@@ -5,7 +5,9 @@
     - watched [youtube video](https://www.youtube.com/watch?v=Mp1xnPfE4PY) with creator of HyperOpt giving intro and demos
     - coded up several examples and tested on elementary functions.
 
-* Read review article on permutationally invariant potential energy surfaces by [Braams and Bowman](http://www.tandfonline.com/doi/abs/10.1080/01442350903234923)
+* Read review article on permutationally invariant polynomial (PIP) potential energy surface construction by [Braams and Bowman](http://www.tandfonline.com/doi/abs/10.1080/01442350903234923)
+
+* Read publication on [applying PIP to neural networks](http://aip.scitation.org/doi/full/10.1063/1.4817187)
 
 * Learned all the basic features of Markdown 
 
