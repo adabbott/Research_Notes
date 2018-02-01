@@ -1,0 +1,26 @@
+Notes taken from Youtube video: Hyperopt: A python library for optimizing machine learning algorithms, Scipy 2013
+
+Hyperopt is a tool for optimizing "hyperparameters", or parameters which are required as initial conditions for ML algorithms
+    -finds better configurations
+    -reproducible work
+    -'free' testing without commitment
+
+Hyperparameter configuration with hyperopt
+
+Describing domain knowledge and search space (hyperopt.hp)
+
+    -search space: what are you going to optimize over?
+        -a random search, design a structured probability distribution that can sample from all configurations
+            you would like to try
+
+    -different search space RANGES:
+        -continuous: uniform, normal
+        -log scale: loguniform, lognormal (more likely to pick something close to a one sided bound)
+        -quantized: quniform, qnormal (good for describing numbers of things, counts, eg number of hidden layers)
+        -quantized log scale: qloguniform
+
+    - search space categorical variable: variable has no order to it, 
+        no similarity between values that happen to be close together
+    - choice option: choosing between different schemes for a particular variable or set of variables
+
+
