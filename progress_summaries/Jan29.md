@@ -5,4 +5,10 @@
     - watched [youtube video](https://www.youtube.com/watch?v=Mp1xnPfE4PY) with creator of HyperOpt giving intro and demos
     - coded up several examples and tested on elementary functions.
 
-* Read review article on Permutationally invariant potential energy surfaces by [Braams and Bowman](http://www.tandfonline.com/doi/abs/10.1080/01442350903234923)
+* Read review article on permutationally invariant potential energy surfaces by [Braams and Bowman](http://www.tandfonline.com/doi/abs/10.1080/01442350903234923)
+
+* Learned all the basic features of Markdown 
+
+* Read through code of new python-based [OPTKING module](https://github.com/psi-rking/optking)
+
+* Sketched out design of template input file processor
