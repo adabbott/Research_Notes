@@ -7,3 +7,5 @@
     - several methods and test cases for extracting data from template input files have been added, see main repo
 
 * Read through some code of [Deepchem](https://github.com/deepchem/deepchem), digging around for useful stuff.
+
+* Looked into [MoleculeNet](http://moleculenet.ai/) 
