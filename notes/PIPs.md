@@ -3,15 +3,15 @@ Notes about permutationally invariant polynomials (PIPs)
 PIPs are necessary for neural networks in the context of constructing PESs because of permutational symmetry in the input coordinates describing the molecular system.
 As a simple example case, water has two hdyrogen atoms, which if there positions were permuted would yield the exact same molecule and therefore the same energy/gradient on the potential energy surface.
 e.g.
-O
-H1 1 1.2
-H2 1 1.0 2 103.5
+O  
+H1 1 1.2  
+H2 1 1.0 2 103.5  
 
 is the same as 
 
-O
-H2 1 1.2
-H1 1 1.0 2 103.5
+O  
+H2 1 1.2  
+H1 1 1.0 2 103.5  
 
 But since neural networks have fixed nodes in the input vector, the NN is not aware of this symmetry. In principle the permutational symmetry can be learned by just expanding the training set (doubling it, in the case of water)
 but this can greatly increase the cost of training. One approach is to used symmetrized nodes but this is not favorable (why?).
