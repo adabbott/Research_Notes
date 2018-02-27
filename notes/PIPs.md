@@ -17,15 +17,15 @@ But since neural networks have fixed nodes in the input vector, the NN is not aw
 but this can greatly increase the cost of training. One approach is to used symmetrized nodes but this is not favorable (why?).
 
 So instead, the geometry is expressed instead in the basis of permutationally invariant polynomials.
-For water, one set of PIPs can be expressed by using the internuclear distance matrix as the coordinate representation, and reduce bond lengths to 
+For water, one set of PIPs can be expressed by using the internuclear distance matrix as the coordinate representation, and reduce bond lengths to  
 
-p_ij = exp(r_ij)
+p_ij = exp(r_ij)  
 
-Letting H1 be index 1, H2 be index 2, and O be index 3, the three PIPs can be expressed as
+Letting H1 be index 1, H2 be index 2, and O be index 3, the three PIPs can be expressed as  
 
-(p_13 + p_23) / 2
-p_13 + p_23
-p_12
+(p_13 + p_23) / 2  
+p_13 + p_23  
+p_12  
 
 which by inspection are all individually invariant if indices 1 and 2 are swapped.
 
