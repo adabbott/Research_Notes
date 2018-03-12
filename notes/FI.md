@@ -29,4 +29,28 @@ molecular geometry (as an interatomic distance matrix) in a permutationally inva
 
 where `x1` and `x2` are the bonds OH<sub>1</sub> and OH<sub>2</sub>.
 
-For an A<sub>2</sub>B<sub>2</sub> system, we have the symmetric group S<sub>2</sub> x S<sub>2</sub> 
+For an A<sub>2</sub>B<sub>2</sub> system, we have the symmetric group S<sub>2</sub> x S<sub>2</sub> (direct product).
+Now we have 6 bonds (r12, r13, r14, r23, r24, r34) which we denote (x1, x2, x3, x4, x5, x6).
+x1 and x6 are unaffected by permutations of like atoms, however the subset (x2, x3, x4, x5) have the permutations
+(23)(45), (24)(35), (25)(34) (why?)  
+
+The magma code is:
+```
+K := RationalField();
+X := {1,2,3,4,5,6};
+G := PermutationGroup<X | (2,3)(4,5), (2,4)(3,5), (2,5)(3,4)>;
+R := InvariantRing(G,K);
+FundamentalInvariants(R);
+```
+and the fundamental invariants are 
+```
+[
+    x1,
+    x2 + x3 + x4 + x5,
+    x6,
+    x2^2 + x3^2 + x4^2 + x5^2,
+    x2*x3 + x4*x5,
+    x2*x4 + x3*x5,
+    x2^3 + x3^3 + x4^3 + x5^3
+]
+```
