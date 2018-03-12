@@ -10,7 +10,9 @@ For an A~2~B system, such as H~2~O, we construct a permutation group
 over the rational field to create a ring containing the fundamental invariants.
 
 The magma code is as follows:  
-```K := RationalField();
+```
+K := RationalField();
 G := PermutationGroup<3 | (1,2)>;
 R := InvariantRing(G,K); 
-FundamentalInvariants(R);```
+FundamentalInvariants(R);
+```
