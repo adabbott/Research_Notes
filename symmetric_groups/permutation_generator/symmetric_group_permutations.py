@@ -65,6 +65,33 @@ def kronecker_product(G1, G2):
             tensor_product.append(np.kron(matrix_op1, matrix_op2))
     return tensor_product
 
+def combine_groups(list_of_groups):
+    """
+    Take some list of groups Sn Sm Sp Sq... Sz which are each lists of matrix representations of the operations in Sn
+    and does a complete tensor product of the entire set into one group
+    """
+    if len(list_of_groups) == 1:
+        raise ValueError("Only one group given as input")
+
+    # number of groups we are combining as a tensor product
+    count = len(list_of_groups)
+    supergroup = kronecker_product(list_of_groups[0],list_of_groups[1])
+    count -= 2
+    while count > 0:
+        for i in range(2, len(list_of_groups)):
+            supergroup = kronecker_product(supergroup, list_of_groups[i])
+            count -= 1
+    return supergroup 
+
+S2xS2xS2 = combine_groups([S2, S2, S2])
+for i in S2xS2xS2:
+    print(i)
+#def generate_permutation_tuples(group):
+#    """
+#    Takes a list of the matrix representations of operators of a group and finds the corresponding permutation operator.
+#    e.g. the matrix acting on a two level system [0 1] permutes x1 and x2, which we denote as the operation (12), programmatically expressed as (1,2)
+#                                                 [1 0]
+#    """
 #for i in S2:
 #    print(i) 
 #
@@ -75,9 +102,9 @@ def kronecker_product(G1, G2):
 #for i in S3xS3:
 #    print(i)
 
-S3xS1 = kronecker_product(S3, S1)
-for i in S3xS1:
-    print(i)
+#S3xS1 = kronecker_product(S3, S1)
+#for i in S3xS1:
+#    print(i)
 #next : generate all possible kronecker products (tensor products) between 2, 3, or n symmetric groups matrix representation operators
 #question: do i need to include the identity?
 # then: you must convert these matrix representations into tuples representing the permutations  
