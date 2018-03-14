@@ -83,6 +83,9 @@ def combine_groups(list_of_groups):
             count -= 1
     return supergroup 
 
+
+# next up: write a Singular input file writer
+
 S2xS2xS2 = combine_groups([S2, S2, S2])
 for i in S2xS2xS2:
     print(i)
@@ -95,9 +98,10 @@ for i in S2xS2xS2:
 #for i in S2:
 #    print(i) 
 #
-#S2xS2 = kronecker_product(S2, S2)
-#for i in S2xS2:
-#    print(i)
+S2xS2 = kronecker_product(S2, S2)
+print(S2xS2)
+for i in S2xS2:
+    print(i)
 #S3xS3 = kronecker_product(S3, S3)
 #for i in S3xS3:
 #    print(i)
