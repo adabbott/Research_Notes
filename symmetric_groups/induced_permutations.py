@@ -15,14 +15,16 @@ def generate_permutations(k):
     """
     f_k = math.factorial(k)
     # create an empty array to collect permutations
-    A = np.empty((f_k, k), dtype=int)
+    #A = np.empty((f_k, k), dtype=int)
+    A = []
     for i, perm in enumerate(it.permutations(range(k))):
-        A[i,:] = perm
+        #A[i,:] = perm
+        A.append(list(perm)) 
     return A
 
 S2 = generate_permutations(2)
 S3 = generate_permutations(3)
-print(S2)
+#print(S3)
 
 def find_cycles(perm):
     """
@@ -52,14 +54,12 @@ def find_cycles(perm):
     # only save cycles of size 2 and larger
     new_cycles = []
     for cyc in cycles:
-        if (len(cyc) > 1): 
+        if len(cyc) > 1: 
             new_cycles.append(cyc)
     return new_cycles
 
-for p in S3:
-    print(find_cycles(p))
-print(find_cycles(S3[0]))
-
+#for p in S3:
+#    print(find_cycles(p))
 
 # might need to change this order to column wise for easy sorting
 def find_bond_indices(natoms):
@@ -82,22 +82,52 @@ def find_bond_indices(natoms):
         j -= 1 
     return bond_indices
 
-def induced_permutations(atomtype_vector):
+def adjust_permutation_indices(atomtype_vector):
+    """
+    Given an atomtype vector, containing the number of each atom, generate the permutations of each atom,
+    and then generate the cycles of each atom, and finally adjust the indices to be nonoverlapping, so that each atom has a unique set of indices.
+    For example, For an A2BC system, the indices may be assigned as follows: A 0,1; B 2; C 3; 
+    This needs to be done because the functions generate_permutations and find_cycles index from 0 for every atom.
+    This way, we can permute bond distance subscripts according to the correct permutation indices.
+    """
+    permutations_by_atom = [] 
+    for atom in atomtype_vector:
+        # add the set of permutations for each atom type to permutations_by_atom
+        permutations_by_atom.append(generate_permutations(atom)) # an array of permutations is added for atom type X
+    print(permutations_by_atom)
+    cycles_by_atom = [] 
+    # each atom has a set of permutations, saved in permutations_by_atom 
+    for i, perms in enumerate(permutations_by_atom):
+        cycles = []
+        # find the cycles of each permutation and append to cycles, then append cycles to cycles_by_atom
+        for perm in perms:
+            cyc = find_cycles(perm)
+            if cyc:  # dont add empty cycles (identity permutation)
+                cycles.append(cyc)
+        cycles_by_atom.append(cycles)
+    print(cycles_by_atom)
+    # now update the indices of the second atom through the last atom since they are currently indexed from zero
+    # to do this we need to know the number of previous atoms, num_prev_atoms
+    atomidx = 0
+    num_prev_atoms = 0
+    for atom in cycles_by_atom[1:]:
+        num_prev_atoms += atomtype_vector[atomidx]
+        for cycle in atom:
+            for subcycle in cycle: # some cycles are composed of two or more subcycles (12)(34) etc.
+                for i, idx in enumerate(subcycle): 
+                    subcycle[i] = idx + num_prev_atoms
+        atomidx += 1
+    print(cycles_by_atom)
+
+# represents an A4B2 system
+atomtype_vector = [3,2,3]
+a = adjust_permutation_indices(atomtype_vector)
+   
+def induced_permutations():
     """
     Find the induced permutations on interatomic distances from like atom permutations
     atomtype_vector: array-like
         A vector of the number of each atoms, the length is the total number of atoms.
         An A3B8C system would be [3, 8, 1]
     """
-    natoms = sum(atomtype_vector)
-    permutations_by_atom = [] 
-    for atom in atomtype_vector:
-        permutations_by_atom.append(generate_permutations(atom))
-    print(permutations_by_atom) 
-
-
-# represents an A2B2 system
-atomtype_vector = [2, 2]
-a = induced_permutations(atomtype_vector)
-#print(a)
-    
+    pass 
