@@ -46,10 +46,13 @@ def find_permutation_cycles(perm):
                 break
         cycles.append(cycle[::-1])
 
-    # remove cycles of size 1
-    for i, cyc in enumerate(cycles):
-        if len(cyc) == 1:
-            cycles.pop(i)
-    return cycles
+    # only save cycles of size 2 and larger
+    new_cycles = []
+    for cyc in cycles:
+        if len(cyc) > 1:
+            new_cycles.append(cyc)
+    return new_cycles
 
+for p in S3:
+    print(find_permutation_cycles(p))
 
