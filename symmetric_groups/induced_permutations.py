@@ -1,17 +1,16 @@
-# This code aims to take a molecular system AnBmCp... and:
-# 1. Determine the permutation operations of the permutation groups Sn, Sm, Sp ... 
-# 2. Find the induced permutations of the permutation operations on the set of interatomic distances
+# This code aims to take an arbitrary molecular system AnBmCp... with any number of like atoms and:
+# 1. Determine the atom permutation operations of the permutation groups Sn, Sm, Sp ... 
+# 2. Find the induced permutations of the atom permutation operations of Sn, Sm, Sp ...  on the set of interatomic distances
 # 3. Export Magma or Singular input code to derive the fundamental invariants
+# Result: a generalized algorithm for obtaining a permutationally invariant basis for geometrical parameters so that the PES is permutation invariant
 
 import numpy as np
 import itertools as it
 import math
 
-
-
 def generate_permutations(k):
     """
-    Generates an array of all possible orderings of k indices
+    Generates a list of lists of all possible orderings of k indices
     """
     f_k = math.factorial(k)
     # create an empty array to collect permutations
@@ -31,6 +30,9 @@ def find_cycles(perm):
     Finds the cycle(s) required to get the permutation. For example,
     the permutation [3,1,2] is obtained by permuting [1,2,3] with the cycle [1,2,3]
     read as "1 goes to 2, 2 goes to 3, 3 goes to 1"
+    Sometimes cycles are products of more than one subcycle, e.g. (12)(34)(5678)
+    This function is to find them all. Ripped bits and pieces of this off from SE, 
+    don't completely understand it but it works xD
     """
     pi = {i: perm[i] for i in range(len(perm))}
     cycles = []
@@ -58,10 +60,8 @@ def find_cycles(perm):
             new_cycles.append(cyc)
     return new_cycles
 
-#for p in S3:
-#    print(find_cycles(p))
 
-# might need to change this order to column wise for easy sorting
+# might need to change this order to column wise for easier sorting. We'll see.
 def find_bond_indices(natoms):
     """
     natoms: int
@@ -105,7 +105,6 @@ def adjust_permutation_indices(atomtype_vector):
             if cyc:  # dont add empty cycles (identity permutation)
                 cycles.append(cyc)
         cycles_by_atom.append(cycles)
-    print(cycles_by_atom)
     # now update the indices of the second atom through the last atom since they are currently indexed from zero
     # to do this we need to know the number of previous atoms, num_prev_atoms
     atomidx = 0
@@ -117,17 +116,40 @@ def adjust_permutation_indices(atomtype_vector):
                 for i, idx in enumerate(subcycle): 
                     subcycle[i] = idx + num_prev_atoms
         atomidx += 1
-    print(cycles_by_atom)
+    return cycles_by_atom
 
 # represents an A4B2 system
-atomtype_vector = [3,2,3]
+atomtype_vector = [2,2,2,2]
 a = adjust_permutation_indices(atomtype_vector)
+print(a)
+
+b = find_bond_indices(8)
+print(b)
    
-def induced_permutations():
+def bond_distance_permutations(atomtype_vector):
     """
-    Find the induced permutations on interatomic distances from like atom permutations
+    Find the effect permutations on interatomic distances from like atom permutations
     atomtype_vector: array-like
         A vector of the number of each atoms, the length is the total number of atoms.
         An A3B8C system would be [3, 8, 1]
     """
-    pass 
+    natoms = sum(atomtype_vector) 
+    cycles_by_atom = adjust_permutation_indices(atomtype_vector)
+    bond_indices = find_bond_indices(natoms)    
+         
+    # for every atom permutation cycle
+    for atom in cycles_by_atom:
+        for cycle in atom:
+            for subcycle in cycle:
+                for i,idx in enumerate(subcycle): 
+                    # for every single bond index of the interatomic distance matrix bond distances... 
+                    for bond in bond_indices:
+                        for bond_idx in bond:
+                        # if the permutation cycle index corresponds to the bond atom index,
+                        # perform the permutation
+                            if idx == bond_idx:
+                                #do something
+                                
+
+
+
