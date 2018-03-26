@@ -32,7 +32,7 @@ def find_cycles(perm):
     read as "1 goes to 2, 2 goes to 3, 3 goes to 1"
     Sometimes cycles are products of more than one subcycle, e.g. (12)(34)(5678)
     This function is to find them all. Ripped bits and pieces of this off from SE, 
-    don't completely understand it but it works xD
+    don't completely understand it but it works :)
     """
     pi = {i: perm[i] for i in range(len(perm))}
     cycles = []
@@ -54,11 +54,14 @@ def find_cycles(perm):
         cycles.append(cycle[::-1])
 
     # only save cycles of size 2 and larger
-    new_cycles = []
-    for cyc in cycles:
-        if len(cyc) > 1: 
-            new_cycles.append(cyc)
-    return new_cycles
+    cycles[:] = [cyc for cyc in cycles if len(cyc) > 1]
+    #new_cycles = []
+    #for cyc in cycles:
+    #    if len(cyc) > 1: 
+    #        new_cycles.append(cyc)
+    #return new_cycles
+    return cycles
+
 
 
 # might need to change this order to column wise for easier sorting. We'll see.
@@ -94,7 +97,7 @@ def adjust_permutation_indices(atomtype_vector):
     for atom in atomtype_vector:
         # add the set of permutations for each atom type to permutations_by_atom
         permutations_by_atom.append(generate_permutations(atom)) # an array of permutations is added for atom type X
-    print(permutations_by_atom)
+    #print(permutations_by_atom)
     cycles_by_atom = [] 
     # each atom has a set of permutations, saved in permutations_by_atom 
     for i, perms in enumerate(permutations_by_atom):
@@ -119,12 +122,36 @@ def adjust_permutation_indices(atomtype_vector):
     return cycles_by_atom
 
 # represents an A4B2 system
-atomtype_vector = [2,2,2,2]
-a = adjust_permutation_indices(atomtype_vector)
-print(a)
+#atomtype_vector = [2,2,2,2]
+#a = adjust_permutation_indices(atomtype_vector)
+#print(a)
+#b = find_bond_indices(8)
+#print(b)
 
-b = find_bond_indices(8)
-print(b)
+def permute_bond(bond, cycle):
+    """
+    Permutes a bond inidice if the bond indice is acted upon by the permutation.
+    There is certainly a better way to code this. Yikes.
+    """
+    count0 = 0
+    count1 = 0
+    for i, idx in enumerate(cycle):
+        if (bond[0] == idx) and (count0 == 0):
+            try:
+                bond[0] = cycle[i+1]
+            except:
+                bond[0] = cycle[0]
+            count0 += 1
+
+        if (bond[1] == idx) and (count1 == 0):
+            try:
+                bond[1] = cycle[i+1]
+            except:
+                bond[1] = cycle[0]
+            count1 += 1
+        
+    bond.sort()
+    return bond 
    
 def bond_distance_permutations(atomtype_vector):
     """
@@ -132,24 +159,26 @@ def bond_distance_permutations(atomtype_vector):
     atomtype_vector: array-like
         A vector of the number of each atoms, the length is the total number of atoms.
         An A3B8C system would be [3, 8, 1]
+    Returns the permuted bond indices 
     """
     natoms = sum(atomtype_vector) 
     cycles_by_atom = adjust_permutation_indices(atomtype_vector)
     bond_indices = find_bond_indices(natoms)    
          
-    # for every atom permutation cycle
+    IDM_perms = [] # interatomic distance matrix permutations
     for atom in cycles_by_atom:
         for cycle in atom:
+            tmp_bond_indices = bond_indices[:]  # make a copy of interatomic distance matrix elements
             for subcycle in cycle:
-                for i,idx in enumerate(subcycle): 
-                    # for every single bond index of the interatomic distance matrix bond distances... 
-                    for bond in bond_indices:
-                        for bond_idx in bond:
-                        # if the permutation cycle index corresponds to the bond atom index,
-                        # perform the permutation
-                            if idx == bond_idx:
-                                #do something
-                                
+                for i, bond in enumerate(tmp_bond_indices):
+                    tmp_bond_indices[i] = permute_bond(bond, subcycle)
+            IDM_perms.append(tmp_bond_indices)  # 
+
+    return bond_indices
+# TODO test this
+#TODO now take the interatomic distance matrix 
 
 
-
+atomtype_vector = [3]
+print(find_bond_indices(3))
+print(bond_distance_permutations(atomtype_vector))
