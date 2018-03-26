@@ -52,7 +52,7 @@
 
 * Learned how to go from permutation operations on a molecular system A<sub>p</sub>B<sub>q</sub>C<sub>r</sub> ... X<sub>n</sub> to the corresponding induced permutations on bond distances in the interatomic distance matrix by hand. Have yet to generalize programmatically.
 
-* Generated [initial code](Molssi_projectnotes/symmetric_groups/symmetric_group_permutations.py) for fundamental invariants on the project notes repo. Currently is capable of: 
+* Generated [initial code](adabbott/Molssi_projectnotes/symmetric_groups/symmetric_group_permutations.py) for fundamental invariants on the project notes repo. Currently is capable of: 
     - Generating permutations of k indices
     - Computing the matrix representations of all operators in an arbitrary permutation group S<sub>n</sub> 
     - Computing the direct product between two permutation groups S<sub>n</sub> and S<sub>m</sub>
@@ -64,7 +64,7 @@
 
 # Week of March 19th 
 
-* Nearly finished with a[generalized algorithm](Molssi_projectnotes/symmetric_groups/induced_permutations.py) for generating the Magma or Singular code
+* Nearly finished with a [generalized algorithm](adabbott/Molssi_projectnotes/symmetric_groups/induced_permutations.py) for generating the Magma or Singular code
 necessary for obtaining all fundamental invariants (or primary and secondary invariants) of an arbitrary molecular system. 
 
 * Once finished, this would seem to be a good contribution. The only other software that I'm aware of that can generally derive a permutation invariant basis for any molecular system is Xie and Bowman's [MSA](https://scholarblogs.emory.edu/bowman/msa/) code, but this does not plug in nicely as a module, as it uses F90, Python 2, and Perl, and requires an input file for using it. Appears to be meant for use as a standalone code for fitting PESs. It also does not determine primary, secondary, or fundamental invariants, but instead uses [(see associated paper by Xie and Bowman)](https://pubs.acs.org/doi/abs/10.1021/ct9004917) to derive *some* invariant polynomial basis which appears to be absurdly large compared to the required amount of invariants. For example, for an A2B2 system, the symmetrized monomial basis is nearly 300 polynomials, while alternatively one can use a basis of 6 primary invariants and 2 secondary invariants, or just the 6 fundamental invariants. In terms of computational efficiency and simplicity, the later bases are preferable. I suppose the advantage is that their implementation is easier and does not rely on a computer algebra package. 
