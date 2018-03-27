@@ -7,6 +7,7 @@
 import numpy as np
 import itertools as it
 import math
+import copy
 
 def generate_permutations(k):
     """
@@ -55,17 +56,13 @@ def find_cycles(perm):
 
     # only save cycles of size 2 and larger
     cycles[:] = [cyc for cyc in cycles if len(cyc) > 1]
-    #new_cycles = []
-    #for cyc in cycles:
-    #    if len(cyc) > 1: 
-    #        new_cycles.append(cyc)
-    #return new_cycles
+
     return cycles
 
 
 
 # might need to change this order to column wise for easier sorting. We'll see.
-def find_bond_indices(natoms):
+def generate_bond_indices(natoms):
     """
     natoms: int
         The number of atoms
@@ -73,7 +70,7 @@ def find_bond_indices(natoms):
     [[0,1], [0,2], [1,2], [0,3], [1,3], [2,3], ...,[0, natom], ...,[natom-1, natom]]
     """ 
     # initialize j as the number of atoms
-    j = natoms
+    j = natoms - 1
     # now loop backward until you generate all bond indices 
     bond_indices = []
     while j > 0:
@@ -85,19 +82,20 @@ def find_bond_indices(natoms):
         j -= 1 
     return bond_indices
 
-def adjust_permutation_indices(atomtype_vector):
+def molecular_cycles(atomtype_vector):
     """
-    Given an atomtype vector, containing the number of each atom, generate the permutations of each atom,
-    and then generate the cycles of each atom, and finally adjust the indices to be nonoverlapping, so that each atom has a unique set of indices.
+    Finds the complete set of cycles that may act on a molecular system.
+    Given an atomtype vector, containing the number of each atom:
+         1.  generate the permutations of each atom
+         2.  generate the cycles of each atom
+         3.  adjust the indices to be nonoverlapping, so that each atom has a unique set of indices.
     For example, For an A2BC system, the indices may be assigned as follows: A 0,1; B 2; C 3; 
-    This needs to be done because the functions generate_permutations and find_cycles index from 0 for every atom.
-    This way, we can permute bond distance subscripts according to the correct permutation indices.
+    while the methods generate_permutations and find_cycles index from 0 for every atom, so we adjust the indices of every atom appropriately
     """
     permutations_by_atom = [] 
     for atom in atomtype_vector:
         # add the set of permutations for each atom type to permutations_by_atom
         permutations_by_atom.append(generate_permutations(atom)) # an array of permutations is added for atom type X
-    #print(permutations_by_atom)
     cycles_by_atom = [] 
     # each atom has a set of permutations, saved in permutations_by_atom 
     for i, perms in enumerate(permutations_by_atom):
@@ -121,20 +119,18 @@ def adjust_permutation_indices(atomtype_vector):
         atomidx += 1
     return cycles_by_atom
 
-# represents an A4B2 system
-#atomtype_vector = [2,2,2,2]
-#a = adjust_permutation_indices(atomtype_vector)
-#print(a)
-#b = find_bond_indices(8)
-#print(b)
 
 def permute_bond(bond, cycle):
     """
-    Permutes a bond inidice if the bond indice is acted upon by the permutation.
+    Permutes a bond inidice if the bond indice is affected by the permutation cycle.
     There is certainly a better way to code this. Yikes.
     """
     count0 = 0
     count1 = 0
+    # if the bond indice matches the cycle indice, set the bond indice equal to the next indice in the cycle
+    # we count so we dont change a bond indice more than once.
+    # If the cycle indice is at the end of the list, the bond indice should become the first element of the list since thats how cycles work.
+    # theres probably a better way to have a list go back to the beginning
     for i, idx in enumerate(cycle):
         if (bond[0] == idx) and (count0 == 0):
             try:
@@ -149,36 +145,60 @@ def permute_bond(bond, cycle):
             except:
                 bond[1] = cycle[0]
             count1 += 1
-        
+    # sort if the permutation messed up the order. if you convert 1,2 to 2,1, for example    
     bond.sort()
     return bond 
    
-def bond_distance_permutations(atomtype_vector):
+def permute_bond_indices(atomtype_vector):
     """
-    Find the effect permutations on interatomic distances from like atom permutations
+    Permutes the set of bond indices of a molecule according to the complete set of valid molecular permutation cycles
     atomtype_vector: array-like
         A vector of the number of each atoms, the length is the total number of atoms.
         An A3B8C system would be [3, 8, 1]
-    Returns the permuted bond indices 
+    Returns many sets permuted bond indices, the number of which equal to the number of cycles
     """
     natoms = sum(atomtype_vector) 
-    cycles_by_atom = adjust_permutation_indices(atomtype_vector)
-    bond_indices = find_bond_indices(natoms)    
+    bond_indices = generate_bond_indices(natoms)    
+    cycles_by_atom = molecular_cycles(atomtype_vector)
          
-    IDM_perms = [] # interatomic distance matrix permutations
+    bond_indice_permutations = [] # interatomic distance matrix permutations
     for atom in cycles_by_atom:
         for cycle in atom:
-            tmp_bond_indices = bond_indices[:]  # make a copy of interatomic distance matrix elements
+            tmp_bond_indices = copy.deepcopy(bond_indices) # need a deep copy, list of lists
             for subcycle in cycle:
                 for i, bond in enumerate(tmp_bond_indices):
                     tmp_bond_indices[i] = permute_bond(bond, subcycle)
-            IDM_perms.append(tmp_bond_indices)  # 
+            bond_indice_permutations.append(tmp_bond_indices) 
 
-    return bond_indices
-# TODO test this
-#TODO now take the interatomic distance matrix 
+    return bond_indice_permutations 
 
-
+def induced_permutations(atomtype_vector, bond_indice_permutations):
+    """
+    Given the original bond indices list [[0,1],[0,2],[1,2]...] and a permutation of this bond indices list,
+    find the permutation vector that maps the original to the permuted list. 
+    Do this for all permutations of the bond indices list. 
+    Result: The complete set induced interatomic distance matrix permutatations caused by the molecular permutation cycles 
+    """
+    natoms = sum(atomtype_vector) 
+    bond_indices = generate_bond_indices(natoms)    
+   
+    induced_perms = [] 
+    for bip in bond_indice_permutations:
+        perm = []
+        for bond1 in bond_indices:
+            for i, bond2 in enumerate(bip):
+                if bond1 == bond2:
+                    perm.append(i)
+        cycle = find_cycles(perm) 
+        induced_perms.append(cycle)
+    return induced_perms
+                
+             
 atomtype_vector = [3]
-print(find_bond_indices(3))
-print(bond_distance_permutations(atomtype_vector))
+#t1 = generate_permutations(1)
+#print(find_cycles(t1))
+#print(generate_bond_indices(3))
+#print(molecular_cycles(atomtype_vector))
+bond_indice_permutations = permute_bond_indices(atomtype_vector)
+#print(bond_indice_permutations)
+print(induced_permutations(atomtype_vector, bond_indice_permutations))
