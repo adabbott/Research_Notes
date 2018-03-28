@@ -1,7 +1,7 @@
 # This code aims to take an arbitrary molecular system AnBmCp... with any number of like atoms and:
-# 1. Determine the atom permutation operations of the permutation groups Sn, Sm, Sp ... 
+# 1. Determine the atom permutation operations (cycles) of the permutation groups Sn, Sm, Sp ... 
 # 2. Find the induced permutations of the atom permutation operations of Sn, Sm, Sp ...  on the set of interatomic distances
-# 3. Export Magma or Singular input code to derive the fundamental invariants
+# 3. Export Magma code to derive the fundamental invariants
 # Result: a generalized algorithm for obtaining a permutationally invariant basis for geometrical parameters so that the PES is permutation invariant
 
 import numpy as np
@@ -14,23 +14,18 @@ def generate_permutations(k):
     Generates a list of lists of all possible orderings of k indices
     """
     f_k = math.factorial(k)
-    # create an empty array to collect permutations
-    #A = np.empty((f_k, k), dtype=int)
     A = []
     for i, perm in enumerate(it.permutations(range(k))):
         #A[i,:] = perm
         A.append(list(perm)) 
     return A
 
-S2 = generate_permutations(2)
-S3 = generate_permutations(3)
-#print(S3)
 
 def find_cycles(perm):
     """
     Finds the cycle(s) required to get the permutation. For example,
     the permutation [3,1,2] is obtained by permuting [1,2,3] with the cycle [1,2,3]
-    read as "1 goes to 2, 2 goes to 3, 3 goes to 1"
+    read as "1 goes to 2, 2 goes to 3, 3 goes to 1".
     Sometimes cycles are products of more than one subcycle, e.g. (12)(34)(5678)
     This function is to find them all. Ripped bits and pieces of this off from SE, 
     don't completely understand it but it works :)
@@ -56,7 +51,6 @@ def find_cycles(perm):
 
     # only save cycles of size 2 and larger
     cycles[:] = [cyc for cyc in cycles if len(cyc) > 1]
-
     return cycles
 
 
@@ -193,12 +187,39 @@ def induced_permutations(atomtype_vector, bond_indice_permutations):
         induced_perms.append(cycle)
     return induced_perms
                 
+def write_magma_input(natoms, induced_perms):
+    """
+    Writes a magma input file which can be copy and pasted 
+    to the Magma online code editor for obtaining the fundamental invariants
+    This has been tested against every result in the SI of Shao, Chen, Zhao, Zhang, J Chem Phys 145 2016
+    https://aip.scitation.org/doi/suppl/10.1063/1.4961454
+    For A2B, A2B2, A3B, A4B
+    """
+    A = []
+    nbonds = int((natoms**2 - natoms) / 2)
+    for i in range(nbonds):
+        A.append(i)
+
+    operators = ''
+    for cycle in induced_perms:
+        for subcycle in cycle:
+            operators += str(tuple(subcycle))
+        # add comma and space except at end
+        if cycle != induced_perms[-1]:
+            operators += ', '
+    line1 = "K := RationalField();\n"  
+    line2 = "X := {};\n".format(set(A))
+    line3 = "G := PermutationGroup<X | {}>;\n".format(operators)
+    last = "R := InvariantRing(G,K);\nFundamentalInvariants(R);"
+    
+    return (line1 + line2 + line3 + last)
              
-atomtype_vector = [3]
-#t1 = generate_permutations(1)
-#print(find_cycles(t1))
-#print(generate_bond_indices(3))
-#print(molecular_cycles(atomtype_vector))
+# TODO: handle cases when some bonds are unaffected by any permutation operator 
+#   given the original bond indices list and all allowed permutations of bonds (induced permutations), 
+
+# use this to test:
+atomtype_vector = [4,1]
 bond_indice_permutations = permute_bond_indices(atomtype_vector)
-#print(bond_indice_permutations)
-print(induced_permutations(atomtype_vector, bond_indice_permutations))
+IP  = induced_permutations(atomtype_vector, bond_indice_permutations)
+a = write_magma_input(sum(atomtype_vector), IP)
+#print(a)
