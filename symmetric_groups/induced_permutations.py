@@ -213,13 +213,26 @@ def write_magma_input(natoms, induced_perms):
     last = "R := InvariantRing(G,K);\nFundamentalInvariants(R);"
     
     return (line1 + line2 + line3 + last)
+
+
+def process_magma_output(string):
+    """
+    Takes as argument a multiline string of the Magma output and creates a Python list
+    of fundamental invariants as strings
+    """
+    # fix exponents, remove brackets if user included brackets
+    string = string.replace('^', '**').replace('[', '').replace(']', '')
+    # each fundamental invariant is separated by a comma
+    tmp = [FI for FI in string.split(',')] 
+    # clean up whitespace
+    fi_list = [re.sub('\s+', ' ', FI).strip() for FI in tmp]
+    return fi_list
+
              
-# TODO: handle cases when some bonds are unaffected by any permutation operator 
-#   given the original bond indices list and all allowed permutations of bonds (induced permutations), 
 
 # use this to test:
-atomtype_vector = [4,1]
+atomtype_vector = [2,1]
 bond_indice_permutations = permute_bond_indices(atomtype_vector)
 IP  = induced_permutations(atomtype_vector, bond_indice_permutations)
 a = write_magma_input(sum(atomtype_vector), IP)
-#print(a)
+print(a)
