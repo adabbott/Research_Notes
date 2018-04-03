@@ -7,3 +7,4 @@
 * Read through [Amp paper](https://www.sciencedirect.com/science/article/pii/S0010465516301266)  and code. Learned about methods used.
 
 * Studied how to generalize non-compact internal coordinate extraction from arbrary input files.
+

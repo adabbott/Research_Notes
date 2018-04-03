@@ -9,8 +9,6 @@
 
 * Read publication on [applying PIP to neural networks](http://aip.scitation.org/doi/full/10.1063/1.4817187)
 
-* Learned all the basic features of Markdown 
-
 * Read through code of new python-based [OPTKING module](https://github.com/psi-rking/optking)
 
 * Sketched out design of template input file processor
