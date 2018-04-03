@@ -15,8 +15,7 @@ def generate_permutations(k):
     """
     f_k = math.factorial(k)
     A = []
-    for i, perm in enumerate(it.permutations(range(k))):
-        #A[i,:] = perm
+    for perm in (it.permutations(range(k))):
         A.append(list(perm)) 
     return A
 
@@ -231,7 +230,7 @@ def process_magma_output(string):
              
 
 # use this to test:
-atomtype_vector = [2,1]
+atomtype_vector = [9]
 bond_indice_permutations = permute_bond_indices(atomtype_vector)
 IP  = induced_permutations(atomtype_vector, bond_indice_permutations)
 a = write_magma_input(sum(atomtype_vector), IP)
