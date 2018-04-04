@@ -10,6 +10,5 @@ but they have some ML modules which may be useful: various featurization classes
 * Designed and began programming part of code relevant to data generation workflows 
     * The user may input a Z-Matrix (internal coordinates) of a molecule with specified ranges and other options in the input file
     * The software will extract the Z-Matrix and create Atom class instances for each atom and a Molecule class instance for the whole molecule
-    * The 
+    * to be continued
         
-    * The GeometryGenerator will then be equipped to displace the coordinates and create input files using TemplateProcessor data
