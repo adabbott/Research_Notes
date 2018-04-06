@@ -12,3 +12,4 @@ but they have some ML modules which may be useful: various featurization classes
     * The software will extract the Z-Matrix and create Atom class instances for each atom and a Molecule class instance for the whole molecule
     * to be continued
         
+* Read about [Schnet](https://arxiv.org/pdf/1712.06113.pdf), [Schnet repo](https://github.com/atomistic-machine-learning/SchNet) Results look really good. Definitely should interface to this.
