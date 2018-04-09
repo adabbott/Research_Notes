@@ -14,3 +14,7 @@ but they have some ML modules which may be useful: various featurization classes
     * sketched out initial driver and input_processor code
 
 * Finished poster 
+        
+* Read about [Schnet](https://arxiv.org/pdf/1712.06113.pdf), [Schnet repo](https://github.com/atomistic-machine-learning/SchNet) Results look really good. Definitely should interface to this.
+
+
