@@ -6,7 +6,7 @@
     * From there it is a matter of running the driver `python driver.py` and choosing 'generate' to create input files  or 'parse' to obtain the data
 
 * In terms of how to code works:
-    * From the internal coordinate file `input.dat`, it creates an InputProcessor object, which uses regex to extract the displacments, and creates a list displacement dictionaries of the form "paramter": value for all internal coordinate parameters.
+    * From the internal coordinate file `input.dat`, it creates an InputProcessor object, which uses regex to extract the displacments, and creates a list displacement dictionaries of the form `"parameter": value` for all internal coordinate parameters.
     * From the template input file `template.dat`, create a TemplateProcessor object, which splits the file string into sections: before the cartesian geometry, the cartesian geometry, and after the cartesian geometry. Each string is saved as a class attribute.  
     * Initialize a Molecule object with the internal coordinates in `input.dat`. 
     * For every displacement, update the Molecule with new internal coordinates, convert to cartesians, and write a new input file in its own directory
