@@ -6,6 +6,9 @@
 
 * Learned how to make a very basic ML model in Keras. Combined with data parsing routine to develop a simple, 'hello world' NN model for O<sub>2</sub> stretching.
 
+* Update: Improved NN model for O<sub>2</sub> stretching. Wrote energy only and energy + gradient models. energy + gradient model performs slightly better all else equal. Divided dataset 50% test, 25% train, 25% validation, mean absolute error in the test set is on the order of 0.5-1.5%. Cross validation still not attempted. 
+
+
 * Meeting Notes:
     * Get a project name
     * Don't automate Keras models yet, first create a clean way to generate data, convert it to Keras-friendly form, and a way to use/access Keras models afterwards 
