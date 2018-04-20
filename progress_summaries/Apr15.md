@@ -9,13 +9,13 @@
 
 * Meeting Notes:
     * Get a project name
-    * Don't automate Keras models yet, first create a clean way to generate data, convert it to Keras-friendly form, and a way to use/access Keras models afterwards 
     * Design a workflow so that data only needs to be obtained once, and save it to a file
-    * During ML model development, take note of trends in the hyperparameters, such as NN structure and number of nodes, that typically perform well, so that when incorporating HyperOpt for hyperparameter search, the search is more limited and refined.
-    * Look into Keras/Tensorflow diagnostic plots of model performance  
-    * Move driver into the code, allow software to be called from anywhere 
     * Create simple documentation on how to run software for data generation
-    * Look into MolSSI quantum chemistry database project, add support in Phase II plan 
     * Clean up repo, add docstrings 
+    * Move driver into the code, allow software to be called from anywhere 
     * Highlight Psi4Numpy publication in PII proposal, record anticipated publications in Phase II plan
+    * Look into MolSSI quantum chemistry database project, add support in Phase II plan 
+    * Don't automate Keras models yet, first create a clean way to generate data, convert it to Keras-friendly form, and a way to use/access Keras models afterwards 
+    * Look into Keras/Tensorflow diagnostic plots of model performance  
+    * During ML model development, take note of trends in the hyperparameters, such as NN structure and number of nodes, that typically perform well, so that when incorporating HyperOpt for hyperparameter search, the search is more limited and refined.
        
