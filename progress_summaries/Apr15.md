@@ -7,7 +7,7 @@
 * Learned how to make a very basic ML model in Keras. Combined with data parsing routine to develop a simple, 'hello world' NN model for O<sub>2</sub> stretching.
 
 
-* Meeting Notes:
+* Meeting Notes (in order of highest priority):
     * Get a project name
     * Design a workflow so that data only needs to be obtained once, and save it to a file
     * Create simple documentation on how to run software for data generation
