@@ -73,3 +73,6 @@ G[1,3]=x2*x3+x4*x5
 G[1,4]=x2*x4+x3*x5
 G[1,5]=x2^3+x3^3+x4^3+x5^3
 ```
+
+According to Simon King's paper, he "obtained minimal generating sets for the natural permutation action of the cyclic groups of order up to 12 in characteristic 0 and of order up to 15 for finite fields"
+I believe this means the algorithm is capable of up to A12 as a system. (required 2010 min in singular, yielded 367 FIs)
