@@ -74,5 +74,9 @@ G[1,4]=x2*x4+x3*x5
 G[1,5]=x2^3+x3^3+x4^3+x5^3
 ```
 
-According to Simon King's paper, he "obtained minimal generating sets for the natural permutation action of the cyclic groups of order up to 12 in characteristic 0 and of order up to 15 for finite fields"
-I believe this means the algorithm is capable of up to A12 as a system. (required 2010 min in singular, yielded 367 FIs)
+
+In Section 3.3 of his paper, King considered a permutation group of 10 variables under symmetric group S<sub>5</sub>  (analgous to a molecular system A5) and found the 56 fundamental invariants.
+He claims his algorithm would take a very long time to find the FIs directly, and instead decomposes into 1-,4-, 5-dim irreducible representations.
+By doing this, it takes 50 minutes in Singular, and uses 4.4 GB memory.
+The 56 FIs found match the number of FIs on  kjshao's github for an A5 molecular system.
+In contrast, he claims that MAGMA only takes 37.5 seconds.
