@@ -7,13 +7,14 @@ from scipy import stats
 
 
 # Load in data and sort
-data = pd.read_csv("h2co.dat")
+#data = pd.read_csv("h2co.dat")
 #data = pd.read_csv("h2o.dat")
-#data = pd.read_csv("h3o+.dat")
+data = pd.read_csv("h3o+.dat")
+data['E'] = (data['E'] - data['E'].min())
 data = data.sort_values("E")
 max_e = data['E'].max()
 
-ntrain = 5000
+ntrain = 10000
 
 def structure_based(data=data,ntrain=ntrain):
     data = data.sort_values("E").reset_index(drop=True)
@@ -21,13 +22,11 @@ def structure_based(data=data,ntrain=ntrain):
     # accept lowest energy point as 1st training point
     train = []
     train.append(data.values[0])
-    
+
     def norm(train_point, data=data):
         """ Computes norm between training point geometry and every point in dataset"""
-        data_dim = data.shape[0]
-        tmp1 = np.tile(train_point[:-1], (data_dim,1))
-        tmp2 = data.values[:,:-1]
-        diff = tmp1 - tmp2
+        tmp1 = np.tile(train_point[:-1], (data.shape[0],1))
+        diff = tmp1 - data.values[:,:-1]
         norm_vector = np.sqrt(np.einsum('ij,ij->i', diff, diff))
         return norm_vector
 
@@ -60,6 +59,8 @@ def structure_based(data=data,ntrain=ntrain):
         
 
 def sobol(data=data,ntrain=ntrain):
+    # sobol requires energy to be relative
+    #data['E'] = (data['E'] - data['E'].min())
     delta = 0.002278
     denom = (1 / (max_e + delta))
     train = []
@@ -91,7 +92,7 @@ def sobol(data=data,ntrain=ntrain):
 def energy_ordered(data=data,ntrain=ntrain):
 #df1 = df[df.index % 3 != 0]  # Excludes every 3rd row starting from 0
 #df2 = df[df.index % 3 == 0]  # Selects every 3rd raw starting from 0
-#This assumes, of course, that you have an index column of ordered, consecutive, integers starting at 0.
+#This assumes that you have an index column of ordered, consecutive, integers starting at 0.
     s = round(data.shape[0] / ntrain)
     train = data[0::s]
     return train 
@@ -107,16 +108,27 @@ def norm(n1,n2):
 
 start = timeit.default_timer()
 sb = structure_based()
-print("Training set generation finished in {} seconds".format(round((timeit.default_timer() - start),2)))
+print("Structure based sampling finished in {} seconds".format(round((timeit.default_timer() - start),2)))
 
-
-#eo = energy_ordered()
-#sobol = sobol(data)
+start = timeit.default_timer()
 random = random(data)
-nbins = 10
-hist = pd.concat([data['E'], sb['E'], random['E']],axis=1)
-hist.columns = ['Full', 'Structure Based', 'Random']
-hist.plot.hist(bins = nbins, stacked=False, density=True,alpha=0.7, color=['black', 'blue', 'red'])
+print("Random sampling finished in {} seconds".format(round((timeit.default_timer() - start),2)))
+
+start = timeit.default_timer()
+eo = energy_ordered()
+print("Energy ordered sampling finished in {} seconds".format(round((timeit.default_timer() - start),2)))
+
+start = timeit.default_timer()
+sobol = sobol(data)
+print("Sobol sequence sampling finished in {} seconds".format(round((timeit.default_timer() - start),2)))
+
+nbins = 20
+hist = pd.concat([data['E'], sb['E'], random['E'], eo['E'], sobol['E']],axis=1)
+hist.columns = ['Full', 'Structure Based', 'Random', 'EO', 'Sobol']
+#hist.plot.hist(bins = nbins, stacked=False, density=True,alpha=0.7, color=['black', 'blue', 'red', 'green', 'yellow'])
+hist.plot.hist(bins = nbins, stacked=True, density=True,alpha=0.7, color=['black', 'blue', 'red', 'green', 'yellow'], 
+                subplots=True, sharey=True, sharex=True,
+                title="H3O+ PES, {} Training points".format(ntrain))
 plt.show()
 #hist = pd.concat([data['E'], eo['E']],axis=1)
 #hist.columns = ['Full','EO']
