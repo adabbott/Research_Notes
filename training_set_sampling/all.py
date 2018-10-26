@@ -11,35 +11,39 @@ data = pd.read_csv("h2co.dat")
 #data = pd.read_csv("h2o.dat")
 #data = pd.read_csv("h3o+.dat")
 data = data.sort_values("E")
-#data['E'] = (data['E'] - data['E'].min())
 max_e = data['E'].max()
-data = data.sort_values("E")
 
 ntrain = 5000
 
-def fast_structure_based(data=data,ntrain=ntrain):
+def structure_based(data=data,ntrain=ntrain):
     data = data.sort_values("E").reset_index(drop=True)
-    train = []
+    data_dim = data.shape[0]
     # accept lowest energy point as 1st training point
+    train = []
     train.append(data.values[0])
-    # accept farthest point from first training point as 2nd training point
-    tmp1 = np.tile(train[0][:-1], (data.shape[0],1))
-    tmp2 = data.values[:,:-1]
-    diff = tmp1 - tmp2
-    norm_vector = np.sqrt(np.einsum('ij,ij->i', diff, diff))
-    idx = np.argmax(norm_vector)
+    
+    def norm(train_point, data=data):
+        """ Computes norm between training point geometry and every point in dataset"""
+        data_dim = data.shape[0]
+        tmp1 = np.tile(train_point[:-1], (data_dim,1))
+        tmp2 = data.values[:,:-1]
+        diff = tmp1 - tmp2
+        norm_vector = np.sqrt(np.einsum('ij,ij->i', diff, diff))
+        return norm_vector
+
+    # accept farthest point from 1st training point as the 2nd training point
+    norm_vector_1 = norm(train[0]) 
+    idx = np.argmax(norm_vector_1)
     newtrain = data.values[idx]
     train.append(newtrain)
 
-    # update norm matrix with second training point
-    tmp1 = np.tile(train[1][:-1], (data.shape[0],1))
-    tmp2 = data.values[:,:-1]
-    diff = tmp1 - tmp2
-    norm_vector_2 = np.sqrt(np.einsum('ij,ij->i', diff, diff))
+    # create norm matrix, whose rows are all the norms to 1st and 2nd training points 
+    norm_vector_2 = norm(train[1])
+    norm_matrix = np.vstack((norm_vector_1, norm_vector_2))
 
-    norm_matrix = np.vstack((norm_vector, norm_vector_2))
-    # the minimum values along the columns of this 2xN array of norms
+    # find the minimum value along the columns of this 2xN array of norms
     min_array = np.amin(norm_matrix, axis=0)
+
     while len(train) < ntrain:
         # min_array contains the smallest norms into the training set, by datapoint.
         # We take the largest one.
@@ -47,214 +51,13 @@ def fast_structure_based(data=data,ntrain=ntrain):
         new_geom = data.values[idx]
         train.append(new_geom)
         # update norm matrix with the norms of newly added training point
-        tmp1 = np.tile(train[-1][:-1], (data.shape[0],1))
-        tmp2 = data.values[:,:-1]
-        diff = tmp1 - tmp2
-        norm_vec = np.sqrt(np.einsum('ij,ij->i', diff, diff))
+        norm_vec = norm(train[-1])
         stack = np.vstack((min_array, norm_vec))
         min_array = np.amin(stack, axis=0)
     train = np.asarray(train).reshape(ntrain,len(data.columns))
     train = pd.DataFrame(train, columns=data.columns).sort_values("E")
     return train
         
-
-
-def old_bad_fast_structure_based(data=data,ntrain=ntrain):
-    """
-    Will only work properly if you remove redundancies (?)
-    """
-    data = data.sort_values("E").reset_index(drop=True)
-    print(data)
-    # accept lowest energy point
-    train = []
-    train.append(data.values[0])
-
-    # accept farthest point from lowest energy point
-    tmp1 = np.tile(train[0][:-1], (data.shape[0],1))
-    tmp2 = data.values[:,:-1]
-    diff = tmp1 - tmp2
-    norm_matrix = np.sqrt(np.einsum('ij,ij->i', diff, diff))
-    #print(norm_matrix)
-    idx = np.argmax(norm_matrix)
-    #print(idx)
-    newtrain = data.values[idx]
-    train.append(newtrain) 
-
-    # fill in rest of points
-    #for i in range(ntrain):
-    i = 0
-    while len(train) < ntrain:
-        # take last element of training set, compute norm vector with whole dataset
-        #start = timeit.default_timer()
-        #print(i)
-        tmp1 = np.tile(train[-1][:-1], (data.shape[0], 1))
-        #print(train[-1][:-1])
-        tmp2 = data.values[:,:-1]
-        diff = tmp1 - tmp2
-        norm_vec = np.sqrt(np.einsum('ij,ij->i', diff, diff))
-        # add norm vector to norm matrix
-        norm_matrix = np.vstack((norm_matrix, norm_vec))
-        print(norm_matrix)
-#        print("One iteration of generating norm matrix takes {} seconds".format(round((timeit.default_timer() - start),2)))
-        # find smallest nonzero norm in each row (corresponding to each training point) of norm matrix
-        # one is guaranteed to be 0, so it is the second smallest.
-        # 'idx' is the column indices of second smallest norm of each row (training point):
-        # this is giving same exact smallest norm every time for older training point norms; need to not count norms already used.
-        #idx = np.argpartition(norm_matrix, 1)[:,1]
-        # for every training point, take smallest unused normo
-
-        # NEW APPROACH: compare smallest nonzero norms, below we set each used norm location in norm matrix to 0.0
-        # smallest nonzero value of whole norm matrix
-        #mask = np.ma.masked_values(norm_matrix, 0.0, copy=False)
-        # smallest nonzero norm of each row of norm matrix (training set points) 
-        mins = np.amin(np.ma.masked_values(norm_matrix, 0.0, copy=False), axis=1)
-        min_indices = np.argmin(np.ma.masked_values(norm_matrix, 0.0, copy=False), axis=1)
-        print(min_indices)
-        #if i % 2 == 0:
-        #    sample = np.argmax(mins)
-        #else:
-        #    sample = np.argmin(mins)
-        sample = np.argmax(mins)
-        #new_train_point_idx = min_indices[np.argmax(mins)]
-        new_train_point_idx = min_indices[sample]
-        print(new_train_point_idx)
-        newtrain = data.values[new_train_point_idx]
-        train.append(newtrain)
-        norm_matrix[sample,new_train_point_idx] = 0.0
-        #norm_matrix[np.argmax(mins),new_train_point_idx] = 0.0
-        i += 1
-    print(np.asarray(train).shape)
-    train = np.asarray(train).reshape(ntrain,len(data.columns))
-    train = pd.DataFrame(train, columns=data.columns).sort_values("E")
-    return train
-
-        ##print(min_indices)
-        ## now figure out which one is bigger
-        #candidates = [] 
-        #for i, row in enumerate(norm_matrix):
-        #    #print(norm_matrix[i,min_indices[i]])
-        #    candidates.append(norm_matrix[i,min_indices[i]])
-        #c = np.asarray(candidates)
-        #new_training_point = data.values[np.argmax(c)]
-        #norm_matrix[min_indices[np.argmax(c)], np.argmax(c)] = 0.0 
-        #train.append(new_training_point)
-            #print(row[min_indices[i]])
-        #print(norm_matrix)
-        #print(min_indices)
-        #print(norm_matrix[row_idx, col_idx])
-        # get coordinates of the
-        #np.unravel_index(min_indices, norm_matrix.shape)
-        #print(min_indices)
-        #print(norm_matrix)
-        #print(norm_matrix[[min_indices]])
-"""
-        #print(min_indices)
-        # the index of the training set which contains the largest, smallest nonzero norm 
-        idx = np.argmax(mins)
-        print(idx)
-        print(mins[idx])
-        # new training point index in full dataset
-        new = np.argmin(mask[idx])
-        new_training_point = data.values[new]
-        train.append(new_training_point)
-        # set norm matrix value of taken norm equal to zero so it isnt used again
-        #norm_matrix[idx,new] = 0.0
-        # set norm matrix value of whole row corresponding to newly drawn trainingp oint to zero so it isnt considered anymore
-        # BADD norm_matrix[idx,:] = 0.0
-        norm_matrix[idx,new] = 0.0 
-    train = np.asarray(train).reshape(ntrain,len(data.columns))
-    train = pd.DataFrame(train, columns=data.columns).sort_values("E")
-    #print(train)
-    return train
-"""           
-
-
-#def structure_based(data=data,ntrain=ntrain):
-#    data = data.sort_values("E")
-#
-#    train = []
-#    test = data.copy()
-#    # take lowest energy point
-#    train.append(data.values[0])
-#    test.drop([0], inplace=True)
-#    #while len(train) < ntrain:
-#    while len(train) < 20:
-#        norms = np.zeros((test.shape[0], len(train)))
-#        #print(norms.shape)
-#        # do not need to loop over training points. Just want norms of last training point
-#        for i, trainpoint in enumerate(train):
-#            for j, row in enumerate(test.itertuples()):
-#                tmp1 = np.asarray(row[1:-1])
-#                tmp2 = trainpoint[:-1]
-#                norm = np.sqrt(np.sum(np.square(tmp1-tmp2)))
-#                norms[j,i] = norm
-#        # find smallest norm of dataset for each current training point
-#        mins = norms.min(axis=0)
-#        #print(mins)
-#        minargs = np.argmin(norms,axis=0) 
-#        #print(minargs)
-#        idx = minargs[np.argmax(mins)]
-#        #print(idx)
-#        #accepted_point = n
-#        #print(minargs)
-#        # TEMPORARY
-#        temp = test.sample(n=1)
-#        train.append(temp.values[0])
-#        test.drop(temp.index[0],inplace=True)
-def structure_based(data=data,ntrain=ntrain):
-    """
-    Very slow but works. Main problem:
-    You are doing the same computations over and over again.
-    Should consider FIXING the size of the test set (just keep full dataset),
-    and EXPANDING the size of the norm matrix so you never have to compute the same norm again and again
-    """
-    train = []
-    test = data.sort_values("E").reset_index(drop=True)
-    # accept lowest energy point, delete from test set
-    train.append(test.values[0])
-    test = test.drop([0]).reset_index(drop=True)
-
-    # accept farthest point from lowest energy point, delete from test set
-    tmp1 = np.tile(train[0][:-1], (test.shape[0],1))
-    tmp2 = test.values[:,:-1]
-    diff = tmp1 - tmp2
-    norms = np.sqrt(np.einsum('ij,ij->i', diff, diff))
-    idx = np.argmax(norms)
-    train.append(test.values[idx])
-    test = test.drop([idx]).reset_index(drop=True)
-    # to accept anothing training point,
-    # 1. Compute the distance of every point in the test dataset to each training point.
-    # 2. Find the test dataset point which has the smallest distance to the training point, for each training point.
-    # 3. Accept the test datapoint which has the LARGEST smallest distance to a training point.
-    # 4. Add accepted datapoint to training set, delete accepted training point from test set
-    while len(train) < ntrain:
-        minnorms = []
-        indices = []
-        for i, trainpoint in enumerate(train):
-            tmp1 = np.tile(trainpoint[:-1], (test.shape[0],1))
-            tmp2 = test.values[:,:-1]
-            diff = tmp1 - tmp2
-            norms = np.sqrt(np.einsum('ij,ij->i', diff, diff))
-            min_norm = norms.min()
-            idx = np.argmin(norms)
-            minnorms.append(min_norm)
-            indices.append(idx)
-        largest_smallest = max(minnorms)
-        final_idx = indices[np.argmax(minnorms)]
-        train.append(test.values[final_idx])
-        #test.drop(final_idx).reset_index(drop=True, inplace=True)
-        test = test.drop(final_idx).reset_index(drop=True)
-    
-    train = np.asarray(train).reshape(ntrain,len(data.columns))
-    train = pd.DataFrame(train, columns=data.columns).sort_values("E")
-    print(train)
-
-
-            
-start = timeit.default_timer()
-sb = fast_structure_based()
-print("Training set generation finished in {} seconds".format(round((timeit.default_timer() - start),2)))
-
 
 def sobol(data=data,ntrain=ntrain):
     delta = 0.002278
@@ -302,15 +105,18 @@ def random(data=data,ntrain=ntrain):
 def norm(n1,n2):
     return np.sqrt(np.sum(np.square(n1-n2)))
 
+start = timeit.default_timer()
+sb = structure_based()
+print("Training set generation finished in {} seconds".format(round((timeit.default_timer() - start),2)))
+
 
 #eo = energy_ordered()
 #sobol = sobol(data)
-#random = random(data)
-#
+random = random(data)
 nbins = 10
-hist = pd.concat([data['E'], sb['E']],axis=1)
-hist.columns = ['Full', 'Structure Based']# 'Random', 'EO']
-hist.plot.hist(bins = nbins, stacked=False, density=True,alpha=0.5, color=['black', 'blue'])
+hist = pd.concat([data['E'], sb['E'], random['E']],axis=1)
+hist.columns = ['Full', 'Structure Based', 'Random']
+hist.plot.hist(bins = nbins, stacked=False, density=True,alpha=0.7, color=['black', 'blue', 'red'])
 plt.show()
 #hist = pd.concat([data['E'], eo['E']],axis=1)
 #hist.columns = ['Full','EO']
