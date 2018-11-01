@@ -1,0 +1,11 @@
+O
+H 1 r1
+H 1 r2 2 a1
+
+r1 = [0.9, 1.2, 7]
+r2 = [0.9, 1.2, 7]
+a1 = [100, 110, 3]
+
+energy = 'regex'
+energy_regex = 'Final Energy:\s+(-\d+\.\d+)'
+
