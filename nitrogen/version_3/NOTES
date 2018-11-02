@@ -1,0 +1,4 @@
+
+We are now trying to pass over a VECTOR in C
+into Python, and then do an operation on the vector, and return a float.
+This is essentially equivalent to a PES evaluation.
