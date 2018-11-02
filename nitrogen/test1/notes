@@ -1,0 +1,6 @@
+
+compile:
+gcc -I /home/adabbott/anaconda3/envs/nitrogen/include/python3.7m -o name name.c
+
+run executable:
+./name

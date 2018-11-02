@@ -1,0 +1,6 @@
+GPy only works on python 3.6. Needed to downgrade. 
+Remaking new env for nitrogen, called nitrogen2:
+
+conda create --name nitrogen2 python=3.6
+source activate nitrogen2
+conda install -c conda-forge GPy
