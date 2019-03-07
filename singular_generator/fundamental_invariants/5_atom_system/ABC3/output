@@ -1,0 +1,40 @@
+                     SINGULAR                                 /  Development
+ A Computer Algebra System for Polynomial Computations       /   version 4.1.0
+                                                           0<
+ by: W. Decker, G.-M. Greuel, G. Pfister, H. Schoenemann     \   Nov 2016
+FB Mathematik der Universitaet, D-67653 Kaiserslautern        \  Debian 1:4.1.0-p3+ds-2build1
+// ** loaded /usr/bin/../share/singular/LIB/finvar.lib (4.0.3.2,June_2016)
+// ** loaded /usr/bin/../share/singular/LIB/algebra.lib (4.0.1.1,Dec_2014)
+// ** loaded /usr/bin/../share/singular/LIB/ring.lib (4.0.3.5,Nov_2016)
+// ** loaded /usr/bin/../share/singular/LIB/primdec.lib (4.0.2.0,Apr_2015)
+// ** loaded /usr/bin/../share/singular/LIB/absfact.lib (4.0.0.0,Jun_2013)
+// ** loaded /usr/bin/../share/singular/LIB/triang.lib (4.0.0.0,Jun_2013)
+// ** loaded /usr/bin/../share/singular/LIB/random.lib (4.0.0.0,Jun_2013)
+// ** loaded /usr/bin/../share/singular/LIB/poly.lib (4.0.0.0,Jun_2013)
+// ** loaded /usr/bin/../share/singular/LIB/inout.lib (4.0.0.0,Jun_2013)
+// ** loaded /usr/bin/../share/singular/LIB/general.lib (4.0.0.1,Jan_2014)
+// ** loaded /usr/bin/../share/singular/LIB/elim.lib (4.0.0.1,Jan_2014)
+// ** loaded /usr/bin/../share/singular/LIB/matrix.lib (4.0.0.0,Jun_2013)
+// ** loaded /usr/bin/../share/singular/LIB/nctools.lib (4.0.3.3,Sep_2016)
+G[1,1]=x1
+G[1,2]=x6+x9+x10
+G[1,3]=x3+x5+x8
+G[1,4]=x2+x4+x7
+G[1,5]=x6^2+x9^2+x10^2
+G[1,6]=x3*x6+x5*x6+x3*x9+x8*x9+x5*x10+x8*x10
+G[1,7]=x2*x6+x4*x6+x2*x9+x7*x9+x4*x10+x7*x10
+G[1,8]=x3^2+x5^2+x8^2
+G[1,9]=x2*x3+x4*x5+x7*x8
+G[1,10]=x2^2+x4^2+x7^2
+G[1,11]=x6^3+x9^3+x10^3
+G[1,12]=x3*x6^2+x5*x6^2+x3*x9^2+x8*x9^2+x5*x10^2+x8*x10^2
+G[1,13]=x2*x6^2+x4*x6^2+x2*x9^2+x7*x9^2+x4*x10^2+x7*x10^2
+G[1,14]=x3^2*x6+x5^2*x6+x3^2*x9+x8^2*x9+x5^2*x10+x8^2*x10
+G[1,15]=x2*x3*x6+x4*x5*x6+x2*x3*x9+x7*x8*x9+x4*x5*x10+x7*x8*x10
+G[1,16]=x2^2*x6+x4^2*x6+x2^2*x9+x7^2*x9+x4^2*x10+x7^2*x10
+G[1,17]=x3^3+x5^3+x8^3
+G[1,18]=x2*x3^2+x4*x5^2+x7*x8^2
+G[1,19]=x2^2*x3+x4^2*x5+x7^2*x8
+G[1,20]=x2^3+x4^3+x7^3
+
+halt 2

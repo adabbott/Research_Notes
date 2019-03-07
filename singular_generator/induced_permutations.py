@@ -184,31 +184,6 @@ def induced_permutations(atomtype_vector, bond_indice_permutations):
         induced_perms.append(cycle)
     return induced_perms
                 
-def write_magma_input(natoms, induced_perms):
-    """
-    Writes a magma input file which can be copy and pasted 
-    to the Magma online code editor for obtaining the fundamental invariants
-    This has been tested against every result in the SI of Shao, Chen, Zhao, Zhang, J Chem Phys 145 2016
-    https://aip.scitation.org/doi/suppl/10.1063/1.4961454
-    For A2B, A2B2, A3B, A4B
-    """
-    A = []
-    nbonds = int((natoms**2 - natoms) / 2)
-    for i in range(nbonds):
-        A.append(i)
-
-    operators = ''
-    for cycle in induced_perms:
-        for subcycle in cycle:
-            operators += str(tuple(subcycle))
-        # add comma and space except at end
-        if cycle != induced_perms[-1]:
-            operators += ', '
-    line1 = "K := RationalField();\n"  
-    line2 = "X := {};\n".format(set(A))
-    line3 = "G := PermutationGroup<X | {}>;\n".format(operators)
-    last = "R := InvariantRing(G,K);\nFundamentalInvariants(R);"
-    return (line1 + line2 + line3 + last)
 
 def write_singular_input(natoms, induced_perms):
     # Singular doesnt tolerate 0 indexing, so we add 1 to every element
@@ -242,7 +217,8 @@ def write_singular_input(natoms, induced_perms):
                     operators += ','
             operators += ')'
         else:
-            operators += '(list' + str(tuple(cycle[0])) + ')'
+            if len(cycle) == 1:
+                operators += '(list' + str(tuple(cycle[0])) + ')'
 
     line1 = "LIB \"finvar.lib\";\n"  
     line2 = "ring R=0,({}),dp;\n".format(",".join(map(str,A)))
@@ -251,20 +227,7 @@ def write_singular_input(natoms, induced_perms):
     line5 = "G;"
     return (line1 + line2 + line3 + line4 + line5)
 
-def process_magma_output(string):
-    """
-    Takes as argument a multiline string of the Magma output and creates a Python list
-    of fundamental invariants as strings
-    """
-    # fix exponents, remove brackets if user included brackets
-    string = string.replace('^', '**').replace('[', '').replace(']', '')
-    # each fundamental invariant is separated by a comma
-    tmp = [FI for FI in string.split(',')] 
-    # clean up whitespace
-    fi_list = [re.sub('\s+', ' ', FI).strip() for FI in tmp]
-    return fi_list
 
-             
 def atom_combinations(N):
     """
     Generates the combinations of atom numbers for a molecular system with total number of atoms equal to N
@@ -280,14 +243,14 @@ def atom_combinations(N):
     return combos
 
 ## use this to test. vector should be in same order as axis of interatomic distances
-atomtype_vector = [2,2]
+atomtype_vector = [2,1]
 bond_indice_permutations = permute_bond_indices(atomtype_vector)
 IP  = induced_permutations(atomtype_vector, bond_indice_permutations)
-
-magma = write_magma_input(sum(atomtype_vector), IP)
-print("Magma Input File:")
-print(magma)
-print("\n")
-print("Singular Input File:")
+#
+#magma = write_magma_input(sum(atomtype_vector), IP)
+#print("Magma Input File:")
+#print(magma)
+#print("\n")
+#print("Singular Input File:")
 singular = write_singular_input(sum(atomtype_vector), IP)
 print(singular)
