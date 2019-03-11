@@ -7,7 +7,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from collections import OrderedDict
 
-datasets = ["../../datasets/h2o","../../datasets/h3o", "../../datasets/h2co", "../../datasets/ochco"]
+#datasets = ["../../datasets/h2o","../../datasets/h3o", "../../datasets/h2co", "../../datasets/ochco"]
+datasets = ["../../datasets/h2o_fi","../../datasets/h3o_fi", "../../datasets/h2co_fi", "../../datasets/ochco_fi"]
 
 def build_model(path):
     data = pd.read_csv(path) 
@@ -29,18 +30,16 @@ def build_model(path):
     xtest = torch.Tensor(data=X_fulltest)
     ytest = torch.Tensor(data=y_fulltest)
 
-    #layers = [(50,), (100,), (200,), (50,50), (100,100), (200,200), (50,50,50,50), (100,100,100,100)]
-    #layers = [(50,), (50,50), (50,50,50), (50,50,50,50)]
     layers = [(20,), (20,20), (20,20,20), (20,20,20,20), (20,20,20,20,20),
     (40,), (40,40), (40,40,40), (40,40,40,40), (40,40,40,40,40),
     (60,), (60,60), (60,60,60), (60,60,60,60), (60,60,60,60,60),
     (80,), (80,80), (80,80,80), (80,80,80,80), (80,80,80,80,80)]
-    #layers = [(100,), (100,100), (100,100,100), (100,100,100,100)]
+    #layers = [(20,20,20,20,20)]
     errors = []
-    
+
     factor = yscaler.var_[0]
     for l in layers:
-        for rstate in range(1):
+        for rstate in range(2):
             torch.manual_seed(rstate)
             depth = len(l)
             # define input structure 
@@ -87,23 +86,9 @@ def build_model(path):
 
             print(l,prev_loss)
             errors.append(prev_loss)
-            #with torch.no_grad():
-            #    p = model(xtest)
-            #    tmploss = metric(p, ytest)
-            #    p = p.detach().numpy()
-            #    predicted_y = yscaler.inverse_transform(p.reshape(-1,1))
-            #    actual_y = yscaler.inverse_transform(y_fulltest)
-            #    # compute error with unscaled data
-            #    rmse = np.sqrt(mean_squared_error(actual_y, predicted_y))
-            #    print('test set error traditional',rmse*219474.63)
-            #    # compute error with scaled data
-            #    hmm = np.sqrt(factor * mean_squared_error(y_fulltest, p.reshape(-1,1)))
-            #    print('test set error direct with factor',hmm*219474.63)
-            #    #errors.append(rmse*219474.63)
-    #print("Best RMSE", min(errors))
+    print("Best RMSE", min(errors))
 
-build_model(datasets[1])
-
-#for path in datasets:
-#    print(path)
-#    build_model(path)
+#build_model(datasets[1])
+for path in datasets:
+    print(path)
+    build_model(path)
