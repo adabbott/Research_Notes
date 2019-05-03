@@ -1,0 +1,180 @@
+\documentclass{article}
+\usepackage{amsmath,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.5in]{geometry}
+
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{mGreen}{rgb}{0,0.3,0.3}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    %numbers=left,                    
+    %numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
+
+\title{Using NITROGEN with Python ML models}
+\date{5-02-2019}
+\author{Adam Abbott}
+\begin{document}
+\maketitle
+\section{System Set-Up}
+Ubuntu 18.04\\
+I use a clean Anaconda virtual environment for compiling, including a fresh install of Python 3.6, gcc compiler, and openblas.
+The Python installation by default includes all of the header files for the Python-C API.
+\begin{lstlisting}[language=bash]
+  > conda create -n nitrogenenv python=3.6 
+  > source activate nitrogenenv 
+  > conda install gcc
+  > conda install openblas 
+\end{lstlisting}
+
+\noindent The version of NITROGEN that I installed is \texttt{nitrogen\_v1.10dev}.\\
+
+\section{Code Changes}
+\noindent Three very small changes need to be made to NITROGEN in order to make the Python interpreter accessible while NITROGEN is running.
+In \texttt{nitrogen/src/main.c}, I add on Line 31:
+\begin{lstlisting}[style=CStyle]
+#include <Python.h>
+\end{lstlisting}
+On Line 37 (beginning of \lstinline[style=CStyle]{int main}):
+\begin{lstlisting}[style=CStyle]
+Py_Initialize();
+\end{lstlisting}
+On line 646: (end of \lstinline[style=CStyle]{int main}):
+\begin{lstlisting}[style=CStyle]
+Py_Finalize();
+\end{lstlisting}
+
+\section{Compilation Notes}
+A few small additions to the default makefiles provided with NITROGEN are needed for linking to Python stuff.
+\begin{itemize}
+\item Top Level Directory (\texttt{/nitrogen\_v1.10dev}) 
+    \begin{itemize}
+    \item makefile: no changes
+    \item makefile.inc: BLAS\_LIB requires link to -lpythonX.Ym library, and  LOCAL\_INC\_DIR requires /path/to/include/pythonX.Ym. In our case, pythonX.Ym is a directory called \texttt{python3.6m}.
+    \end{itemize}
+\item \texttt{/nitrogen\_v1.10dev/nitrogen}
+    \begin{itemize}
+    \item makefile: no changes
+    \end{itemize}
+\item PES Library (calcSurface function) makefile: 
+    \begin{itemize}
+    \item LD\_FLAGS: add ``\$(PY\_LIB)''
+    \item CC\_FLAGS: add ``\$(PY\_INC\_DIR)''
+    \end{itemize}
+\end{itemize}
+
+\newpage
+\section{PES Library}
+The calcSurface function is some ugly code that purely deals with data transfer between C and Python.
+It imports a python file (\texttt{compute\_energy.py}), finds a function in that python file (\texttt{pes()}), and passes data (the cartesian coordinate vector)
+to that function. The contents of the Python file can be freely changed without recompiling the PES Library (which we call \texttt{mlpes.c}), so long as the 
+name of the Python file and the name of its PES function do not change. This means you can try out many different models from entirely different sources just by changing the Python script; no recompilation required.
+
+First a simple Python script  which we call \texttt{compute\_energy.py}. The name of the script matters, it will be referred to in
+the PES Library C code file later. It contains just one function, called \texttt{pes()}:
+As a simple example, the Python script \texttt{compute\_energy.py} looks like the following:
+% [language=Python]
+\begin{lstlisting}[style=CStyle,language=Python]
+# you can freely import whatever Python packages you want
+import numpy as np         
+
+# dummy energy computation: sum of cartesian coordinates
+def pes(geom_vector):
+    g = np.asarray(geom_vector)
+    e = np.sum(g)         
+    return e
+\end{lstlisting}
+Now the corresponding PES Library \texttt{mlpes.c} uses the Python-C API to import the above Python function and pass data through it, returning the energy.
+It was a struggle to get this to work. I'm not even sure if all of this is required. I wrote it once long ago, forgot how I did it, and now it's boiler-plate code. The comments are somewhat useful.
+\newpage
+
+\begin{lstlisting}[style=CStyle]
+/*********
+Use Python ML model in NITROGEN
+***********/
+
+#include "nitLib.h"
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <Python.h> // NEW: For Python-C API functionalities
+
+#define N 3                 //Number of atoms
+
+int getN(){
+    return N;
+}
+
+double calcSurface(double *X, int *PERM){
+    // declare Python objects (description on next comment line)
+    PyObject *pName, *pModule, *pFunc, *pArg, *pDict, *pReturn;
+    // (name of python file), (imported Python module object), (PES function within python file), 
+    // (argument of PES function), (collection of Python objects) (Energy float holder)
+
+    // Name of python file (compute_energy.py)
+    pName = PyUnicode_FromString("compute_energy");         
+    if (!pName)
+    {
+        printf("pName\n");
+        return 0;
+    }
+    // Import python module 
+    pModule = PyImport_Import(pName);                       
+    // Get dictionary mapping between the name of every python object and the objects themselves 
+    pDict = PyModule_GetDict(pModule);                      
+    // Get the Python object corresponding to key in pDict, "pes", which in this case is a function object
+    pFunc = PyDict_GetItemString(pDict, (char*)"pes");      
+    // Create Python Tuple to hold Cartesian coordinates 
+    pArg = PyTuple_New(3 * N);                              
+    // Transfer 'double *X' into a Python Tuple. Put desired input of function into tuple.
+    int i;
+    for(i=0; i < 3 * N; i++)
+    {
+    PyTuple_SetItem(pArg, i, PyFloat_FromDouble(X[i]));
+    }
+    // Call the function on the tuple argument and get the result as a python object (a float, energy in wavenumbers)
+    // Arguments are (python function, () means tuple, O means python object, pArg is python object)
+    pReturn = PyObject_CallFunction(pFunc, (const char*)"(O)", pArg);
+    PyErr_Print();
+    // Cast Python float back to C double
+    double value = PyFloat_AsDouble(pReturn);                   
+    // Print result (useful for debugging, but fills NITROGEN output with clutter. Worth it IMO)
+    printf("Output of python function: %f\n", value);           
+    return value;
+}
+\end{lstlisting}
+
+Once the above script is compiled into \texttt{mlpes.so}, the executable can be used with any 3-atom system Python pes function.
+4-atom systems, for example, just require changing \lstinline[style=CStyle]{#define N 3} to 4 and recompiling.
+
+
+
+
+
+
+%\begin{itemize}
+%\item Line 31: \lstinline{#inclu 
+%\end{itemize}
+
+
+\end{document}
