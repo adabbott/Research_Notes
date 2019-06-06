@@ -511,8 +511,9 @@ input_string = ("""
                 hp_maxit = 20
                 use_pips = true
                 """)
-
-gp = peslearn.ml.GaussianProcess("PES.dat", input_object, molecule_type='A2B')
+                
+inp = peslearn.InputProcessor(input_string)
+gp = peslearn.ml.GaussianProcess("PES.dat", inp, molecule_type='A2B')
 gp.optimize_model()
 ```
 
