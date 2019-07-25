@@ -272,8 +272,8 @@ a1,r1,r2,E
 108.00,1.0000,1.0000,-76.240995054410
 ```
 ```python
-r0,r1,r2,E
-1.5181   0.9600   0.9600-   76.243202980383
+r0       r1       r2       E
+1.5181   0.9600   0.9600   -76.243202980383
 1.4554   0.9500   0.9500   -76.242743191056
 1.4941   1.0000   0.9500   -76.242037809799
 ```
@@ -475,18 +475,36 @@ The `compute_energy.py` file can be imported and used. Here's an example python 
 
 ```python
 from compute_energy import pes
+import numpy as np
 
+interatomic_geoms = np.loadtxt('new_geometries.dat')
+energies = pes(interatomic_geoms, cartesian=False)
+print(energies)
+
+#prints:
+#[[-76.24099496]
+# [-76.24031118]
+# [-76.24024971]]
+```
+
+```python
+1.5181   0.9600   0.9600  
+1.4554   0.9500   0.9500  
+1.4941   1.0000   0.9500 
+```
+
+```
 cart_geoms = [[0.0000, 0.0000, 1.1000, 0.0000, 0.7361, -0.4250, 0.0000, 0.0000, 0.0000],
               [0.0000, 0.2000, 1.2000, 0.0000, 0.7461, -0.4150, 0.0000, 0.0000, 0.1000],
               [0.0000, 0.1000, 1.3000, 0.0000, 0.7561, -0.4350, 0.0000, 0.0000, 0.2000]]
 
-energies1 = pes(cart_geoms, cartesian=True)
-print(energies1)
+energies = pes(cart_geoms, cartesian=True)
+print(energies)
 
 interatomic_geoms = np.array([[1.494050142500,1.000000000000,1.000000000000],
                               [1.597603916000,1.000000000000,0.950000000000],
                               [1.418793563200,1.000000000000,0.950000000000]])
-
+interatomic_geoms = np.loadtxt(
 energies2 = pes(interatomic_geoms, cartesian=False)
 print(energies2)
 ```
@@ -511,8 +529,9 @@ input_string = ("""
                 hp_maxit = 20
                 use_pips = true
                 """)
-
-gp = peslearn.ml.GaussianProcess("PES.dat", input_object, molecule_type='A2B')
+                
+inp = peslearn.InputProcessor(input_string)
+gp = peslearn.ml.GaussianProcess("PES.dat", inp, molecule_type='A2B')
 gp.optimize_model()
 ```
 
