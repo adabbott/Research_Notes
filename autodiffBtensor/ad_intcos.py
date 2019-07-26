@@ -2,6 +2,11 @@ import torch
 import math
 import ad_v3d
 
+# constants needed for TORS
+fix_val_near_pi = 1.57
+v3d_tors_angle_lim = 0.017
+v3d_tors_cos_tol = 1e-10
+
 def qValues(intcos, geom):
     """Calculates internal coordinates from cartesian geometry
     Parameters
@@ -113,9 +118,20 @@ class TORS(object):
         else: 
             return 0
 
-    # compute angle and return value in radians
     def q(self, geom):
-        check, tau = ad_v3d.tors(geom[self.A], geom[self.B], geom[self.C], geom[self.D])
-        return tau
+        try:
+            tau = ad_v3d.tors(geom[self.A], geom[self.B], geom[self.C], geom[self.D])
+        except: 
+            raise Exception("Tors.q: unable to compute torsion value")
+
+        # Extend values domain of torsion angles beyond pi or -pi, so that
+        # delta(values) can be calculated
+        if self._near180 == -1 and tau > fix_val_near_pi:
+            return tau - 2.0 * math.pi
+        elif self._near180 == +1 and tau < -1 * fix_val_near_pi:
+            return tau + 2.0 * math.pi
+        else:
+            return tau
+
 
 

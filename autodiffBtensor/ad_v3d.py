@@ -15,6 +15,8 @@ def normalize(v1, Rmin=1.0e-8, Rmax=1.0e15):
     """
     n = norm(v1)
     if n < Rmin or n > Rmax:
+        print('vector:', v1)
+        print('norm:', n)
         raise Exception("Could not normalize vector. Vector norm beyond tolerance")
     else:
         return v1 / n 
@@ -31,6 +33,30 @@ def eAB(p1, p2):
 
 def cross(u, v):
     return torch.cross(u, v)
+
+def are_parallel(u, v):
+    """ Determines if two vectors are parallel within tolerance (1e-10)"""
+    if math.fabs(dot(u, v) - 1.0e0) < DOT_PARALLEL_LIMIT:
+        return True
+    else:
+        return False
+
+def are_antiparallel(u, v):
+    """ Determines if two vectors are antiparallel within tolerance (1e-10)"""
+    if math.fabs(dot(u, v) + 1.0e0) < DOT_PARALLEL_LIMIT:
+        return True
+    else:
+        return False
+
+def are_parallel_or_antiparallel(u, v):
+    """
+    Determines if two vectors are parallel and or antiparallal
+    Returns
+    -------
+    boolean
+        if vectors are either parallel or antiparallel
+    """
+    return are_parallel(u, v) or are_antiparallel(u, v)
 
 def angle(A, B, C, tol=1.0e-14):
     """ Compute and return angle in radians A-B-C (between vector B->A and vector B->C)
@@ -83,10 +109,12 @@ def _calc_angle(vec_1, vec_2, tol=1.0e-14):
     """
 
     dotprod = dot(vec_1, vec_2)
-    # If close to 0 or 180, the gradient will be 0 from the round function
+    # TODO If close to 0 or 180, the gradient will be 0 from the round function
     if dotprod > 1.0 - tol:
+        print("ROUND WARNING")
         phi = torch.round(dotprod)
     elif dotprod < -1.0 + tol:
+        print("ROUND WARNING")
         phi = torch.round(dotprod)
     else:
         phi = torch.acos(dotprod)
@@ -99,46 +127,48 @@ def tors(A, B, C, D):
     tors_cos_tol   = TORS_COS_TOL
 
     # Form e vectors
-    EAB = eAB(A, B)
-    EBC = eAB(B, C)
-    ECD = eAB(C, D)
+    try:
+        EBA = eAB(B, A)
+        EAB = -1 * EBA
+    except AlgError as error:
+        #logger.warning("Could not normalize %d, %d vector in tors()\n" % (str(A), str(B)))
+        raise Exception("Could not normalize %d, %d vector in tors()\n" % (str(A), str(B)))
+    try:
+        EBC = eAB(B, C)
+    except AlgError as error:
+        #logger.warning("Could not normalize %d, %d vector in tors()\n" % (str(B), str(C)))
+        raise Exception("Could not normalize %d, %d vector in tors()\n" % (str(B), str(C)))
+    try:
+        ECB = eAB(C, B)
+        EBC = -1 * ECB
+    except AlgError as error:
+        # This is a bug I think: str(C), str(D) should be C, B
+        #logger.warning("Could not normalize %d, %d vector in tors()\n" % (str(C), str(D)))
+        raise Exception("Could not normalize %d, %d vector in tors()\n" % (str(C), str(B)))
+    try:
+        ECD = eAB(C, D)
+    except AlgError as error:
+        raise Exception("Could not normalize %d, %d vector in tors()\n" % (str(C), str(D)))
 
     # Compute bond angles
-    phi_123 = angle(A, B, C)
-    phi_234 = angle(B, C, D)
+    phi_123 = _calc_angle(EBA, EBC)
+    phi_234 = _calc_angle(ECB, ECD)
+    # Dr. Allen's notes:
+    tau = -torch.asin(dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234)))
+    tau_final = tau
 
-    if phi_123 < phi_lim or phi_123 > (math.pi - phi_lim) or \
-       phi_234 < phi_lim or phi_234 > (math.pi - phi_lim):
-        print('3 Colinear atoms in torsion definition')
-        return False, 0.0
-
-    tmp = cross(EAB, EBC)
-    tmp2 = cross(EBC, ECD)
-    tval = dot(tmp, tmp2) / (torch.sin(phi_123) * torch.sin(phi_234))
-    print('tval', tval)
-
-    if tval >= 1.0 - tors_cos_tol:  # accounts for numerical leaking out of range
-        #tau = 0.0
-        tau = torch.round(tval)
-    elif tval <= -1.0 + tors_cos_tol:
-        # forces tval to be -1.0. Rounding causes gradient to be 0.
-        #tau = torch.acos(torch.round(tval)) #acos(-1.0)
-        tau = torch.acos(tval) #acos(-1.0)
-    else:
-        tau = torch.acos(tval)
-
-    # determine sign of torsion ; this convention matches Wilson, Decius and Cross
-    if tau != math.pi: #torch.acos(-1.0):  # no torsion will get value of -pi; Range is (-pi,pi].
-        tmp = cross(EBC, ECD)
-        tval = dot(EAB, tmp)
-        if tval < 0:
-            tau_final = -1 * tau  # removed inplace operation
-        else:
-            tau_final = tau
-    else:
-        tau_final = tau
-
-    return True, tau_final
+    ## determine sign of torsion ; this convention matches Wilson, Decius and Cross
+    #if tau != math.pi: # no torsion will get value of -pi; Range is (-pi,pi].
+    #    tmp = cross(EBC, ECD)
+    #    tval = dot(EAB, tmp)
+    #    if tval < 0:
+    #        print('CHANGING SIGN!!!')
+    #        tau_final = -1 * tau  # removed inplace operation by creating new variable, tau_final
+    #    else:
+    #        tau_final = tau
+    #else:
+    #    tau_final = tau
+    return tau_final
 
 
 #TODO TODO TODO TODO
