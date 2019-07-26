@@ -1,4 +1,5 @@
 import torch
+import math
 import ad_v3d
 
 def qValues(intcos, geom):
@@ -38,14 +39,45 @@ class BEND(object):
         self.A = atoms[0]
         self.B = atoms[1]
         self.C = atoms[2]
-        self.bendType = bendType # just "REGULAR" bends for now, no linear or complimentary
+        self._bendType = bendType # just "REGULAR" bends for now, no linear or complimentary
         self._axes_fixed = False
 
     def compute_axes(self, geom):
         u = ad_v3d.eAB(geom[self.B], geom[self.A])  # B->A
         v = ad_v3d.eAB(geom[self.B], geom[self.C])  # B->C
-        self._w = ad_v3d.normalize(ad_v3d.cross(u,v)) # cross product and normalize
-        self._x = ad_v3d.normalize(u + v)  # angle bisector
+
+        if self._bendType == "REGULAR":                   # not a linear-bend type
+            self._w = ad_v3d.normalize(ad_v3d.cross(u,v)) # cross product and normalize
+            self._x = ad_v3d.normalize(u + v)             # angle bisector
+            return
+
+        tv1 = torch.tensor([1,0,0], dtype=torch.float64, requires_grad=True) 
+        tmp_tv2 = torch.tensor([0,1,1], dtype=torch.float64, requires_grad=True)
+        tv2 = ad_v3d.normalize(tmp_tv2)
+
+        u_tv1 = ad_v3d.are_parallel_or_antiparallel(u, tv1)
+        v_tv1 = ad_v3d.are_parallel_or_antiparallel(v, tv1)
+        u_tv2 = ad_v3d.are_parallel_or_antiparallel(u, tv2)
+        v_tv2 = ad_v3d.are_parallel_or_antiparallel(v, tv2)
+
+        # handle both types of linear bends
+        if not ad_v3d.are_parallel_or_antiparallel(u, v):
+            self._w = ad_v3d.normalize(ad_v3d.cross(u, v))  # orthogonal vector
+            self._x = ad_v3d.normalize(u + v)
+        # u || v but not || to tv1.
+        elif not u_tv1 and not v_tv1:
+            self._w = ad_v3d.normalize(ad_v3d.cross(u, tv1))
+            self._x = ad_v3d.normalize(ad_v3d.cross(self._w, u))
+        # u || v but not || to tv2.
+        elif not u_tv2 and not v_tv2:
+            self._w = ad_v3d.normalize(ad_v3d.cross(u,tv2))
+            self._x = ad_v3d.normalize(ad_v3d.cross(self._w, u))
+
+        if self._bendType == "COMPLEMENT":
+            w2 = torch.copy(self._w)
+            self._w = -1.0 * self._x  # -w_normal -> x_complement
+            self._x = w2
+        return
         
     def q(self, geom):
         if not self._axes_fixed:
