@@ -120,6 +120,7 @@ class TORS(object):
 
     def q(self, geom):
         try:
+            #print("TORSION ORDER", self.A, self.B, self.C, self.D)
             tau = ad_v3d.tors(geom[self.A], geom[self.B], geom[self.C], geom[self.D])
         except: 
             raise Exception("Tors.q: unable to compute torsion value")

@@ -21,13 +21,18 @@ def test_molecule(psi_geom, ad_intcoords, optking_intcoords):
     npgeom = np.array(psi_geom) * bohr2ang
     geom = torch.tensor(npgeom, requires_grad=True)
     # Autodiff B tensor (specify 1st order only)
+    autodiff_coords = ad_intcos.qValues(ad_intcoords, geom)
+    #print(autodiff_coords)
     B1 = autodiff_Btensor(ad_intcoords, geom, order=1)
     #print(B1)
     # Original PyOptKing B tensor
+    optking_coords = optking.intcosMisc.qValues(optking_intcoords, npgeom)
+    #print(optking_coords)
     B2 = optking.intcosMisc.Bmat(optking_intcoords, npgeom)
     #print(B2)
     # Prints True if B-matrices are the same
-    print(torch.allclose(B1, torch.tensor(B2)))
+    print('Same Internal Coordinates...',torch.allclose(autodiff_coords, torch.tensor(optking_coords)))
+    print('Same B-Matrix...',torch.allclose(B1, torch.tensor(B2)))
 
 h2o = psi4.geometry(
 '''
@@ -86,19 +91,50 @@ H           -0.152976834267    -1.197746817763    -0.930040622624
 '''
 )
 
-print("Testing water...", end=' ')
+hooh = psi4.geometry(
+'''
+H
+O 1 0.9
+O 2 1.4 1 100.0
+H 3 0.9 2 100.0 1 114.0
+'''
+)
+hooh_autodiff = [ad_intcos.STRE(0,1), ad_intcos.STRE(0,2), ad_intcos.BEND(2,1,0), ad_intcos.STRE(3,2), ad_intcos.BEND(3,2,1), ad_intcos.TORS(3,2,1,0)]
+hooh_optking = [optking.Stre(0,1), optking.Stre(0,2), optking.Bend(2,1,0), optking.Stre(3,2), optking.Bend(3,2,1), optking.Tors(3,2,1,0)]
+
+sf4 = psi4.geometry(
+'''
+ S  0.00000000  -0.00000000  -0.30618267
+ F -1.50688420  -0.00000000   0.56381732
+ F  0.00000000  -1.74000000  -0.30618267
+ F -0.00000000   1.74000000  -0.30618267
+ F  1.50688420   0.00000000   0.56381732
+'''
+)
+# try to break TORS
+sf4_autodiff = [ad_intcos.TORS(0,1,2,3), ad_intcos.TORS(1,3,4,0), ad_intcos.TORS(0,2,1,4)]
+sf4_optking = [optking.Tors(0,1,2,3), optking.Tors(1,3,4,0), optking.Tors(0,2,1,4)]
+
+
+print("Testing water...")
 test_molecule(h2o.geometry(), h2o_autodiff, h2o_optking)
 
-print("Testing linear water...", end=' ')
+print("Testing linear water...")
 test_molecule(linear_h2o.geometry(), linear_h2o_autodiff, linear_h2o_optking)
 
-print("Testing ammonia...", end=' ')
+print("Testing ammonia...")
 test_molecule(ammonia.geometry(), ammonia_autodiff, ammonia_optking)
 
-print("Testing formaldehyde...", end=' ')
+print("Testing formaldehyde...")
 test_molecule(h2co.geometry(), h2co_autodiff, h2co_optking)
 
-print("Testing bent formaldehyde...", end=' ')
+print("Testing bent formaldehyde...")
 test_molecule(bent_h2co.geometry(), h2co_autodiff, h2co_optking)
-    
+
+print("Testing hooh...")
+test_molecule(hooh.geometry(), hooh_autodiff, hooh_optking)
+#
+print("Testing nonsense sf4 ...")
+test_molecule(sf4.geometry(), sf4_autodiff, sf4_optking)
+#    
 

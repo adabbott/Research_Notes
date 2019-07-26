@@ -153,45 +153,131 @@ def tors(A, B, C, D):
     # Compute bond angles
     phi_123 = _calc_angle(EBA, EBC)
     phi_234 = _calc_angle(ECB, ECD)
-    # Dr. Allen's notes:
-    tau = -torch.asin(dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234)))
-    tau_final = tau
 
-    ## determine sign of torsion ; this convention matches Wilson, Decius and Cross
-    #if tau != math.pi: # no torsion will get value of -pi; Range is (-pi,pi].
+    up_lim = math.pi - phi_lim
+    if phi_123 < phi_lim or phi_123 > up_lim or phi_234 < phi_lim or phi_234 > up_lim:
+        raise Exception("Tors angle for %d, %d, %d, %d is too large for good "
+                                    + "definition" % (str(A), str(B), str(C), str(D)))
+
+    tmp = cross(EAB, EBC)
+    tmp2 = cross(EBC, ECD)
+
+    #This gives correct internal coordinate value, but completely wrong B tensor 
+    #tval = dot(tmp, tmp2) / (torch.sin(phi_123) * torch.sin(phi_234))
+    #tau = torch.acos(tval)
+    #This gives correct B tensor for h2co, but wrong sign, and wrong internal coordinate value
+    #tval = dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
+    #tau = torch.asin(tval)
+
+    # This works for all examples except SF4, is that okay? Known bug with OPTKING
+    #This gives correct B tensor for h2co. Wrong internal coordinate value 
+    tval = dot(EAB, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
+    tau = torch.asin(tval)
+    return tau + math.pi
+
+
+    #tau = torch.asin(dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234)))
+    #print('tau',tau)
+    #tval = dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
+    #if tval >= 1.0 - tors_cos_tol:  # accounts for numerical leaking out of range
+    #    tau.item() = 0.0
+    #elif tval <= -1.0 + tors_cos_tol:
+    #    tau.item() = math.pi
+
+    # Can't just force tval = 0.0 or pi, or the derivative graph is lost. 
+    # This is a trick: force it to be a value while adding a subtracting 
+    #if tval >= 1.0 - tors_cos_tol:  # accounts for numerical leaking out of range
+    #    # YOU WANT TAU TO BE 0.0, tval to become 1.0
+    #    #factor = 1.0 / tval.clone().detach() 
+    #    factor = 1.0 / tval 
+    #    tval2 = tval * factor
+    #    tau = torch.acos(tval2)
+    #elif tval <= -1.0 + tors_cos_tol:
+    #    # YOU WANT TAU TO BE pi, tval to become -1.0
+    #    #factor = -1.0 / tval.clone().detach() 
+    #    factor = -1.0 / tval 
+    #    tval2 = tval * factor
+    #    print("UNSTABLE -1.0", tval)
+    #    tau = torch.acos(tval2)
+    #else:
+    #    tau = torch.acos(tval)
+    #tau = torch.acos(tval2)
+    #tau = torch.asin(tval)
+    #return tau
+
+    #TODO sign convention
+    # determine sign of torsion ; this convention matches Wilson, Decius and Cross
+    #if tau != math.pi:  # no torsion will get value of -pi; Range is (-pi,pi].
+    #if not torch.allclose(tau, torch.tensor(math.pi, dtype=torch.float64)):# != math.pi:  # no torsion will get value of -pi; Range is (-pi,pi].
     #    tmp = cross(EBC, ECD)
     #    tval = dot(EAB, tmp)
     #    if tval < 0:
-    #        print('CHANGING SIGN!!!')
     #        tau_final = -1 * tau  # removed inplace operation by creating new variable, tau_final
     #    else:
     #        tau_final = tau
     #else:
+    #    print("ITS PI!")
     #    tau_final = tau
-    return tau_final
+    #return tau_final
+    
+
+    ## determine sign of torsion ; this convention matches Wilson, Decius and Cross
+    #if tau != math.pi: # no torsion will get value of -pi; Range is (-pi,pi].
+    #    print("NOT EQUAL PI")
+    #    tmp = cross(EBC, ECD)
+    #    tval = dot(EAB, tmp)
+    #    #if tval < 0:
+    #    #    print('CHANGING SIGN!!!')
+    #    #    tau_final = -1 * tau  # removed inplace operation by creating new variable, tau_final
+    #    #else:
+    #    #    tau_final = tau
+    #    if tval < 0:
+    #        tau_final = tau
+    #    else:
+    #        tau_final = tau
+    #else:
+    #    print("EQUAL PI")
+    #    tau_final = -1 * tau
+    #return tau_final
 
 
 #TODO TODO TODO TODO
-# Compute and return angle in dihedral angle in radians A-B-C-D
-# returns false if bond angles are too large for good torsion definition
+# NOT MODIFIED YET
 def oofp(A, B, C, D):
-    check1, eBA = eAB(B, A)
-    check2, eBC = eAB(B, C)
-    check3, eBD = eAB(B, D)
-    if not check1 or not check2 or not check3:
-        return False, 0.0
+    """ Compute and return angle in dihedral angle in radians A-B-C-D
+    returns false if bond angles are too large for good torsion definition
+    """
+    logger = logging.getLogger(__name__)
+    try:
+        eBA = eAB(B, A)
+    except AlgError as error:
+        logger.warning("Could not normalize %d, %d vector in tors()\n" % (str(B), str(A)))
+        raise
+    try:
+        eBC = eAB(B, C)
+    except AlgError as error:
+        logger.warning("Could not normalize %d, %d vector in tors()\n" % (str(B), str(C)))
+        raise
+    try:
+        eBD = eAB(B, D)
+    except AlgError as error:
+        logger.warning("Could not normalize %d, %d vector in tors()\n" % (str(B), str(D)))
+        raise
 
-    check1, phi_CBD = angle(C, B, D)
-    if not check1:
-        return False, 0.0
+    phi_CBD = _calc_angle(eBC, eBD)
 
     # This shouldn't happen unless angle B-C-D -> 0,
-    if torch.sin(phi_CBD) < op.Params.v3d_tors_cos_tol:  #reusing parameter
-        return False, 0.0
+    if sin(phi_CBD) < op.Params.v3d_tors_cos_tol:  # reusing parameter
+        raise AlgError("Angle: %d, %d, %d is to close to zero in oofp\n"
+                                    % (str(C), str(B), str(D)))
 
-    dotprod = dot(cross(eBC, eBD), eBA) / torch.sin(phi_CBD)
+    dotprod = dot(cross(eBC, eBD), eBA) / sin(phi_CBD)
 
-    if dotprod > 1.0: tau = torch.acos(-1.0)
-    elif dotprod < -1.0: tau = -1 * torch.acos(-1.0)
-    else: tau = torch.asin(dotprod)
-    return True, tau
+    if dotprod > 1.0:
+        tau = acos(-1)
+    elif dotprod < -1.0:
+        tau = -1 * acos(-1)
+    else:
+        tau = asin(dotprod)
+    return tau
+
