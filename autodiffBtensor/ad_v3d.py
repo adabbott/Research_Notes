@@ -5,6 +5,7 @@ import torch
 TORS_ANGLE_LIM = 0.017
 TORS_COS_TOL   = 1e-10
 DOT_PARALLEL_LIMIT = 1.e-10
+fix_val_near_pi = 1.57
 
 def norm(v):
     return torch.norm(v)
@@ -81,17 +82,17 @@ def angle(A, B, C, tol=1.0e-14):
     except: 
         raise Exception("Could not normalize eBA in angle()\n")
 
-    dotprod = dot(eBA, eBC)
-    if dotprod > 1.0 - tol:
-        #phi = 0.0
-        phi = torch.tensor(0.0, requires_grad=True)
-    elif dotprod < -1.0 + tol:
-        phi = torch.acos(torch.tensor(-1.0, requires_grad=True))
-    else:
-        phi = torch.acos(dotprod)
-    return phi
+    #dotprod = dot(eBA, eBC)
+    #if dotprod > 1.0 - tol:
+    #    #phi = 0.0
+    #    phi = torch.tensor(0.0, requires_grad=True)
+    #elif dotprod < -1.0 + tol:
+    #    phi = torch.acos(torch.tensor(-1.0, requires_grad=True))
+    #else:
+    #    phi = torch.acos(dotprod)
+    #return phi
 
-    #return _calc_angle(eBA, eBC, tol)
+    return _calc_angle(eBA, eBC, tol)
 
 def _calc_angle(vec_1, vec_2, tol=1.0e-14):
     """
@@ -109,15 +110,17 @@ def _calc_angle(vec_1, vec_2, tol=1.0e-14):
     """
 
     dotprod = dot(vec_1, vec_2)
+    #print("DOT PRODUCT", dotprod)
+    phi = torch.acos(dotprod)
     # TODO If close to 0 or 180, the gradient will be 0 from the round function
-    if dotprod > 1.0 - tol:
-        print("ROUND WARNING")
-        phi = torch.round(dotprod)
-    elif dotprod < -1.0 + tol:
-        print("ROUND WARNING")
-        phi = torch.round(dotprod)
-    else:
-        phi = torch.acos(dotprod)
+    #if dotprod > 1.0 - tol:
+    #    print("ROUND WARNING")
+    #    phi = torch.round(dotprod)
+    #elif dotprod < -1.0 + tol:
+    #    print("ROUND WARNING")
+    #    phi = torch.round(dotprod)
+    #else:
+    #    phi = torch.acos(dotprod)
     return phi
 
 # Compute and return angle in dihedral angle in radians A-B-C-D
@@ -161,84 +164,29 @@ def tors(A, B, C, D):
 
     tmp = cross(EAB, EBC)
     tmp2 = cross(EBC, ECD)
+    tval = dot(tmp, tmp2) / (torch.sin(phi_123) * torch.sin(phi_234))
+    # Both acos and asin have the same derivatives, except for a minus sign. 
+    # Must compute the internal coordinates in such a way that the derivatives are not evaluated at fringes of acos(x) 
+    if torch.allclose(tval, torch.tensor(-1.00000000, dtype=torch.float64)):
+        tval = dot(EAB, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
+        tau = torch.asin(tval) + math.pi
+    elif torch.allclose(tval, torch.tensor(1.00000000, dtype=torch.float64)):
+        tval = dot(EAB, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
+        tau = -torch.asin(tval)  
+    else:
+        tau = torch.acos(tval)
 
-    #This gives correct internal coordinate value, but completely wrong B tensor 
-    #tval = dot(tmp, tmp2) / (torch.sin(phi_123) * torch.sin(phi_234))
-    #tau = torch.acos(tval)
-    #This gives correct B tensor for h2co, but wrong sign, and wrong internal coordinate value
-    #tval = dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
-    #tau = torch.asin(tval)
-
-    # This works for all examples except SF4, is that okay? Known bug with OPTKING
-    #This gives correct B tensor for h2co. Wrong internal coordinate value 
-    tval = dot(EAB, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
-    tau = torch.asin(tval)
-    return tau + math.pi
-
-
-    #tau = torch.asin(dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234)))
-    #print('tau',tau)
-    #tval = dot(EBA, cross(ECB, ECD)) / (torch.sin(phi_123) * torch.sin(phi_234))
-    #if tval >= 1.0 - tors_cos_tol:  # accounts for numerical leaking out of range
-    #    tau.item() = 0.0
-    #elif tval <= -1.0 + tors_cos_tol:
-    #    tau.item() = math.pi
-
-    # Can't just force tval = 0.0 or pi, or the derivative graph is lost. 
-    # This is a trick: force it to be a value while adding a subtracting 
-    #if tval >= 1.0 - tors_cos_tol:  # accounts for numerical leaking out of range
-    #    # YOU WANT TAU TO BE 0.0, tval to become 1.0
-    #    #factor = 1.0 / tval.clone().detach() 
-    #    factor = 1.0 / tval 
-    #    tval2 = tval * factor
-    #    tau = torch.acos(tval2)
-    #elif tval <= -1.0 + tors_cos_tol:
-    #    # YOU WANT TAU TO BE pi, tval to become -1.0
-    #    #factor = -1.0 / tval.clone().detach() 
-    #    factor = -1.0 / tval 
-    #    tval2 = tval * factor
-    #    print("UNSTABLE -1.0", tval)
-    #    tau = torch.acos(tval2)
-    #else:
-    #    tau = torch.acos(tval)
-    #tau = torch.acos(tval2)
-    #tau = torch.asin(tval)
-    #return tau
-
-    #TODO sign convention
-    # determine sign of torsion ; this convention matches Wilson, Decius and Cross
-    #if tau != math.pi:  # no torsion will get value of -pi; Range is (-pi,pi].
-    #if not torch.allclose(tau, torch.tensor(math.pi, dtype=torch.float64)):# != math.pi:  # no torsion will get value of -pi; Range is (-pi,pi].
-    #    tmp = cross(EBC, ECD)
-    #    tval = dot(EAB, tmp)
-    #    if tval < 0:
-    #        tau_final = -1 * tau  # removed inplace operation by creating new variable, tau_final
-    #    else:
-    #        tau_final = tau
-    #else:
-    #    print("ITS PI!")
-    #    tau_final = tau
-    #return tau_final
-    
-
-    ## determine sign of torsion ; this convention matches Wilson, Decius and Cross
-    #if tau != math.pi: # no torsion will get value of -pi; Range is (-pi,pi].
-    #    print("NOT EQUAL PI")
-    #    tmp = cross(EBC, ECD)
-    #    tval = dot(EAB, tmp)
-    #    #if tval < 0:
-    #    #    print('CHANGING SIGN!!!')
-    #    #    tau_final = -1 * tau  # removed inplace operation by creating new variable, tau_final
-    #    #else:
-    #    #    tau_final = tau
-    #    if tval < 0:
-    #        tau_final = tau
-    #    else:
-    #        tau_final = tau
-    #else:
-    #    print("EQUAL PI")
-    #    tau_final = -1 * tau
-    #return tau_final
+    # Sign convention
+    if not torch.allclose(tau, torch.tensor(math.pi, dtype=torch.float64)):
+        tmp = cross(EBC, ECD)
+        tval = dot(EAB, tmp)
+        if tval < 0:
+            tau_final = -1 * tau  # removed inplace operation by creating new variable, tau_final
+        else:
+            tau_final = tau
+    else:
+        tau_final = tau
+    return tau_final
 
 
 #TODO TODO TODO TODO

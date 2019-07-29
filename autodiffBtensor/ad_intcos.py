@@ -118,6 +118,17 @@ class TORS(object):
         else: 
             return 0
 
+    def updateOrientation(self, geom):
+        tval = self.q(geom)
+        if tval > op.Params.fix_val_near_pi:
+            self._near180 = +1
+        elif tval < -1 * op.Params.fix_val_near_pi:
+            self._near180 = -1
+        else:
+            self._near180 = 0
+        return
+
+
     def q(self, geom):
         try:
             #print("TORSION ORDER", self.A, self.B, self.C, self.D)
