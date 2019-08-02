@@ -85,8 +85,7 @@ def cartesian_freq(hess, m):
     idx = cartlamda.argsort()[::-1]
     cartlamda = cartlamda[idx]
     freqs = np.sqrt(cartlamda) * convert
-    print(freqs[:-6])
-    return freqs[:-6]
+    return freqs[:-6], cartL
 
 def internal_freq(hess, internals, geom, m):
     """
@@ -97,7 +96,7 @@ def internal_freq(hess, internals, geom, m):
     m : numpy array of masses in amu
     Returns 
     -------
-    Frequencies in wavenumbers
+    Frequencies in wavenumbers, normal coordinates
     """
     m = np.repeat(m,3)
     M = 1 / m
@@ -106,11 +105,11 @@ def internal_freq(hess, internals, geom, m):
     G = np.einsum('in,jn,n->ij', B, B, M)
     GF = G.dot(hess)
     intlamda, intL = np.linalg.eig(GF)
+    print('THIS',intlamda)
     idx = intlamda.argsort()[::-1]
     intlamda = intlamda[idx]
     freqs = np.sqrt(intlamda) * convert
-    print(freqs)
-    return freqs
+    return freqs, intL
 
 def cartHess2intHess(H, intcos, geom):
     """
@@ -126,9 +125,6 @@ def cartHess2intHess(H, intcos, geom):
     Atranspose = np.dot(Ginv, B)
     Hq = np.dot(Atranspose, np.dot(H, Atranspose.T))
     return Hq
-
-
-
 
 # this is optimized tightly, but apparently model was not trained on true equilibrium, just approximate. Next geom is true geom the model was trained on
 #cartesians = torch.tensor([[0.0000000000,  1.0144292965, -0.0959637982],
@@ -167,16 +163,57 @@ psihess = np.array(wfn.hessian())
 psihess /= 0.529177249**2
 
 m = np.array([1.007825032230, 1.007825032230, 15.994914619570])
-print("Manually computed frequencies with Psi4 Hessian")
-psi4freq = cartesian_freq(psihess, m)
-print("Manually computed frequencies with NN with Cartesian Hessian")
-nnfreq = cartesian_freq(hcart.detach().numpy(), m)
-print("Manually computed frequencies with NN with interatomic distance coordinate Hessian")
-nnfreq2 = internal_freq(hint.detach().numpy(), get_interatomics(3), cartesians, m)
-print("Manually computed frequencies with NN with curvilinear internal coordinate Hessian")
+
+psi4freq, junk = cartesian_freq(psihess, m)
+print("Manually computed frequencies with Psi4 Hessian", psi4freq)
+
+nnfreq, junk = cartesian_freq(hcart.detach().numpy(), m)
+print("Manually computed frequencies with NN with Cartesian Hessian", nnfreq)
+
+nnfreq2, junk = internal_freq(hint.detach().numpy(), get_interatomics(3), cartesians, m)
+print("Manually computed frequencies with NN with interatomic distance coordinate Hessian", nnfreq2)
+
 internals = [Btensors.ad_intcos.STRE(0,2), Btensors.ad_intcos.STRE(1,2), Btensors.ad_intcos.BEND(0,2,1)]
 curvi_inthess = cartHess2intHess(hcart.detach().numpy(), internals, cartesians)
-nnfreq2 = internal_freq(curvi_inthess, internals, cartesians, m)
+nnfreq3, L = internal_freq(curvi_inthess, internals, cartesians, m)
+print("Manually computed frequencies with NN with curvilinear internal coordinate Hessian", nnfreq3)
+
+
+# Cubic force constants in curvilinear coordinates
+M = np.sqrt(1 / np.repeat(m,3))
+B = Btensors.ad_btensor.autodiff_Btensor(internals, cartesians, order=1)
+B = B.detach().numpy()
+# Get curvilinear internal eigenvectors L
+freq, L = internal_freq(curvi_inthess, internals, cartesians, m)
+
+#inv_trans_L = np.linalg.inv(L).T # Maybe dont tranpose? does inverse flip dimension? 
+#little_l = np.einsum('a,ia,ir->ar', M, B, inv_trans_L)
+#L1_tensor = np.einsum('ia,a,ar->ir', B, M, little_l)
+#quadratic = np.einsum('ij,ir,jr->r', curvi_inthess, L1_tensor, L1_tensor)
+#print(quadratic)
+#print(quadratic * convert)
+
+def quadratic(m, hess, eigenvecs, B):
+    """Mass of each atom, internal coordinate hessian, eigenvectors of hessian, B tensor"""
+    M = np.sqrt(1 / np.repeat(m,3))
+    inv_trans_L = np.linalg.inv(eigenvecs).T # Maybe dont tranpose? does inverse flip dimension? 
+    little_l = np.einsum('a,ia,ir->ar', M, B, inv_trans_L)
+    L1_tensor = np.einsum('ia,a,ar->ir', B, M, little_l)
+    quadratic = np.einsum('ij,ir,jr->r', hess, L1_tensor, L1_tensor)
+    print('quad',quadratic)
+    return L1_tensor
+
+# Use Psi4 data first
+internals = [Btensors.ad_intcos.STRE(0,2), Btensors.ad_intcos.STRE(1,2), Btensors.ad_intcos.BEND(0,2,1)]
+psi4_inthess = cartHess2intHess(psihess, internals, cartesians)
+print(psi4_inthess)
+print(curvi_inthess)
+f, L = internal_freq(psi4_inthess, internals, cartesians, m)
+L1 = quadratic(m, psi4_inthess, L, B)
+
+
+
+
 
 
 
