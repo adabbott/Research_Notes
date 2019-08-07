@@ -22,18 +22,6 @@ cmeter = 299792458 # speed of light in cm/s
 hz2cm = 3.33565e-11
 
 convert = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m))/(c*2*np.pi)
-convert2 = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m*ang2m))/(c * 2 * np.pi)
-
-convert_1 = (hartree2J / (ang2m**3 * amu2kg**(3/2) )) * np.sqrt(h) # (converts to 1 / s^2.5)
-
-convert3 = np.cbrt(hartree2J/(amu2kg*ang2m*ang2m))/(c*2*np.pi)
-
-convert4 = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m*ang2m))/(c*2*np.pi)
-convert5 = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m*ang2m))/(c**2 *2*np.pi)
-
-#                  |      1 / s^2 m                   |
-convert6 = np.cbrt((hartree2J/(amu2kg*ang2m*ang2m*ang2m)) * cmeter ) / (c*2*np.pi)
-convert7 = np.cbrt((hartree2J/(amu2kg*ang2m*ang2m*ang2m)) ) / (c*2*np.pi)
 
 # Load NN model
 nn = NeuralNetwork('model_data/PES.dat', InputProcessor(''), molecule_type='A2B')
@@ -88,6 +76,549 @@ def differentiate_nn(energy, geometry, order=1):
         count += 1
     return grad_tensor
 
+def new_differentiate_nn(geometry, order=1):
+    tmpgeom = []
+    for i in geometry:
+        tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+    geom = torch.stack(tmpgeom)
+    E = transform(geom)
+    nparams = torch.numel(geom)
+    shape = [nparams]
+    count = 0
+    while count < order:
+        gradients = []
+        for value in E.flatten():
+            g = torch.autograd.grad(value, geom, create_graph=True)[0].reshape(nparams)
+            gradients.append(g)
+        E = torch.stack(gradients).reshape(tuple(shape))
+        shape.append(nparams)
+        count += 1
+    return E 
+
+def new_general(geometry, cartesian=False):
+    tmpgeom = []
+    for i in geometry:
+        tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+    tmpgeom2 = torch.stack(tmpgeom)
+    if cartesian:
+        computed_distances = cart2distances(geom)
+        
+    E = transform(geom)
+
+
+def new(geometry):
+    tmpgeom = []
+    for i in geometry:
+        tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+    geom = torch.stack(tmpgeom)
+    E = transform(geom)
+    x_dim = torch.numel(geom)   
+    gradient = torch.autograd.grad(E, geom, create_graph=True)[0]
+    print("gradient done")
+    h1 = torch.autograd.grad(gradient[0], geom, create_graph=True)[0]  # Each h1 is three elements
+    h2 = torch.autograd.grad(gradient[1], geom, create_graph=True)[0]
+    h3 = torch.autograd.grad(gradient[2], geom, create_graph=True)[0]
+    print("hessian done")
+    c1 = torch.autograd.grad(h1[0], geom, create_graph=True)[0] # Each c1 is three elements
+    c2 = torch.autograd.grad(h1[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h1[2], geom, create_graph=True)[0]
+    c4 = torch.autograd.grad(h2[0], geom, create_graph=True)[0]
+    c5 = torch.autograd.grad(h2[1], geom, create_graph=True)[0]
+    c6 = torch.autograd.grad(h2[2], geom, create_graph=True)[0]
+    c7 = torch.autograd.grad(h3[0], geom, create_graph=True)[0]
+    c8 = torch.autograd.grad(h3[1], geom, create_graph=True)[0]
+    c9 = torch.autograd.grad(h3[2], geom, create_graph=True)[0]
+    print("cubic done")
+    q1  = torch.autograd.grad(c1[0], geom, create_graph=True)[0]
+    q2  = torch.autograd.grad(c1[1], geom, create_graph=True)[0]
+    q3  = torch.autograd.grad(c1[2], geom, create_graph=True)[0]
+    q4  = torch.autograd.grad(c2[0], geom, create_graph=True)[0]
+    q5  = torch.autograd.grad(c2[1], geom, create_graph=True)[0]
+    q6  = torch.autograd.grad(c2[2], geom, create_graph=True)[0]
+    q7  = torch.autograd.grad(c3[0], geom, create_graph=True)[0]
+    q8  = torch.autograd.grad(c3[1], geom, create_graph=True)[0]
+    q9  = torch.autograd.grad(c3[2], geom, create_graph=True)[0]
+    q10 = torch.autograd.grad(c4[0], geom, create_graph=True)[0]
+    q11 = torch.autograd.grad(c4[1], geom, create_graph=True)[0]
+    q12 = torch.autograd.grad(c4[2], geom, create_graph=True)[0]
+    q13 = torch.autograd.grad(c5[0], geom, create_graph=True)[0]
+    q14 = torch.autograd.grad(c5[1], geom, create_graph=True)[0]
+    q15 = torch.autograd.grad(c5[2], geom, create_graph=True)[0]
+    q16 = torch.autograd.grad(c6[0], geom, create_graph=True)[0]
+    q17 = torch.autograd.grad(c6[1], geom, create_graph=True)[0]
+    q18 = torch.autograd.grad(c6[2], geom, create_graph=True)[0]
+    q19 = torch.autograd.grad(c7[0], geom, create_graph=True)[0]
+    q20 = torch.autograd.grad(c7[1], geom, create_graph=True)[0]
+    q21 = torch.autograd.grad(c7[2], geom, create_graph=True)[0]
+    q22 = torch.autograd.grad(c8[0], geom, create_graph=True)[0]
+    q23 = torch.autograd.grad(c8[1], geom, create_graph=True)[0]
+    q24 = torch.autograd.grad(c8[2], geom, create_graph=True)[0]
+    q25 = torch.autograd.grad(c9[0], geom, create_graph=True)[0]
+    q26 = torch.autograd.grad(c9[1], geom, create_graph=True)[0]
+    q27 = torch.autograd.grad(c9[2], geom, create_graph=True)[0]
+    print("quartic done")
+    f1 = torch.autograd.grad(q1[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q1[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q1[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q2[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q2[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q2[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q3[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q3[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q3[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q4[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q4[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q4[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q5[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q5[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q5[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q6[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q6[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q6[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q7[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q7[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q7[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q8[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q8[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q8[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q9[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q9[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q9[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q10[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q10[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q10[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q11[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q11[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q11[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q12[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q12[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q12[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q13[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q13[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q13[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q14[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q14[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q14[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q15[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q15[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q15[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q16[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q16[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q16[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q17[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q17[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q17[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q18[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q18[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q18[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q19[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q19[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q19[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q20[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q20[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q20[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q21[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q21[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q21[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q22[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q22[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q22[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q23[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q23[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q23[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q24[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q24[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q24[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q25[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q25[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q25[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q26[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q26[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q26[2], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q27[0], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q27[1], geom, create_graph=True)[0]
+    f1 = torch.autograd.grad(q27[2], geom, create_graph=True)[0]
+    print("quintic done")
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    s1 = torch.autograd.grad(f1[2], geom, create_graph=True)[0]
+    print("sextic done")
+
+
+def new_cart(geometry):
+    tmpgeom = []
+    for i in geometry:
+        tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+    geom = torch.stack(tmpgeom)
+    computed_distances = cart2distances(geom)
+    E = transform(computed_distances)
+    x_dim = torch.numel(geom)   
+    gradient = torch.autograd.grad(E, geom, create_graph=True)[0]
+    print("gradient done")
+    h1 = torch.autograd.grad(gradient[0], geom, create_graph=True)[0]  # Each h1 is three elements
+    h2 = torch.autograd.grad(gradient[1], geom, create_graph=True)[0]
+    h3 = torch.autograd.grad(gradient[2], geom, create_graph=True)[0]
+    h4 = torch.autograd.grad(gradient[3], geom, create_graph=True)[0]  # Each h1 is three elements
+    h5 = torch.autograd.grad(gradient[4], geom, create_graph=True)[0]
+    h6 = torch.autograd.grad(gradient[5], geom, create_graph=True)[0]
+    h7 = torch.autograd.grad(gradient[6], geom, create_graph=True)[0]  # Each h1 is three elements
+    h8 = torch.autograd.grad(gradient[7], geom, create_graph=True)[0]
+    h9 = torch.autograd.grad(gradient[8], geom, create_graph=True)[0]
+    print("hessian done")
+    c1 = torch.autograd.grad(h1[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h1[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h1[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h1[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h1[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h1[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h1[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h1[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h1[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h2[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h2[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h2[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h2[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h2[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h2[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h2[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h2[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h2[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h3[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h3[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h3[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h3[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h3[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h3[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h3[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h3[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h3[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h4[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h4[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h4[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h4[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h4[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h4[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h4[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h4[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h4[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h5[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h5[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h5[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h5[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h5[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h5[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h5[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h5[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h5[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h6[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h6[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h6[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h6[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h6[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h6[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h6[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h6[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h6[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h7[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h7[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h7[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h7[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h7[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h7[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h7[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h7[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h7[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h8[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h8[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h8[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h8[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h8[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h8[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h8[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h8[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h8[8], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h9[0], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h9[1], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h9[2], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h9[3], geom, create_graph=True)[0] 
+    c2 = torch.autograd.grad(h9[4], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h9[5], geom, create_graph=True)[0]
+    c1 = torch.autograd.grad(h9[6], geom, create_graph=True)[0]
+    c2 = torch.autograd.grad(h9[7], geom, create_graph=True)[0]
+    c3 = torch.autograd.grad(h9[8], geom, create_graph=True)[0]
+    print("cubic done")
+
+
+
+
+def get_derivatives(energy, params):
+    """
+    Returns all derivatives involving E and members of params. d^nE/d(params). 
+    For example, if params are x,y, and z, 
+    this will return dE/dx, dE/dy, dE/dz, d2E/dx2, d2E/dy2, d2E/dz2, d2E/dxdy, d2E/dxdz, d2E/dydz, d3E/dxdydz
+    """
+    grad_tensor = energy
+    nparams = torch.numel(params)
+    # The shape of first derivative. Will be adjusted at higher order
+    shape = [nparams]
+    count = 0
+    while count < order:
+        gradients = []
+        for value in grad_tensor.flatten():
+            g = torch.autograd.grad(value, geometry, create_graph=True)[0].reshape(nparams)
+            gradients.append(g)
+        grad_tensor = torch.stack(gradients).reshape(tuple(shape))
+        shape.append(nparams)
+        count += 1
+    return grad_tensor
+    return
+
+def get_derivative(energy, params):
+    """
+    Returns d^nE/d(params) for n params. 
+    """
+    return
+
 def get_interatomics(natoms):
     # Build autodiff-OptKing internal coordinates of interatomic distances
     #natoms = xyz.shape[0]
@@ -100,66 +631,70 @@ def get_interatomics(natoms):
     return interatomics
 
 def cartesian_freq(hess, m):
-    """Get harmonic frequencies in wavenumbers from Cartesian Hessian in Hartree/ang^2. 
+    """
+    Do normal coordinate analysis in Cartesian coordinates
+    
+    Parameters
+    ----------
+    hess : 2d array
+        The Hessian in Cartesian coordinates (not mass weighted)
+    m : 1d array
+        The masses of the atoms in amu. Has size = natoms.
+    Returns
+    -------
+    freqs : Harmonic frequencies in wavenumbers (cm-1).
+    LMW   : Normal coordinate eigenvectors from mass-weighted Hessian
+    Lmw   : Normal coordinate eigenvectors with massweighting partially removed: Lmw = m^-1/2 * LMW
+
+Get harmonic frequencies in wavenumbers from Cartesian Hessian in Hartree/ang^2. 
     m is a numpy array containing mass in amu for each atom, same order as Hessian. size:natom"""
     m = np.repeat(m,3)
     M = 1 / np.sqrt(m)
-    M = np.diag(M)
-    Hmw = M.dot(hess).dot(M)
-    cartlamda, cartL = np.linalg.eig(Hmw)
-    idx = cartlamda.argsort()[::-1]
-    cartlamda = cartlamda[idx]
-    freqs = np.sqrt(cartlamda) * convert
-    return freqs[:-6], cartL
+    diagM = np.diag(M)
+    Hmw = diagM.dot(hess).dot(diagM)
+    lamda, LMW = np.linalg.eig(Hmw)
+    idx = lamda.argsort()
+    lamda = lamda[idx]
+    LMW = LMW[:,idx]
+    freqs = np.sqrt(lamda) * convert
+    Lmw = np.einsum('i,ir->ir', M,LMW)
+    #Lmw = np.einsum('i,ir->ir', np.sqrt(m),LMW)
+    return freqs[6:], LMW[:,6:], Lmw[:,6:]
 
 def internal_freq(hess, B1, m):
     """
-    Get harmonic frequencies with GF method. 
-    hess : numpy array of hessian in internal coordinates Hartree/ang^2
-    B1 : 1st order B tensor in terms of internal coordinates in Hessian 
-    m : numpy array of masses in amu
-    Returns 
-    -------
-    Frequencies in wavenumbers, normal coordinates
-    """
-    m = np.repeat(m,3)
-    M = 1 / m
-    G = np.einsum('in,jn,n->ij', B1, B1, M)
-    GF = G.dot(hess)
-    intlamda, intL = np.linalg.eig(GF)
-    idx = intlamda.argsort()[::-1]
-    intlamda = intlamda[idx]
-    freqs = np.sqrt(intlamda) * convert
-    return freqs, intL
+    Do normal coordinate analysis with GF method. 
 
-def tmp_internal_freq(hess, B1, m):
-    """
-    Get harmonic frequencies with GF method. 
-    hess : numpy array of hessian in internal coordinates Hartree/ang^2
-    B1 : 1st order B tensor in terms of internal coordinates in Hessian 
-    m : numpy array of masses in amu
+    Parameters
+    ----------
+    hess : ndarray 
+        NumPy array of Hessian in internal coordinates, Hartrees/Angstrom^2
+    B1 : ndarray
+        Numpy array 1st order B tensor corresponding to internal coordinate definitions in Hessian 
+    m : ndarray
+        Numpy array of masses of each atom in amu. Size is number of atoms. 
     Returns 
     -------
-    Frequencies in wavenumbers, normal coordinates
+    Frequencies in wavenumbers, normalized normal coordinates, and mass-weighted (1/sqrt(amu)) normal coordinates 
+    All values sorted to be in order of increasing energy of the frequencies.
     """
     m = np.repeat(m,3)
     M = 1 / m
     G = np.einsum('in,jn,n->ij', B1, B1, M)
     Gt = scipy.linalg.fractional_matrix_power(G, 0.5)
     Fp = Gt.dot(hess).dot(Gt)
-    intlamda, intL = np.linalg.eig(Fp)
-    L = Gt.dot(intL)
+    lamda, L = np.linalg.eig(Fp)
+    mwL = Gt.dot(L)
     # Return Frequencies and 'L matrix' (mass weighted) in increasing order
-    idx = intlamda.argsort()
-    intlamda = intlamda[idx]
-    freqs = np.sqrt(intlamda) * convert
-    return freqs, L[:,idx]
+    idx = lamda.argsort()
+    lamda = lamda[idx]
+    freqs = np.sqrt(lamda) * convert
+    return freqs, L[:,idx], mwL[:,idx], 
 
 def cartcubic2intcubic(cart_cubic, int_hess, B1, B2):
     G = np.dot(B1, B1.T)
     Ginv = np.linalg.inv(G)
     A = np.dot(Ginv, B1)
-    # First: just do what it says
     tmp1 = np.einsum('ia,jb,kc,abc->ijk', A, A, A, cart_cubic)
     tmp2 = np.einsum('lmn,il,jm,kn->ijk', B2, int_hess, A, A)
     tmp3 = np.einsum('lmn,jl,im,kn->ijk', B2, int_hess, A, A)
@@ -228,6 +763,68 @@ def intderiv2cartderiv(derivative_tensor, B1):
         raise Exception("Too many dimensions. Add code to function to compute")
     return cart_tensor
 
+def cubic_from_internals(hess, cubic, m, L, B1, B2):
+    """
+    Computes cubic normal coordinate force constants in cm-1 from internal coordinate derivatives.
+    Parameters
+    ----------
+    hess : 2d array
+        Internal coordinate Hessian in Hartree/Angstrom^2
+    cubic : 3d array
+        Internal coordinate third derivative tensor (analogue of Hessian) Hartree/Angstrom^3
+    m : 1d array
+        Masses of the atoms in amu (length is number of atoms)
+    L : 2d array
+        The 'L Matrix', mass-weighted (1/sqrt(amu)) normal coordinates wrt internals. 
+        These are the eigenvectors from GF method weighted by the G matrix : G^(1/2)L
+    B1 : 2d array
+        1st order B tensor which relates internal coordinates to cartesian coordinates
+    B2 : 3d array
+        2nd order B tensor which relates internal coordinates to cartesian coordinates
+    """
+    M = np.sqrt(1 / np.repeat(m,3))
+    inv_trans_L = np.linalg.inv(L).T 
+    little_l = np.einsum('a,ia,ir->ar', M, B1, inv_trans_L)
+    L1 = np.einsum('ia,a,ar->ir', B1, M, little_l)
+    L2 = np.einsum('iab,a,ar,b,bs->irs', B2, M, little_l, M, little_l)
+    term1 = np.einsum('ijk,ir,js,kt->rst', cubic, L1, L1, L1)
+    term2 = np.einsum('ij, irs, jt->rst', hess, L2, L1)
+    term3 = np.einsum('ij, irt, js->rst', hess, L2, L1)
+    term4 = np.einsum('ij,ist,jr->rst', hess, L2, L1)
+    nc_cubic = term1 + term2 + term3 + term4                             # UNITS: Hartree / Ang^3 amu^3/2
+    frac = (hbar / (2*np.pi*cmeter))**(3/2) 
+    nc_cubic *= (1 / (ang2m**3 * amu2kg**(3/2)))                         # UNITS: Hartree / m^3 kg^3/2
+    nc_cubic *= frac                                                     # UNITS: Hartree / m^(3/2) 
+    nc_cubic *= (1 / 100**(3/2))                                         # UNITS: Hartree cm-1 ^ (3/2)
+    # Multiply each element by appropriate 3 harmonic frequencies
+    omega = np.array([1737.31536,3987.9131,4144.72382])**(-1/2)
+    nc_cubic = np.einsum('ijk,i,j,k->ijk', nc_cubic, omega, omega, omega)# UNITS: Hartree
+    # add minus sign and convert to cm-1
+    nc_cubic *= -hartree2cm                                              # UNITS: cm-1
+    return nc_cubic
+
+def cubic_from_cartesians(cubic, L):
+    """ 
+    Parameters
+    ----------
+    cubic : 3d array
+        Cartesian coordinate third derivative tensor in Hartree/Angstrom^3
+    L : 2d array
+        The 'L Matrix', mass-weighted (1/sqrt(amu)) normal coordinates wrt cartesians. 
+        These are the eigenvectors of the Mass-weighted cartesian Hessian, multiplied by 1/sqrt(amu). 
+    """
+    nc_cubic = np.einsum('ir,js,kt,ijk->rst', L, L, L, cubic)            # UNITS: Hartree/ Ang^3 amu^(3/2)
+    frac = (hbar / (2*np.pi*cmeter))**(3/2) 
+    nc_cubic *= (1 / (ang2m**3 * amu2kg**(3/2)))                         # UNITS: Hartree / m^3 kg^3/2
+    nc_cubic *= frac                                                     # UNITS: Hartree / m^(3/2) 
+    nc_cubic *= (1 / 100**(3/2))                                         # UNITS: Hartree cm-1 ^ (3/2)
+    # Multiply each element by appropriate 3 harmonic frequencies
+    omega = np.array([1737.31536,3987.9131,4144.72382])**(-1/2)
+    nc_cubic = np.einsum('ijk,i,j,k->ijk', nc_cubic, omega, omega, omega)# UNITS: Hartree
+    nc_cubic *= -hartree2cm                                              # UNITS: cm-1
+    return nc_cubic
+
+
 cartesians = torch.tensor([[ 0.0000000000,0.0000000000,0.9496765298],
                            [ 0.0000000000,0.8834024755,-0.3485478124],
                            [ 0.0000000000,0.0000000000,0.0000000000]], dtype=torch.float64, requires_grad=True)
@@ -263,23 +860,6 @@ print(np.sort(np.array(wfn.frequencies()))[::-1])
 psihess = np.array(wfn.hessian())
 psihess /= 0.529177249**2
 
-#m = np.array([1.007825032230, 1.007825032230, 15.994914619570])
-#
-#psi4freq, junk = cartesian_freq(psihess, m)
-#print("Manually computed frequencies with Psi4 Hessian", psi4freq)
-#
-#nnfreq, junk = cartesian_freq(hcart.detach().numpy(), m)
-#print("Manually computed frequencies with NN with Cartesian Hessian", nnfreq)
-#
-#nnfreq2, junk = internal_freq(hint.detach().numpy(), get_interatomics(3), cartesians, m)
-#print("Manually computed frequencies with NN with interatomic distance coordinate Hessian", nnfreq2)
-#
-#internals = [Btensors.ad_intcos.STRE(0,2), Btensors.ad_intcos.STRE(1,2), Btensors.ad_intcos.BEND(0,2,1)]
-#curvi_inthess = cartHess2intHess(hcart.detach().numpy(), internals, cartesians)
-#nnfreq3, L = internal_freq(curvi_inthess, internals, cartesians, m)
-#print("Manually computed frequencies with NN with curvilinear internal coordinate Hessian", nnfreq3)
-
-
 
 def quadratic(hess, m, L, B):
     """internal coordinate hessian, Mass of each atom, G 1/2 dotted with eigenvectors of hessian, and B tensor"""
@@ -291,90 +871,6 @@ def quadratic(hess, m, L, B):
     print('quad',np.diagonal(np.sqrt(quadratic) * convert))
     return np.diagonal(np.sqrt(quadratic) * convert)
     
-def cubic(hess, cubic, m, L, B1, B2):
-    M = np.sqrt(1 / np.repeat(m,3))
-    inv_trans_L = np.linalg.inv(L).T # Maybe dont tranpose? does inverse flip dimension? 
-    little_l = np.einsum('a,ia,ir->ar', M, B1, inv_trans_L)
-    L1 = np.einsum('ia,a,ar->ir', B1, M, little_l)
-    L2 = np.einsum('iab,a,ar,b,bs->irs', B2, M, little_l, M, little_l)
-    term1 = np.einsum('ijk,ir,js,kt->rst', cubic, L1, L1, L1)
-    term2 = np.einsum('ij, irs, jt->rst', hess, L2, L1)
-    term3 = np.einsum('ij, irt, js->rst', hess, L2, L1)
-    term4 = np.einsum('ij,ist,jr->rst', hess, L2, L1)
-
-    nc_cubic = term1 + term2 + term3 + term4                             # UNITS: Hartree / Ang^3 amu^3/2
-    frac = (hbar / (2*np.pi*cmeter))**(3/2) 
-    nc_cubic *= (1 / (ang2m**3 * amu2kg**(3/2)))                         # UNITS: Hartree / m^3 kg^3/2
-    nc_cubic *= frac                                                     # UNITS: Hartree / m^(3/2) 
-    nc_cubic *= (1 / 100**(3/2))                                         # UNITS: Hartree cm-1 ^ (3/2)
-    # Multiply each element by appropriate 3 harmonic frequencies
-    omega = np.array([1737.31536,3987.9131,4144.72382])**(-1/2)
-    nc_cubic = np.einsum('ijk,i,j,k->ijk', nc_cubic, omega, omega, omega) # UNITS: Hartree
-    # add minus sign and convert to cm-1
-    nc_cubic *= -hartree2cm                                               # UNITS: cm-1
-    print(nc_cubic)
-    return nc_cubic
-
-
-
-# Use Psi4 data first
-#internals = [Btensors.ad_intcos.STRE(0,2), Btensors.ad_intcos.STRE(1,2), Btensors.ad_intcos.BEND(0,2,1)]
-#psi4_inthess = cartHess2intHess(psihess, internals, cartesians)
-
-#m = np.array([1.007825032230, 1.007825032230, 15.994914619570])
-#f, L = internal_freq(psi4_inthess, internals, cartesians, m)
-#print(f)
-
-#B1 = Btensors.ad_btensor.autodiff_Btensor(internals, cartesians, order=1)
-#B1 = B1.detach().numpy()
-#quadratic(m, psi4_inthess, L, B1)
-#cubic(psi4_inthess, L, B1, B2)
-
-
-
-# Define curvilinear internal coordinates, 1st, 2nd order B tensors
-
-# Genearte Cartesian Hessian with NN, convert to internal coordinates
-#internal_coordinates =  cart2internals(cartesians, internals)
-#print(internal_coordinates)
-#hess_curvi = differentiate_nn(E, ad_internals, order=2)
-#print(hess_curvi)
-#hess_cart =  differentiate_nn(E, cartesians, order=2)
-#hess_int = cartHess2intHess(hess_cart.detach().numpy(), internals, cartesians)
-#m = np.array([1.007825032230, 1.007825032230, 15.994914619570])
-#f, L = internal_freq(hess_int, internals, cartesians, m)
-#print(f)
-# Check: perform normal coordinate analysis, the L-tensor way
-#quadratic(hess_int, m, L, B1)
-
-#cubic_cart =  differentiate_nn(E, cartesians, order=3)
-#quartic_cart =  differentiate_nn(E, computed_distances, order=4)
-
-#hess_internals =  differentiate_nn(E, computed_distances, order=2)
-#cubic_internals =  differentiate_nn(E, computed_distances, order=2)
-
-
-# CHECK
-#G = np.einsum('in,jn,n,n->ij', B, B, M, M)
-#lamda = L.T.dot(G.dot(psi4_inthess)).dot(L)
-#print(np.sqrt(lamda) * convert)
-
-
-
-# Some accuracy as lost here, probably due to the gradient not being exactly zero.
-#computed_distances = cart2distances(cartesians)
-#E = transform(computed_distances)
-#hess = differentiate_nn(E, cartesians, order=2)
-#print('cart hess')
-#print(hess)
-#print(cartesian_freq(hess.detach().numpy(), m))
-#print('converted cart hess to int hess')
-#inthess = cartderiv2intderiv(hess.detach().numpy(), B1)
-#print(inthess)
-#print('backtransformed to cart hess')
-#newcart = intderiv2cartderiv(inthess, B1)
-#print(newcart)
-#print(cartesian_freq(newcart, m))
 
 internals = [Btensors.ad_intcos.STRE(0,2), Btensors.ad_intcos.STRE(1,2), Btensors.ad_intcos.BEND(0,2,1)]
 interatomics = get_interatomics(3)
@@ -386,41 +882,55 @@ B1_idm, B2_idm = B1_idm.detach().numpy(), B2_idm.detach().numpy()
 m = np.array([1.007825032230, 1.007825032230, 15.994914619570])
 distances = torch.tensor([0.0, 0.0, 0.0], dtype=torch.float64, requires_grad=True)
 computed_distances = cart2distances(cartesians)
-temp = distances + computed_distances
 E = transform(computed_distances)
-interatomic_hess = differentiate_nn(E, computed_distances, order=2).detach().numpy()
-cart_hess = intderiv2cartderiv(interatomic_hess, B1_idm)
-curvilinear_hess = cartderiv2intderiv(cart_hess, B1)
-psi4_curvihess = cartderiv2intderiv(psihess, B1)
-print(curvilinear_hess)
-print(psi4_curvihess)
 
-interatomic_cubic = differentiate_nn(E, computed_distances, order=3).detach().numpy()
-cart_cubic = intcubic2cartcubic(interatomic_cubic, interatomic_hess, B1_idm, B2_idm)
-int_cubic = cartcubic2intcubic(cart_cubic, interatomic_hess, B1_idm, B2_idm)
-# Check forward and reverse transformation
-print(np.allclose(int_cubic,interatomic_cubic))
-curvilinear_cubic = cartcubic2intcubic(cart_cubic, curvilinear_hess, B1, B2)
+# TESTBED for faster derivatives
+# Create single parameter tensors and combine them together for convenience
+eq_geom = [1.570282260121,0.949676529800,0.949676529800]
+tmpdistances = []
+for i in eq_geom:
+    tmpdistances.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+distances = torch.stack(tmpdistances)
+E = transform(distances)
 
-#f, L = internal_freq(curvilinear_hess, B1, m)
-f, L_allen = tmp_internal_freq(curvilinear_hess, B1, m)
-print(f)
-print(L_allen)
+cart_eq_geom = [ 0.0000000000,0.0000000000,0.9496765298, 0.0000000000,0.8834024755,-0.3485478124, 0.0000000000,0.0000000000,0.0000000000]
+tmp = []
+for i in cart_eq_geom:
+    tmp.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+full_cart = torch.stack(tmp)
+print(full_cart)
+new_cart(full_cart)
+#E = transform(distances)
 
-b = quadratic(curvilinear_hess, m, L_allen, B1)
-cubic(curvilinear_hess, curvilinear_cubic, m, L_allen, B1, B2)
 
-# Try using as much Psi4 stuff as possible. Use Psi4 Cartesian hessian to get interatomic hessian, use that to get cartesian cubic, 
-#interatomic_hess = cartderiv2intderiv(psihess, B1_idm) 
+#test = differentiate_nn(E, distances, order=2)
+#print(test)
+#test = differentiate_nn(E, distances, order=3)
+#print(test)
+##new(eq_geom)
+#
+#test = differentiate_nn(E, distances, order=4)
+#print(test)
+#test = differentiate_nn(E, distances, order=5)
+#print(test)
+
+## Force constant stuff
+#interatomic_hess = differentiate_nn(E, computed_distances, order=2).detach().numpy()
+#cart_hess = intderiv2cartderiv(interatomic_hess, B1_idm)
+#curvilinear_hess = cartderiv2intderiv(cart_hess, B1)
+#psi4_curvihess = cartderiv2intderiv(psihess, B1)
+#
+#interatomic_cubic = differentiate_nn(E, computed_distances, order=3).detach().numpy()
 #cart_cubic = intcubic2cartcubic(interatomic_cubic, interatomic_hess, B1_idm, B2_idm)
-#curvilinear_cubic = cartcubic2intcubic(cart_cubic, psi4_curvihess, B1, B2)
-#f, L_allen = tmp_internal_freq(psi4_curvihess, B1, m)
-#b = quadratic(psi4_curvihess, m, L_allen, B1)
-#cubic(psi4_curvihess, curvilinear_cubic, m, L_allen, B1, B2)
+#int_cubic = cartcubic2intcubic(cart_cubic, interatomic_hess, B1_idm, B2_idm)
+#curvilinear_cubic = cartcubic2intcubic(cart_cubic, curvilinear_hess, B1, B2)
+#
+#f, L, mwL = internal_freq(curvilinear_hess, B1, m)
+#b = quadratic(curvilinear_hess, m, mwL, B1)
+#cubic_from_internals(curvilinear_hess, curvilinear_cubic, m, mwL, B1, B2)
+#
+#f, L, mwL = cartesian_freq(cart_hess, m)
+#cubic_from_cartesians(cart_cubic, mwL)
 
-# Identical frequencies, good!
-#idm_f, idm_L = internal_freq(interatomic_hess, B1_idm, m)
-#cart_f, cart_L = cartesian_freq(cart_hess, m)
-#f, L = internal_freq(curvilinear_hess, B1, m)
 
 
