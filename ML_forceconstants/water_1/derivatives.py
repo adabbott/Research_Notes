@@ -58,12 +58,9 @@ def cart2internals(cart, internals):
     return values
       
 def differentiate_nn(energy, geometry, order=1):
-    # The grad_tensor starts of as a single element, the energy. Then it becomes the gradient, hessian, cubic ... 
-    # depending on value of 'order'
+    '''Very slow since nothing is held in memory and graphs need to keep being recreated. also causes memory leaks'''
     grad_tensor = energy
-    # The number of geometry parameters. Returned gradient tensor will have this size in all dimensions
     nparams = torch.numel(geometry)
-    # The shape of first derivative. Will be adjusted at higher order
     shape = [nparams]
     count = 0
     while count < order:
@@ -76,34 +73,61 @@ def differentiate_nn(energy, geometry, order=1):
         count += 1
     return grad_tensor
 
-def new_differentiate_nn(geometry, order=1):
+
+def new_general(geometry, cartesian=False, order=4):
+    """Takes in list of interatomic distances or cartesian coordinates, computes energy and derivatives
+       Keeps all intermediate derivative graphs in memory as their own object for optimal performance.
+    """
+    # Initialize variables, transform geometry, compute energy.
     tmpgeom = []
     for i in geometry:
         tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
     geom = torch.stack(tmpgeom)
     E = transform(geom)
-    nparams = torch.numel(geom)
-    shape = [nparams]
-    count = 0
-    while count < order:
-        gradients = []
-        for value in E.flatten():
-            g = torch.autograd.grad(value, geom, create_graph=True)[0].reshape(nparams)
-            gradients.append(g)
-        E = torch.stack(gradients).reshape(tuple(shape))
-        shape.append(nparams)
-        count += 1
-    return E 
+    #if cartesian: #TODO handle torch.clone.detach(), make sure its corect
+    #    geom = cart2distances(tmpgeom2)
+    #    E = transform(geom)
 
-def new_general(geometry, cartesian=False):
-    tmpgeom = []
-    for i in geometry:
-        tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
-    tmpgeom2 = torch.stack(tmpgeom)
-    if cartesian:
-        computed_distances = cart2distances(geom)
-        
-    E = transform(geom)
+    # Compute derivatives. Build up higher order tensors one dimension at a time.
+    gradient = torch.autograd.grad(E, geom, create_graph=True)[0]
+    h1, c1, q1, f1, s1 = [], [], [], [], []
+    for d1 in gradient:
+        h = torch.autograd.grad(d1, geom, create_graph=True)[0]
+        h1.append(h) 
+        c2, q2, f2, s2 = [], [], [], []
+        for d2 in h: 
+            c = torch.autograd.grad(d2, geom, create_graph=True)[0]
+            c2.append(c)
+            q3, f3, s3 = [], [], []
+            for d3 in c: 
+                q = torch.autograd.grad(d3, geom, create_graph=True)[0]
+                q3.append(q)
+                f4, s4 = [], []
+                for d4 in q:
+                    f = torch.autograd.grad(d4, geom, create_graph=True)[0]
+                    f4.append(f)
+                    s5 = []
+                    for d5 in f:
+                        s = torch.autograd.grad(d5, geom, create_graph=True)[0]
+                        s5.append(s)
+                    s4.append(torch.stack(s5))
+                f3.append(torch.stack(f4))
+                s3.append(torch.stack(s4))
+            q2.append(torch.stack(q3))
+            f2.append(torch.stack(f3))
+            s2.append(torch.stack(s3))
+        c1.append(torch.stack(c2))
+        q1.append(torch.stack(q2))
+        f1.append(torch.stack(f2))
+        s1.append(torch.stack(s2))
+
+    hessian = torch.stack(h1)
+    cubic = torch.stack(c1)
+    quartic = torch.stack(q1)
+    quintic = torch.stack(f1)
+    sextic = torch.stack(s1)
+    return hessian, cubic, quartic, quintic, sextic
+    
 
 
 def new(geometry):
@@ -112,7 +136,6 @@ def new(geometry):
         tmpgeom.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
     geom = torch.stack(tmpgeom)
     E = transform(geom)
-    x_dim = torch.numel(geom)   
     gradient = torch.autograd.grad(E, geom, create_graph=True)[0]
     print("gradient done")
     h1 = torch.autograd.grad(gradient[0], geom, create_graph=True)[0]  # Each h1 is three elements
@@ -893,14 +916,23 @@ for i in eq_geom:
 distances = torch.stack(tmpdistances)
 E = transform(distances)
 
-cart_eq_geom = [ 0.0000000000,0.0000000000,0.9496765298, 0.0000000000,0.8834024755,-0.3485478124, 0.0000000000,0.0000000000,0.0000000000]
-tmp = []
-for i in cart_eq_geom:
-    tmp.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
-full_cart = torch.stack(tmp)
-print(full_cart)
-new_cart(full_cart)
-#E = transform(distances)
+#cart_eq_geom = [ 0.0000000000,0.0000000000,0.9496765298, 0.0000000000,0.8834024755,-0.3485478124, 0.0000000000,0.0000000000,0.0000000000]
+#tmp = []
+#for i in cart_eq_geom:
+#    tmp.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+#full_cart = torch.stack(tmp)
+#print(full_cart)
+#new_cart(full_cart)
+
+h, c, q, f, s = new_general(eq_geom)
+test = differentiate_nn(E, distances, order=2)
+print(torch.allclose(test, h))
+test = differentiate_nn(E, distances, order=3)
+print(torch.allclose(test, c))
+test = differentiate_nn(E, distances, order=4)
+print(torch.allclose(test, q))
+test = differentiate_nn(E, distances, order=5)
+print(torch.allclose(test, f))
 
 
 #test = differentiate_nn(E, distances, order=2)
