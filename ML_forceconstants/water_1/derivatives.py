@@ -7,15 +7,33 @@ import torch
 import sympy
 from compute_energy import pes
 import Btensors
-np.set_printoptions(threshold=5000, linewidth=200, precision=5)
+np.set_printoptions(threshold=5000, linewidth=200, precision=5, suppress=True)
 torch.set_printoptions(threshold=5000, linewidth=200, precision=5)
 bohr2ang = 0.529177249
 hartree2J = 4.3597443e-18
+hartree2cm = 219474.63
 amu2kg = 1.6605389e-27
 ang2m = 1e-10
+h = 6.6260701510e-34   # Plancks in J s
+hbar = 1.054571817e-34 # Reduced Plancks constant J s
+hbarcm = (hbar / hartree2J) * hartree2cm
 c = 29979245800.0 # speed of light in cm/s
+cmeter = 299792458 # speed of light in cm/s
+hz2cm = 3.33565e-11
+
 convert = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m))/(c*2*np.pi)
-convert2 = np.sqrt(hartree2J/(amu2kg*amu2kg*ang2m*ang2m*ang2m))/(c * 2 * np.pi)
+convert2 = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m*ang2m))/(c * 2 * np.pi)
+
+convert_1 = (hartree2J / (ang2m**3 * amu2kg**(3/2) )) * np.sqrt(h) # (converts to 1 / s^2.5)
+
+convert3 = np.cbrt(hartree2J/(amu2kg*ang2m*ang2m))/(c*2*np.pi)
+
+convert4 = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m*ang2m))/(c*2*np.pi)
+convert5 = np.sqrt(hartree2J/(amu2kg*ang2m*ang2m*ang2m))/(c**2 *2*np.pi)
+
+#                  |      1 / s^2 m                   |
+convert6 = np.cbrt((hartree2J/(amu2kg*ang2m*ang2m*ang2m)) * cmeter ) / (c*2*np.pi)
+convert7 = np.cbrt((hartree2J/(amu2kg*ang2m*ang2m*ang2m)) ) / (c*2*np.pi)
 
 # Load NN model
 nn = NeuralNetwork('model_data/PES.dat', InputProcessor(''), molecule_type='A2B')
@@ -127,19 +145,27 @@ def tmp_internal_freq(hess, B1, m):
     m = np.repeat(m,3)
     M = 1 / m
     G = np.einsum('in,jn,n->ij', B1, B1, M)
-    #Gtneg = scipy.linalg.fractional_matrix_power(G, -0.5)
     Gt = scipy.linalg.fractional_matrix_power(G, 0.5)
     Fp = Gt.dot(hess).dot(Gt)
     intlamda, intL = np.linalg.eig(Fp)
-    print("C")
-    print(intL)
     L = Gt.dot(intL)
-    print("L")
-    print(L)
-    idx = intlamda.argsort()[::-1]
+    # Return Frequencies and 'L matrix' (mass weighted) in increasing order
+    idx = intlamda.argsort()
     intlamda = intlamda[idx]
     freqs = np.sqrt(intlamda) * convert
-    return freqs, L
+    return freqs, L[:,idx]
+
+def cartcubic2intcubic(cart_cubic, int_hess, B1, B2):
+    G = np.dot(B1, B1.T)
+    Ginv = np.linalg.inv(G)
+    A = np.dot(Ginv, B1)
+    # First: just do what it says
+    tmp1 = np.einsum('ia,jb,kc,abc->ijk', A, A, A, cart_cubic)
+    tmp2 = np.einsum('lmn,il,jm,kn->ijk', B2, int_hess, A, A)
+    tmp3 = np.einsum('lmn,jl,im,kn->ijk', B2, int_hess, A, A)
+    tmp4 = np.einsum('lmn,kl,im,jn->ijk', B2, int_hess, A, A)
+    int_cubic = tmp1 - tmp2 - tmp3 - tmp4
+    return int_cubic
 
 def cartderiv2intderiv(derivative_tensor, B1):
     """
@@ -169,6 +195,14 @@ def cartderiv2intderiv(derivative_tensor, B1):
         raise Exception("Too many dimensions. Add code to function")
     return int_tensor
 
+def intcubic2cartcubic(intcubic, inthess, B1, B2):
+    tmp1 = np.einsum('ia,jb,kc,ijk->abc', B1, B1, B1, intcubic)
+    tmp2 = np.einsum('iab,jc,ij->abc', B2, B1, inthess)
+    tmp3 = np.einsum('ica,jb,ij->abc', B2, B1, inthess)
+    tmp4 = np.einsum('ibc,ja,ij->abc', B2, B1, inthess)
+    cart_cubic = tmp1 + tmp2 + tmp3 + tmp4
+    return cart_cubic
+    
 def intderiv2cartderiv(derivative_tensor, B1):
     """ 
     Converts cartesian derivative tensor (gradient, Hessian, cubic, quartic ...) into internal coordinates
@@ -246,37 +280,8 @@ psihess /= 0.529177249**2
 #print("Manually computed frequencies with NN with curvilinear internal coordinate Hessian", nnfreq3)
 
 
-# Cubic force constants in curvilinear coordinates
-#M = np.sqrt(1 / np.repeat(m,3))
-#B = Btensors.ad_btensor.autodiff_Btensor(internals, cartesians, order=1)
-#B = B.detach().numpy()
-# Get curvilinear internal eigenvectors L
-#freq, L = internal_freq(curvi_inthess, internals, cartesians, m)
-
-#inv_trans_L = np.linalg.inv(L).T # Maybe dont tranpose? does inverse flip dimension? 
-#little_l = np.einsum('a,ia,ir->ar', M, B, inv_trans_L)
-#L1_tensor = np.einsum('ia,a,ar->ir', B, M, little_l)
-#quadratic = np.einsum('ij,ir,jr->r', curvi_inthess, L1_tensor, L1_tensor)
-#print(quadratic)
-#print(quadratic * convert)
 
 def quadratic(hess, m, L, B):
-    """internal coordinate hessian, Mass of each atom,  eigenvectors of hessian, B tensor"""
-    M = np.sqrt(1 / np.repeat(m,3))
-    inv_trans_L = np.linalg.inv(L).T # Maybe dont tranpose? does inverse flip dimension? 
-    little_l = np.einsum('a,ia,ir->ar', M, B, inv_trans_L)
-    L1_tensor = np.einsum('ia,a,ar->ir', B, M, little_l)
-    # NORMALIZE 
-    L1 = L1_tensor / np.linalg.norm(L1_tensor, axis=0)
-    # MASS WEIGHT HESSIAN w/G THEN USE FORCE CONSTANT EQUATION
-    G = np.einsum('in,jn,n,n->ij', B, B, M, M)
-    GF = np.einsum('ij,jk->ik', G,hess)
-    quadratic = np.einsum('ij,ir,js->rs', GF, L1, L1)
-    #print('quad',np.sqrt(quadratic) * convert)
-    print('quad',np.diagonal(np.sqrt(quadratic) * convert))
-    return np.diagonal(np.sqrt(quadratic) * convert)
-
-def quadratic2(hess, m, L, B):
     """internal coordinate hessian, Mass of each atom, G 1/2 dotted with eigenvectors of hessian, and B tensor"""
     M = np.sqrt(1 / np.repeat(m,3))
     inv_trans_L = np.linalg.inv(L).T 
@@ -286,87 +291,31 @@ def quadratic2(hess, m, L, B):
     print('quad',np.diagonal(np.sqrt(quadratic) * convert))
     return np.diagonal(np.sqrt(quadratic) * convert)
     
-def cubic2(hess, cubic, m, L, B1, B2):
+def cubic(hess, cubic, m, L, B1, B2):
     M = np.sqrt(1 / np.repeat(m,3))
     inv_trans_L = np.linalg.inv(L).T # Maybe dont tranpose? does inverse flip dimension? 
     little_l = np.einsum('a,ia,ir->ar', M, B1, inv_trans_L)
     L1 = np.einsum('ia,a,ar->ir', B1, M, little_l)
     L2 = np.einsum('iab,a,ar,b,bs->irs', B2, M, little_l, M, little_l)
-    term1 = np.einsum('ijk,ir,js,kt->rst', mwcubic, L1, L1, L1)
-    term2 = np.einsum('ij, irs, jt->rst', mwhess, L2, L1)
-    term3 = np.einsum('ij, irt, js->rst', mwhess, L2, L1)
-    term4 = np.einsum('ij,ist,jr->rst', mwhess, L2, L1)
-    print("SQRT(SUM t2 t3 t4)*convert")
-    print(np.sqrt(term2 + term3 + term4) * convert)
+    term1 = np.einsum('ijk,ir,js,kt->rst', cubic, L1, L1, L1)
+    term2 = np.einsum('ij, irs, jt->rst', hess, L2, L1)
+    term3 = np.einsum('ij, irt, js->rst', hess, L2, L1)
+    term4 = np.einsum('ij,ist,jr->rst', hess, L2, L1)
 
-    return
+    nc_cubic = term1 + term2 + term3 + term4                             # UNITS: Hartree / Ang^3 amu^3/2
+    frac = (hbar / (2*np.pi*cmeter))**(3/2) 
+    nc_cubic *= (1 / (ang2m**3 * amu2kg**(3/2)))                         # UNITS: Hartree / m^3 kg^3/2
+    nc_cubic *= frac                                                     # UNITS: Hartree / m^(3/2) 
+    nc_cubic *= (1 / 100**(3/2))                                         # UNITS: Hartree cm-1 ^ (3/2)
+    # Multiply each element by appropriate 3 harmonic frequencies
+    omega = np.array([1737.31536,3987.9131,4144.72382])**(-1/2)
+    nc_cubic = np.einsum('ijk,i,j,k->ijk', nc_cubic, omega, omega, omega) # UNITS: Hartree
+    # add minus sign and convert to cm-1
+    nc_cubic *= -hartree2cm                                               # UNITS: cm-1
+    print(nc_cubic)
+    return nc_cubic
 
 
-def cubic(hess, cubic, m, L, B1, B2):
-    M = np.sqrt(1 / np.repeat(m,3))
-    inv_trans_L = np.linalg.inv(L).T # Maybe dont tranpose? does inverse flip dimension? 
-    little_l = np.einsum('a,ia,ir->ar', M, B1, inv_trans_L)
-
-    L1_tensor = np.einsum('ia,a,ar->ir', B1, M, little_l)
-    L1 = L1_tensor / np.linalg.norm(L1_tensor, axis=0)
-
-    L2_tensor = np.einsum('iab,a,ar,b,bs->irs', B2, M, little_l, M, little_l)
-    print("unnorm L2")
-    print(L2_tensor)
-    # Normalize 'along the column'
-    invnorm = np.reciprocal(np.linalg.norm(L2_tensor, axis=1))
-    L2 = np.einsum('ijk,ik->ijk', L2_tensor, invnorm)
-    # Normalize 'through the stack' 
-    #invnorm = np.reciprocal(np.linalg.norm(L2_tensor, axis=0))
-    #L2 = np.einsum('ijk,jk->ijk', L2_tensor, invnorm)
-    # Normalize 'along the row'
-    #invnorm = np.reciprocal(np.linalg.norm(L2_tensor, axis=2))
-    #L2 = np.einsum('ijk,ij->ijk', L2_tensor, invnorm)
-    print("norm L2")
-    print(L2)
-
-    # TODO: Mass weight Cubic tensor???
-    G1 = np.einsum('in,jn,n,n->ij', B1, B1, M, M)
-    mwhess = np.einsum('ij,jk->ik', G1,hess)
-    #G2 = np.einsum('inm, jnm, knm, n, m->ijk', B2, B2, B2, M, M)
-    G2 = np.einsum('inm, jnm, n, m->ij', B2, B2, M, M)
-    #G2 = np.einsum('in,jn,kn,n,n->ijk', B1, B1, B1, M, M)
-    #mwcubic = np.einsum('ij,i, jkm->ikl', G1, G1, cubic)
-    mwcubic = G1.dot(cubic).dot(G1)
-    ##mwcubic = np.einsum('jk,ijk->ikl', G2, cubic)
-    #mwcubic = np.dot(G2, cubic)
-    #mwcubic = np.einsum('ijk,jkl->ikl', G2, cubic)
-    #mwcubic = G2.dot(cubic)
-    print(mwcubic.shape)
-    #GF = np.einsum('ij,jk->ik', G,hess)
-
-    quadratic = np.einsum('ij,ir,js->rs', mwhess, L1, L1)
-    print('quad',np.sqrt(quadratic) * convert)
-    term1 = np.einsum('ijk,ir,js,kt->rst', mwcubic, L1, L1, L1)
-    term2 = np.einsum('ij, irs, jt->rst', mwhess, L2, L1)
-    term3 = np.einsum('ij, irt, js->rst', mwhess, L2, L1)
-    term4 = np.einsum('ij,ist,jr->rst', mwhess, L2, L1)
-    # Convert units of third order terms
-    #tmp1 = np.sqrt(term1 * convert2)
-    # Convert units of 2nd order terms
-    tmp1 = np.sqrt(term1) * convert2
-    print(np.sqrt(term2)*convert)
-    print(np.sqrt(term3)*convert)
-    print(np.sqrt(term4)*convert)
-    print("SUM t2 t3 t4")
-    print(term2 + term3 + term4)
-    print("SQRT(SUM t2 t3 t4)*convert")
-    print(np.sqrt(term2 + term3 + term4) * convert)
-
-    #tmp2 = np.sqrt(term2 + term3 + term4) * convert
-    #print(tmp1)
-    #print(tmp2)
-    #fc_3 = term1 + term2 + term3 + term4
-
-    #print(fc_3)
-    #print(fc_3 * convert)
-    #print(np.sqrt(fc_3) * convert)
-    #print(np.sqrt(fc_3) * convert2)
 
 # Use Psi4 data first
 #internals = [Btensors.ad_intcos.STRE(0,2), Btensors.ad_intcos.STRE(1,2), Btensors.ad_intcos.BEND(0,2,1)]
@@ -442,20 +391,32 @@ E = transform(computed_distances)
 interatomic_hess = differentiate_nn(E, computed_distances, order=2).detach().numpy()
 cart_hess = intderiv2cartderiv(interatomic_hess, B1_idm)
 curvilinear_hess = cartderiv2intderiv(cart_hess, B1)
+psi4_curvihess = cartderiv2intderiv(psihess, B1)
 print(curvilinear_hess)
+print(psi4_curvihess)
 
 interatomic_cubic = differentiate_nn(E, computed_distances, order=3).detach().numpy()
-cart_cubic = intderiv2cartderiv(interatomic_cubic, B1_idm)
-curvilinear_cubic = cartderiv2intderiv(cart_cubic, B1)
+cart_cubic = intcubic2cartcubic(interatomic_cubic, interatomic_hess, B1_idm, B2_idm)
+int_cubic = cartcubic2intcubic(cart_cubic, interatomic_hess, B1_idm, B2_idm)
+# Check forward and reverse transformation
+print(np.allclose(int_cubic,interatomic_cubic))
+curvilinear_cubic = cartcubic2intcubic(cart_cubic, curvilinear_hess, B1, B2)
 
 #f, L = internal_freq(curvilinear_hess, B1, m)
 f, L_allen = tmp_internal_freq(curvilinear_hess, B1, m)
+print(f)
 print(L_allen)
 
+b = quadratic(curvilinear_hess, m, L_allen, B1)
+cubic(curvilinear_hess, curvilinear_cubic, m, L_allen, B1, B2)
 
-b = quadratic2(curvilinear_hess, m, L_allen, B1)
-cubic2(curvilinear_hess, curvilinear_cubic, m, L_allen, B1, B2)
-
+# Try using as much Psi4 stuff as possible. Use Psi4 Cartesian hessian to get interatomic hessian, use that to get cartesian cubic, 
+#interatomic_hess = cartderiv2intderiv(psihess, B1_idm) 
+#cart_cubic = intcubic2cartcubic(interatomic_cubic, interatomic_hess, B1_idm, B2_idm)
+#curvilinear_cubic = cartcubic2intcubic(cart_cubic, psi4_curvihess, B1, B2)
+#f, L_allen = tmp_internal_freq(psi4_curvihess, B1, m)
+#b = quadratic(psi4_curvihess, m, L_allen, B1)
+#cubic(psi4_curvihess, curvilinear_cubic, m, L_allen, B1, B2)
 
 # Identical frequencies, good!
 #idm_f, idm_L = internal_freq(interatomic_hess, B1_idm, m)
