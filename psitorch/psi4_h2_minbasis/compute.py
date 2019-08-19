@@ -78,27 +78,36 @@ def nuclear_repulsion(atom1, atom2):
     return Za*Zb / torch.sqrt(torch.sum((atom1 - atom2)**2))
 
 # Define coordinates in angstroms as Torch tensors, turn on gradient tracking. Convert to Bohr. 
-tmpatom1 = torch.tensor([0.0,0.0,0.0], requires_grad=True)
-tmpatom2 = torch.tensor([0.0,0.0,0.9], requires_grad=True)
+#tmpatom1 = torch.tensor([0.0,0.0,0.0], requires_grad=True)
+#tmpatom2 = torch.tensor([0.0,0.0,0.9], requires_grad=True)
+tmpatom1 = torch.tensor([0.0,0.0,0.45], requires_grad=True)
+tmpatom2 = torch.tensor([0.0,0.0,-0.45], requires_grad=True)
 atom1 = ang2bohr * tmpatom1
 atom2 = ang2bohr * tmpatom2
 # Define basis exponent
-a1 = torch.tensor([0.2331359749], requires_grad=True)
+a1 = torch.tensor([0.2331359749], requires_grad=False)
+#a1 = torch.tensor([0.5], requires_grad=False)
 
 # Compute nuclear repulsion energy, and integrals: overlap, kinetic, nuclear-electron potential, two-electron repulsion 
 Enuc = nuclear_repulsion(atom1, atom2)
 
 s1 = overlap_s(a1, a1, atom1, atom1)
 s2 = overlap_s(a1, a1, atom1, atom2)
-S = torch.stack([s1,s2,s2,s1]).reshape(2,2)
+s3 = overlap_s(a1, a1, atom2, atom1)
+s4 = overlap_s(a1, a1, atom2, atom2)
+S = torch.stack([s1,s2,s3,s4]).reshape(2,2)
 
 t1 = kinetic_s(a1, a1, atom1, atom1)
 t2 = kinetic_s(a1, a1, atom1, atom2)
-T = torch.stack([t1,t2,t2,t1]).reshape(2,2)
+t3 = kinetic_s(a1, a1, atom2, atom1)
+t4 = kinetic_s(a1, a1, atom2, atom2)
+T = torch.stack([t1,t2,t3,t4]).reshape(2,2)
 
 v1 = potential_s(a1, a1, atom1, atom1, atom1, 1) + potential_s(a1, a1, atom1, atom1, atom2, 1)
 v2 = potential_s(a1, a1, atom1, atom2, atom1, 1) + potential_s(a1, a1, atom1, atom2, atom2, 1)
-V = torch.stack([v1,v2,v2,v1]).reshape(2,2)
+v3 = potential_s(a1, a1, atom1, atom2, atom1, 1) + potential_s(a1, a1, atom1, atom2, atom2, 1)
+v4 = potential_s(a1, a1, atom1, atom1, atom1, 1) + potential_s(a1, a1, atom1, atom1, atom2, 1)
+V = torch.stack([v1,v2,v3,v4]).reshape(2,2)
 
 g1 = eri_s(a1, a1, a1, a1, atom1, atom1, atom1, atom1)
 g2 = eri_s(a1, a1, a1, a1, atom1, atom1, atom1, atom2)
@@ -106,21 +115,34 @@ g3 = eri_s(a1, a1, a1, a1, atom1, atom1, atom2, atom2)
 g4 = eri_s(a1, a1, a1, a1, atom1, atom2, atom1, atom2)
 G = torch.stack([g1, g2, g2, g3, g2, g4, g4, g2, g2, g4, g4, g2, g3, g2, g2, g1]).reshape(2,2,2,2)
 
-# Converged density from Psi4
-D = torch.tensor([[0.29175269765654,0.29175269765655],
-                  [0.29175269765655,0.29175269765655]])
 
-def hartree_fock_energy(H, G, D, Enuc):
+# HARTREE FOCK FROM SCRATCH
+eigval, eigvec = torch.symeig(S, eigenvectors=True)
+d12 = torch.sqrt(torch.diag(eigval))
+tmpA = torch.chain_matmul(eigvec, d12, eigvec) 
+A = torch.inverse(tmpA)  # Orthogonalizer S^(-1/2)
+ndocc = 1
+H = T + V
+# Guess 0 density matrix
+D = torch.zeros((2,2))
+
+for i in range(3):
     J = torch.einsum('pqrs,rs->pq', G, D)
     K = torch.einsum('prqs,rs->pq', G, D)
     F = H + J * 2 - K
-    e = torch.einsum('pq,pq->', F + H, D) + Enuc
-    return e
+    
+    E = torch.einsum('pq,pq->', F + H, D) + Enuc
+    print(E)
+
+    Fp = torch.chain_matmul(A, F, A)
+    e, C2 = torch.symeig(Fp, eigenvectors=True)             
+    C = torch.matmul(A, C2)
+    Cocc = C[:, :ndocc]                                                              
+    D = torch.einsum('pi,qi->pq', Cocc, Cocc)
 
 # Energy in Hartree agrees
-print(hartree_fock_energy(T + V, G, D, Enuc))
-
-
-#print(torch.autograd.grad(k2, tmpatom2))
-#print(torch.autograd.grad(v1, tmpatom1))
+grad = torch.autograd.grad(E, atom1, create_graph=True)[0] 
+print(grad)
+grad = torch.autograd.grad(E, atom2)[0] 
+print(grad)
 
