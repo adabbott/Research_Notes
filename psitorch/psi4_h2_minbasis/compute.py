@@ -1,11 +1,21 @@
 import torch
 import math
-torch.set_printoptions(precision=12)
+torch.set_printoptions(precision=10, linewidth=400)
 torch.set_default_dtype(torch.float64)
-
 ang2bohr = 1 / 0.52917720859
-#def factorial(tensr):
-#    return torch.exp(torch.mvlgamma(tensr, 1))
+
+# Define coordinates in Angstroms as Torch tensors, turn on gradient tracking. Convert to Bohr. 
+tmpgeom1 = [0.0000000000000000,0.0000000000000,0.00000000000000, 0.0000000000000000,0.0000000000000000,0.90000000000000]
+tmpgeom2 = []
+for i in tmpgeom1:
+    tmpgeom2.append(torch.tensor(i, dtype=torch.float64, requires_grad=True))
+geom = torch.stack(tmpgeom2).reshape(2,3) * ang2bohr
+print(geom)
+atom1 = geom[0]
+atom2 = geom[1]
+
+# Define s atomic orbital basis function exponent. Use 1.0 for contraction coefficents.
+a1 = torch.tensor([0.3000000000], requires_grad=False)
 
 def overlap_s(a1, a2, A, B):
     """
@@ -32,8 +42,8 @@ def kinetic_s(a1, a2, A, B):
     return S00 * K00
 
 def torchboys(nu, arg):
-    '''Pytorch can only compute F0 boys function using the error function relation, the rest would have to
-    be determined recursively'''
+    '''Pytorch only has torch.erf, does not have torch.lowergamma. can only compute F0 boys function using the error function relation, the rest would have to
+    be determined recursively? Deepmind has a Cephes wrapper for PyTorch which has it. http://deepmind.github.io/torch-cephes/   '''
     if arg < 1e-8:
         boys =  1 / (2 * nu + 1) - arg / (2 * nu + 3)
     else:
@@ -75,74 +85,79 @@ def nuclear_repulsion(atom1, atom2):
     ''' warning : hard coded'''
     Za = 1
     Zb = 1
-    return Za*Zb / torch.sqrt(torch.sum((atom1 - atom2)**2))
+    return Za*Zb / torch.norm(atom1-atom2) 
 
-# Define coordinates in angstroms as Torch tensors, turn on gradient tracking. Convert to Bohr. 
-#tmpatom1 = torch.tensor([0.0,0.0,0.0], requires_grad=True)
-#tmpatom2 = torch.tensor([0.0,0.0,0.9], requires_grad=True)
-tmpatom1 = torch.tensor([0.0,0.0,0.45], requires_grad=True)
-tmpatom2 = torch.tensor([0.0,0.0,-0.45], requires_grad=True)
-atom1 = ang2bohr * tmpatom1
-atom2 = ang2bohr * tmpatom2
-# Define basis exponent
-a1 = torch.tensor([0.2331359749], requires_grad=False)
-#a1 = torch.tensor([0.5], requires_grad=False)
+#def factorial(tensr):
+#    return torch.exp(torch.mvlgamma(tensr, 1))
 
 # Compute nuclear repulsion energy, and integrals: overlap, kinetic, nuclear-electron potential, two-electron repulsion 
 Enuc = nuclear_repulsion(atom1, atom2)
-
 s1 = overlap_s(a1, a1, atom1, atom1)
 s2 = overlap_s(a1, a1, atom1, atom2)
 s3 = overlap_s(a1, a1, atom2, atom1)
 s4 = overlap_s(a1, a1, atom2, atom2)
-S = torch.stack([s1,s2,s3,s4]).reshape(2,2)
-
+S = torch.stack([s1,s2,s2,s1]).reshape(2,2)
 t1 = kinetic_s(a1, a1, atom1, atom1)
 t2 = kinetic_s(a1, a1, atom1, atom2)
 t3 = kinetic_s(a1, a1, atom2, atom1)
 t4 = kinetic_s(a1, a1, atom2, atom2)
 T = torch.stack([t1,t2,t3,t4]).reshape(2,2)
-
 v1 = potential_s(a1, a1, atom1, atom1, atom1, 1) + potential_s(a1, a1, atom1, atom1, atom2, 1)
 v2 = potential_s(a1, a1, atom1, atom2, atom1, 1) + potential_s(a1, a1, atom1, atom2, atom2, 1)
 v3 = potential_s(a1, a1, atom1, atom2, atom1, 1) + potential_s(a1, a1, atom1, atom2, atom2, 1)
 v4 = potential_s(a1, a1, atom1, atom1, atom1, 1) + potential_s(a1, a1, atom1, atom1, atom2, 1)
 V = torch.stack([v1,v2,v3,v4]).reshape(2,2)
-
 g1 = eri_s(a1, a1, a1, a1, atom1, atom1, atom1, atom1)
 g2 = eri_s(a1, a1, a1, a1, atom1, atom1, atom1, atom2)
 g3 = eri_s(a1, a1, a1, a1, atom1, atom1, atom2, atom2)
 g4 = eri_s(a1, a1, a1, a1, atom1, atom2, atom1, atom2)
 G = torch.stack([g1, g2, g2, g3, g2, g4, g4, g2, g2, g4, g4, g2, g3, g2, g2, g1]).reshape(2,2,2,2)
 
-
 # HARTREE FOCK FROM SCRATCH
+# For some reason forming orthogonalizer from this method gives NaN hessians 
 eigval, eigvec = torch.symeig(S, eigenvectors=True)
-d12 = torch.sqrt(torch.diag(eigval))
+#d12 = torch.sqrt(torch.diag(eigval))
+d12 = torch.diag(torch.sqrt(eigval))
 tmpA = torch.chain_matmul(eigvec, d12, eigvec) 
 A = torch.inverse(tmpA)  # Orthogonalizer S^(-1/2)
+
+## This implementation does not give NaN hessians, has stable backward() gradient function
+#from sqrtm import sqrtm
+#S_1_2 = sqrtm(S)
+#A = torch.inverse(S_1_2)
 ndocc = 1
 H = T + V
-# Guess 0 density matrix
+# Guess 0 density matrix. (Can alternatively start with *converged* Density, then run through just 2 iteration cycles to
+# 'connect' all arrays back to the geometry in a Pytorch computation graph. For example, the J,K, and F arrays must be constructed from a D that is
+# determined from F)
 D = torch.zeros((2,2))
 
-for i in range(3):
+# Do HF. 
+for i in range(10):
     J = torch.einsum('pqrs,rs->pq', G, D)
     K = torch.einsum('prqs,rs->pq', G, D)
     F = H + J * 2 - K
-    
     E = torch.einsum('pq,pq->', F + H, D) + Enuc
-    print(E)
-
     Fp = torch.chain_matmul(A, F, A)
     e, C2 = torch.symeig(Fp, eigenvectors=True)             
     C = torch.matmul(A, C2)
     Cocc = C[:, :ndocc]                                                              
     D = torch.einsum('pi,qi->pq', Cocc, Cocc)
 
-# Energy in Hartree agrees
-grad = torch.autograd.grad(E, atom1, create_graph=True)[0] 
+# Compute derivatives
+grad = torch.autograd.grad(E, geom, create_graph=True)[0] 
+h = []
+for g in grad.flatten():
+    h1 = torch.autograd.grad(g, geom, create_graph=True)[0]
+    h.append(h1)
+hess = torch.stack(h).reshape(6,6)
+
+
+print(E)
+print("Gradient")
 print(grad)
-grad = torch.autograd.grad(E, atom2)[0] 
-print(grad)
+print("Hessian")
+print(hess)
+print(torch.eig(hess))
+
 
