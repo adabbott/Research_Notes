@@ -38,13 +38,12 @@ def overlap(aa, bb, Ra, Rb):
     #S = c#  (math.pi / (aa + bb)) ** (3/2)
     return S
 
-@torch.jit.script
+#@torch.jit.script
 def build_overlap(basisA, basisB, A, B):
     '''Vectorized constructiong of overlap integral matrix of diatomic molecule with s-orbital basis functions'''
     nbfA = torch.numel(basisA)
     nbfB = torch.numel(basisB)
     nbf = nbfA + nbfB
-    I = torch.zeros((nbf,nbf))
     # Orbital overlap integral over s functions = Na * Nb * c * (pi / (aa+bb))^(3/2)
     # Construct Normalization constant product array, Na * Nb component
     basis = torch.cat((basisA,basisB), dim=0)
@@ -62,6 +61,34 @@ def build_overlap(basisA, basisB, A, B):
     Bn = B.repeat(nbfB).reshape(nbfB, 3)
     centers = torch.cat((An,Bn),dim=0)
     # need to subtract every possible A with every possible B, build up 3D tensors, transpose non-cartesian dimensions for second one, dot them
+    tmpA = centers.expand(nbf,nbf,3)
+    AminusB = tmpA - torch.transpose(tmpA, 0,1) #caution: tranpose shares memory with original array. changing one changes the other
+    AmBAmB = torch.einsum('ijk,ijk->ij', AminusB, AminusB)
+    coeff = torch.exp(AmBAmB * (-aa_times_bb / aa_plus_bb))
+    S = normtensor * coeff * term
+    return S
+
+def full_overlap(basis, geom, nbf_per_atom):
+    '''basis is a vector of orbital exponents in the same order as the atom order in 'geom'.
+       That is, you must concatentate the basis sets of each atom together before passing to this function.
+       Geom is  an N x 3 array of cartesian coordinates for N atoms.
+       nbf_per_atom is a 1d torch.tensor with the number of basis functions for each atom (so we know which center goes with which basis function)
+    '''
+    if basis.size()[0] != torch.sum(nbf_per_atom):
+        raise Exception("Size of basis set does not match number of basis functions per atom")
+    if geom.size()[0] != nbf_per_atom.size()[0]:
+        raise Exception("Number of atoms and number of basis functions per atom do not match.")
+    nbf = torch.numel(basis)
+    # 'centers' are the cartesian centers ((nbf,3) array) of each basis function, in the same order as the 'basis' vector
+    centers = geom.repeat_interleave(nbf_per_atom, dim=0).reshape(-1,3)
+    # Construct Normalization constant product array, Na * Nb component
+    norm = (2 * basis / math.pi)**(3/4)
+    normtensor = torch.ger(norm,norm) # outer product => every possible combination of Na * Nb
+    # Construct pi / aa + bb ** 3/2 term
+    aa_times_bb = torch.ger(basis,basis)
+    aa_plus_bb = basis.expand(nbf,-1) + torch.transpose(basis.expand(nbf,-1),0,1) # doesnt copy data, unlike repeat(). may not work, but very efficient
+    term = (math.pi / aa_plus_bb) ** (3/2)
+    # Construct gaussian product coefficient array, c = exp(A-B dot A-B) * ((-aa * bb) / (aa + bb))
     tmpA = centers.expand(nbf,nbf,3)
     AminusB = tmpA - torch.transpose(tmpA, 0,1) #caution: tranpose shares memory with original array. changing one changes the other
     AmBAmB = torch.einsum('ijk,ijk->ij', AminusB, AminusB)
@@ -108,8 +135,6 @@ def eri(aa,bb,cc,dd,A,B,C,D):
     F = torchboys(torch.tensor(0.0), arg)
     G = F * Na * Nb * Nc * Nd * c1 * c2 * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
     return G
-
-
 
 #@torch.jit.script
 def build_tei(basisA, basisB, basisC, basisD, A, B, C, D):
@@ -190,42 +215,45 @@ basis1 = torch.tensor([0.5, 0.4], requires_grad=False)
 basis2 = torch.tensor([0.5, 0.4, 0.3, 0.2], requires_grad=False)
 basis3 = torch.tensor([0.5, 0.4, 0.3, 0.2, 0.1, 0.05], requires_grad=False)
 basis4 = torch.tensor([0.5, 0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.001], requires_grad=False)
+D1 = torch.from_numpy(np.load('D4.npy'))
+D2 = torch.from_numpy(np.load('D8.npy'))
+D3 = torch.from_numpy(np.load('D12.npy'))
+D4 = torch.from_numpy(np.load('D16.npy'))
 
 basisn = torch.rand(200)
 
-D4 = torch.from_numpy(np.load('D4.npy'))
-D8 = torch.from_numpy(np.load('D8.npy'))
-D12 = torch.from_numpy(np.load('D12.npy'))
-D16 = torch.from_numpy(np.load('D16.npy'))
+print(geom)
+S1 = build_overlap(basis2, basis2, geom[0], geom[1])
+full_basis = torch.cat((basis2,basis2))
+S2 = full_overlap(full_basis, geom, torch.tensor([4,4]))
+print(torch.allclose(S1,S2))
 
-#e,grad = benchmark(geom,basis1,D4) 
-#print(e,grad)
-#e,grad = benchmark(geom,basis2,D8)
-#print(e,grad)
-#e,grad = benchmark(geom,basis3,D12) 
-#print(e,grad)
-#benchmark(geom,basis4,D16)
-#print(e,grad)
-
+#@torch.jit.script
+#def benchmark_s1(basis1,basisn,geom):
+#    Stmp = build_overlap(basis1,basis1, geom[0], geom[1]) # pass through easy data for JIT compilation (not sure if thats how it works)
+#    S = build_overlap(basisn,basisn, geom[0], geom[1])    # now pass through actual example
+#    return S
 
 #@torch.jit.script
 def benchmark_s1(basis1,basisn,geom):
-    build_overlap(basis1,basis1, geom[0], geom[1]) # pass through easy data for JIT compilation (not sure if thats how it works)
-    build_overlap(basisn,basisn, geom[0], geom[1])
+    S1 = build_overlap(basis1,basis1, geom[0], geom[1]) # pass through easy data for JIT compilation (not sure if thats how it works)
+    S = build_overlap(basisn,basisn, geom[0], geom[1])    # now pass through actual example
+    return S
 
 #@torch.jit.script
 def benchmark_s2(basis1,basisn,geom):
-    build_oei(basis1,basis1,geom[0],geom[1],mode='overlap') # pass through easy data for JIT compilation (not sure if thats how it works)
-    build_oei(basisn,basisn,geom[0],geom[1],mode='overlap')
+    S1 = build_oei(basis1,basis1,geom[0],geom[1],mode='overlap') # pass through easy data for JIT compilation (not sure if thats how it works)
+    S = build_oei(basisn,basisn,geom[0],geom[1],mode='overlap')
+    return S
+
 
 #benchmark_s2(basis1, basisn, geom)
-
-##def benchmark_s2(basis1,basis2,basis3,basis4,geom):
-#    build_oei(basis1,basis1, geom[0], geom[1], mode='overlap')
-#    build_oei(basis2,basis2, geom[0], geom[1], mode='overlap')
-#    build_oei(basis3,basis3, geom[0], geom[1], mode='overlap')
-#    build_oei(basis4,basis4, geom[0], geom[1], mode='overlap')
-
+#with torch.jit.optimized_execution(True):
+#    fast = torch.jit.trace(build_overlap, (basis1, basis1, geom[0], geom[1]))
+#with torch.jit.optimized_execution(True):
+#    fast = torch.jit.trace(build_overlap, (basisn, basisn, geom[0], geom[1]))
+    #fast = torch.jit.trace(build_overlap) #, (basisn, basisn, geom[0], geom[1]))
+    #fast = torch.jit.script(build_overlap)
+#S = fast(basisn, basisn, geom[0], geom[1])
 #print(S)
-#print(fast)
 
