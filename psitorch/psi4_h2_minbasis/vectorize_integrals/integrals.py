@@ -28,6 +28,23 @@ def torchboys(nu, arg):
         boys = torch.erf(torch.sqrt(arg)) * math.sqrt(math.pi) / (2 * torch.sqrt(arg))
     return boys
 
+def boys(nu, arg):
+    #if arg < 1e-8:
+    #    boys =  1 / (2 * nu + 1) - arg / (2 * nu + 3)
+    #else:
+    boys = 0.5 * torch.exp(-arg) * (1 / (nu + 0.5)) * (1 + (arg / (nu+1.5)) *\
+                                                          (1 + (arg / (nu+2.5)) *\
+                                                          (1 + (arg / (nu+3.5)) *\
+                                                          (1 + (arg / (nu+4.5)) *\
+                                                          (1 + (arg / (nu+5.5)) *\
+                                                          (1 + (arg / (nu+6.5)) *\
+                                                          (1 + (arg / (nu+7.5)) *\
+                                                          (1 + (arg / (nu+8.5)) *\
+                                                          (1 + (arg / (nu+9.5)) *\
+                                                          (1 + (arg / (nu+10.5))*\
+                                                          (1 + (arg / (nu+11.5)))))))))))))
+    return boys
+
 @torch.jit.script
 def overlap(aa, bb, Ra, Rb):
     '''Computes a single overlap integral over two primitive s-orbital basis functions'''
@@ -38,7 +55,7 @@ def overlap(aa, bb, Ra, Rb):
     #S = c#  (math.pi / (aa + bb)) ** (3/2)
     return S
 
-#@torch.jit.script
+@torch.jit.script
 def build_overlap(basisA, basisB, A, B):
     '''Vectorized constructiong of overlap integral matrix of diatomic molecule with s-orbital basis functions'''
     nbfA = torch.numel(basisA)
@@ -68,11 +85,13 @@ def build_overlap(basisA, basisB, A, B):
     S = normtensor * coeff * term
     return S
 
-def full_overlap(basis, geom, nbf_per_atom):
+#@torch.jit.script
+def overlap_kinetic(basis, geom, nbf_per_atom):
     '''basis is a vector of orbital exponents in the same order as the atom order in 'geom'.
        That is, you must concatentate the basis sets of each atom together before passing to this function.
        Geom is  an N x 3 array of cartesian coordinates for N atoms.
        nbf_per_atom is a 1d torch.tensor with the number of basis functions for each atom (so we know which center goes with which basis function)
+       In the future you should jsut make a single  arg which contains all orbital exponents and there corresponding centers pre-prepared
     '''
     if basis.size()[0] != torch.sum(nbf_per_atom):
         raise Exception("Size of basis set does not match number of basis functions per atom")
@@ -94,7 +113,12 @@ def full_overlap(basis, geom, nbf_per_atom):
     AmBAmB = torch.einsum('ijk,ijk->ij', AminusB, AminusB)
     coeff = torch.exp(AmBAmB * (-aa_times_bb / aa_plus_bb))
     S = normtensor * coeff * term
-    return S
+    # Is kinetic this simple? Yep.
+    P = aa_times_bb / aa_plus_bb
+    T = S * (3 * P + 2 * P * P * -AmBAmB)
+    # Constructing the Boys function tensor is tricky in its current form, need to rewrite as a series?
+    # Also, each potential integral is a sum over all centers (atoms).. right?
+    return S, T
 
 @torch.jit.script
 def kinetic(aa,bb,A,B):
@@ -104,7 +128,7 @@ def kinetic(aa,bb,A,B):
     K = overlap(aa,bb,A,B) * (3 * P + 2 * P * P * ab)
     return K
 
-@torch.jit.script
+#@torch.jit.script
 def potential(aa,bb,A,B,atom,charge):
     '''Computes a single electron-nuclear potential energy integral over two primitive s-orbital basis functions'''
     g = aa + bb
@@ -114,6 +138,7 @@ def potential(aa,bb,A,B,atom,charge):
     Na = normalize(aa)
     Nb = normalize(bb)
     F = torchboys(torch.tensor(0.0), arg)
+    print(arg,F[0], boys(torch.tensor(0.0), arg)[0])
     V = -charge * F * Na * Nb * c * 2 * math.pi / g
     return V
 
@@ -222,11 +247,25 @@ D4 = torch.from_numpy(np.load('D16.npy'))
 
 basisn = torch.rand(200)
 
-print(geom)
-S1 = build_overlap(basis2, basis2, geom[0], geom[1])
-full_basis = torch.cat((basis2,basis2))
-S2 = full_overlap(full_basis, geom, torch.tensor([4,4]))
-print(torch.allclose(S1,S2))
+#S1 = build_overlap(basis2, basis2, geom[0], geom[1])
+#full_basis = torch.cat((basisn,basisn))
+
+#full_basis = torch.cat((basis2,basis2))
+#S, T = overlap_kinetic(full_basis, geom, torch.tensor([4,4]))
+#T2 = build_oei(basis2, basis2, geom[0], geom[1], 'kinetic')
+#print(torch.allclose(T,T2))
+#
+#full_basis = torch.cat((basisn,basisn))
+#S, T = overlap_kinetic(full_basis, geom, torch.tensor([200,200]))
+#T2 = build_oei(basisn, basisn, geom[0], geom[1], 'kinetic')
+#print(torch.allclose(T,T2))
+
+T2 = build_oei(basisn, basisn, geom[0], geom[1], 'potential')
+
+
+
+#S, T = overlap_kinetic(full_basis, geom, torch.tensor([4,4]))
+#print(build_oei(basis2, basis2, geom[0], geom[1], 'kinetic'))
 
 #@torch.jit.script
 #def benchmark_s1(basis1,basisn,geom):
