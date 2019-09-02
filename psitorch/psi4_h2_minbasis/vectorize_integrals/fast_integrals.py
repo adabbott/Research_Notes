@@ -29,10 +29,7 @@ def torchboys(nu, arg):
     return boys
 
 def boys(nu, arg):
-    '''Alternative boys function expansion.'''
-    #if arg < 1e-8:
-    #    boys =  1 / (2 * nu + 1) - arg / (2 * nu + 3)
-    #else:
+    '''Alternative boys function expansion. Not exact.'''
     boys = 0.5 * torch.exp(-arg) * (1 / (nu + 0.5)) * (1 + (arg / (nu+1.5)) *\
                                                           (1 + (arg / (nu+2.5)) *\
                                                           (1 + (arg / (nu+3.5)) *\
@@ -57,42 +54,20 @@ def overlap(aa, bb, Ra, Rb):
     return S
 
 @torch.jit.script
-def build_overlap(basisA, basisB, A, B):
-    '''Vectorized constructiong of overlap integral matrix of diatomic molecule with s-orbital basis functions'''
-    nbfA = torch.numel(basisA)
-    nbfB = torch.numel(basisB)
-    nbf = nbfA + nbfB
-    # Orbital overlap integral over s functions = Na * Nb * c * (pi / (aa+bb))^(3/2)
-    # Construct Normalization constant product array, Na * Nb component
-    basis = torch.cat((basisA,basisB), dim=0)
-    norm = (2 * basis / math.pi)**(3/4)
-    normtensor = torch.ger(norm,norm) # outer product => every possible combination of Na, Nb
-    # Construct pi / aa + bb ** 3/2 term
-    aa_times_bb = torch.ger(basis,basis)
-    #aa_plus_bb = basis.expand(nbf,-1) + basis.expand(nbf,-1).T # doesnt copy data, unlike repeat(). may not work, but very efficient
-    aa_plus_bb = basis.expand(nbf,-1) + torch.transpose(basis.expand(nbf,-1),0,1) # doesnt copy data, unlike repeat(). may not work, but very efficient
-    term = (math.pi / aa_plus_bb) ** (3/2)
-    # Construct gaussian product coefficient array, c = exp(A-B dot A-B) * ((-aa * bb) / (aa + bb))
-    # first exp(A-B dot A-B)
-    # 'centers' are the cartesian centers ((nbf,3) array) of each basis function, in the same order as the 'basis' vector
-    An = A.repeat(nbfA).reshape(nbfA, 3) # switch to expand?
-    Bn = B.repeat(nbfB).reshape(nbfB, 3)
-    centers = torch.cat((An,Bn),dim=0)
-    # need to subtract every possible A with every possible B, build up 3D tensors, transpose non-cartesian dimensions for second one, dot them
-    tmpA = centers.expand(nbf,nbf,3)
-    AminusB = tmpA - torch.transpose(tmpA, 0,1) #caution: tranpose shares memory with original array. changing one changes the other
-    AmBAmB = torch.einsum('ijk,ijk->ij', AminusB, AminusB)
-    coeff = torch.exp(AmBAmB * (-aa_times_bb / aa_plus_bb))
-    S = normtensor * coeff * term
-    return S
-
-@torch.jit.script
 def vectorized_oei(basis, geom, nbf_per_atom, charge_per_atom):
-    '''basis is a vector of orbital exponents in the same order as the atom order in 'geom'.
-       That is, you must concatentate the basis sets of each atom together before passing to this function.
-       Geom is  an N x 3 array of cartesian coordinates for N atoms.
-       nbf_per_atom is a 1d torch.tensor with the number of basis functions for each atom (so we know which center goes with which basis function)
-       In the future you should jsut make a single  arg which contains all orbital exponents and there corresponding centers pre-prepared
+    '''Computes overlap, kinetic, and potential energy integrals over s orbital basis functions
+       Parameters
+       ----------
+       basis : torch.tensor() of shape (n,), where n is number of basis functions
+            A vector of orbital exponents in the same order as the atom order in 'geom'.
+            That is, you must concatentate the basis functions of each atom together before passing to this function.
+       geom : torch.tensor() of shape (N x 3), where N is number of atoms
+            The cartesian coordinates 
+       nbf_per_atom: torch.tensor() of shape (N,)
+            The number of basis functions for each atom (so we know which center (cartesian coordinate) goes with which basis function)
+       charge_per_atom: torch.tensor() of shape (N,)
+            The charge of the nucleus for each atom.
+       NOTE: In the future you should just make a single argument which contains all orbital exponents and their corresponding centers pre-prepared
     '''
     #if basis.size()[0] != torch.sum(nbf_per_atom):
     #    raise Exception("Size of basis set does not match number of basis functions per atom")
@@ -121,12 +96,12 @@ def vectorized_oei(basis, geom, nbf_per_atom, charge_per_atom):
     # Construct gaussian product center array, R = (aa * A + bb * B) / (aa + bb)
     # First construct every possible sum of exponential-weighted cartesian centers, aa*A + bb*B 
     aatimesA = torch.einsum('i,ij->ij', basis,centers)
-    # This is a 3D tensor (4,4,3), where each row is a unique sum of two exponent-weighted cartesian centers
+    # This is a 3D tensor (nbf,nbf,3), where each row is a unique sum of two exponent-weighted cartesian centers
     numerator = aatimesA[:,None,:] + aatimesA[None,:,:]
     R = torch.einsum('ijk,ij->ijk', numerator, 1/aa_plus_bb)
     # Now we must subtract off the atomic coordinates, for each atom, introducing yet another dimension, where we expand according to number of atoms
     R_per_atom = R.expand(geom.size()[0],-1,-1,-1)
-    expanded_geom = torch.transpose(geom.expand(4,4,-1,-1), 0,2)
+    expanded_geom = torch.transpose(geom.expand(nbf,nbf,-1,-1), 0,2)
     # Subtract off atom coordinates
     Rminusgeom = R_per_atom - expanded_geom
     # Now contract along the coordinate dimension, and weight by aa_plus_bb. This is the boys function argument.
@@ -142,26 +117,38 @@ def vectorized_oei(basis, geom, nbf_per_atom, charge_per_atom):
     return S, T, V
 
 #@torch.jit.script
-def potential(aa,bb,A,B,atom,charge):
-    '''Computes a single electron-nuclear potential energy integral over two primitive s-orbital basis functions'''
-    g = aa + bb
-    eps = 1 / (4 * g)
-    P, c = gp(aa,bb,A,B)
-    arg = g * torch.dot(P - atom, P - atom)
-    Na = normalize(aa)
-    Nb = normalize(bb)
-    F = torchboys(torch.tensor(0.0), arg)
-    #print(arg,F[0], boys(torch.tensor(0.0), arg)[0])
-    V = -charge * F * Na * Nb * c * 2 * math.pi / g
-    return V
+def vectorized_tei(basis, geom, nbf_per_atom):
+    '''Computes two electron integrals over s orbital basis functions
+       Parameters
+       ----------
+       basis : torch.tensor() of shape (n,), where n is number of basis functions
+            A vector of orbital exponents in the same order as the atom order in 'geom'.
+            That is, you must concatentate the basis functions of each atom together before passing to this function.
+       geom : torch.tensor() of shape (N x 3), where N is number of atoms
+            The cartesian coordinates 
+       nbf_per_atom: torch.tensor() of shape (N,)
+            The number of basis functions for each atom (so we know which center (cartesian coordinate) goes with which basis function)
+    '''
+    nbf = torch.numel(basis)
+    # 'centers' are the cartesian centers ((nbf,3) array) corresponding to each basis function, in the same order as the 'basis' vector
+    centers = geom.repeat_interleave(nbf_per_atom, dim=0).reshape(-1,3)
+    # Construct every combination of normalization constants 
+    norm = (2 * basis / math.pi)**(3/4)
+    normtensor = torch.einsum('i,j,k,l',norm,norm,norm,norm) 
+    # Construct 4 index tensor of dimensions (A,B,C,D) where each dimension is every possible basis function
+    # (A,B,C,D) + (D,B,C,A) ---> (A+D,B+B,C+C,D+A) ---> (A+D,D+A,C+C,B+B) which is just (A+D,A+D,C+C,B+B)
+    g1tmp = basis.expand(nbf,nbf,nbf,-1) + torch.transpose(basis.expand(nbf,nbf,nbf,-1), 0,3)
+    g1 = torch.transpose(g1tmp, 1,3)
+    g2tmp = torch.transpose(g1, 0,2)
+    g2 = torch.transpose(g2tmp, 1,3)
+    #g2 = torch.transpose(g2, 2,3)
+    #g1 = basis.expand(nbf,nbf,nbf,-1) + torch.transpose(basis.expand(nbf,nbf,nbf,-1),1,0) # doesnt copy data, unlike repeat(). may not work, but very efficient
+    #g2 = torch.transpose(basis.expand(nbf,nbf,nbf,-1), 2,3) + torch.transpose(basis.expand(nbf,nbf,nbf,-1),1,0) # doesnt copy data, unlike repeat(). may not work, but very efficient
+    #g2 = basis.expand(nbf,nbf,nbf,-1) + torch.transpose(basis.expand(nbf,nbf,nbf,-1),3,2) # doesnt copy data, unlike repeat(). may not work, but very efficient
 
-@torch.jit.script
-def kinetic(aa,bb,A,B):
-    '''Computes a single kinetic energy integral over two primitive s-orbital basis functions'''
-    P = (aa * bb) / (aa + bb)
-    ab = -1.0 * torch.dot(A-B, A-B)
-    K = overlap(aa,bb,A,B) * (3 * P + 2 * P * P * ab)
-    return K
+    #G = F * c1 * c2 * Na * Nb * Nc * Nd *  2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
+    G = normtensor * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
+    return G
 
 
 @torch.jit.script
@@ -180,7 +167,9 @@ def eri(aa,bb,cc,dd,A,B,C,D):
     delta = 1 / (4 * g1) + 1 / (4 * g2)
     arg = torch.dot(Rp - Rq, Rp - Rq) / (4 * delta)
     F = torchboys(torch.tensor(0.0), arg)
-    G = F * Na * Nb * Nc * Nd * c1 * c2 * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
+    #TODO change back
+    #G = F * Na * Nb * Nc * Nd * c1 * c2 * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
+    G = Na * Nb * Nc * Nd * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
     return G
 
 #@torch.jit.script
@@ -211,6 +200,32 @@ def build_tei(basisA, basisB, basisC, basisD, A, B, C, D):
                     #G[i,l,k,j] = G[i,j,k,l] 
                     #G[j,k,l,i] = G[i,j,k,l] 
     return G
+
+
+#@torch.jit.script
+def potential(aa,bb,A,B,atom,charge):
+    '''Computes a single electron-nuclear potential energy integral over two primitive s-orbital basis functions'''
+    g = aa + bb
+    eps = 1 / (4 * g)
+    P, c = gp(aa,bb,A,B)
+    arg = g * torch.dot(P - atom, P - atom)
+    Na = normalize(aa)
+    Nb = normalize(bb)
+    F = torchboys(torch.tensor(0.0), arg)
+    #print(arg,F[0], boys(torch.tensor(0.0), arg)[0])
+    V = -charge * F * Na * Nb * c * 2 * math.pi / g
+    return V
+
+@torch.jit.script
+def kinetic(aa,bb,A,B):
+    '''Computes a single kinetic energy integral over two primitive s-orbital basis functions'''
+    P = (aa * bb) / (aa + bb)
+    ab = -1.0 * torch.dot(A-B, A-B)
+    K = overlap(aa,bb,A,B) * (3 * P + 2 * P * P * ab)
+    return K
+
+
+
 
 @torch.jit.script
 def nuclear_repulsion(atom1, atom2):
@@ -264,23 +279,37 @@ basis3 = torch.tensor([0.5, 0.4, 0.3, 0.2, 0.1, 0.05], requires_grad=False)
 basis4 = torch.tensor([0.5, 0.4, 0.3, 0.2, 0.1, 0.05, 0.01, 0.001], requires_grad=False)
 basisn = torch.rand(200)
 
+full_basis = torch.cat((basis1,basis1))
+nbf_per_atom = torch.tensor([basis1.size()[0],basis1.size()[0]])
+G = vectorized_tei(full_basis,geom,nbf_per_atom)
+G2 = build_tei(basis1, basis1, basis1, basis1, geom[0], geom[1], geom[0], geom[1])
+print(torch.allclose(G, G2))
+#G3 = torch.from_numpy(np.load('G.npy'))
+#print(torch.allclose(G2, G3))
+
 
 def benchmark(basis,geom):
-    full_basis = torch.cat((basis1,basis1))
-    nbf_per_atom = torch.tensor([basis1.size()[0],basis1.size()[0]])
+    full_basis = torch.cat((basis,basis))
+    nbf_per_atom = torch.tensor([basis.size()[0],basis.size()[0]])
     charge_per_atom = torch.tensor([1.0,1.0])
     S, T, V = vectorized_oei(full_basis, geom, nbf_per_atom, charge_per_atom)
+    H = T + V
+    result = torch.einsum('ij,jk,kl,lm,im->', H,H,H,H,H)
+    grad = torch.autograd.grad(result, geom)
     return S, T, V
 
 def benchmark_old(basis,geom):
     S2 = build_oei(basis, basis, geom[0], geom[1], 'overlap')
     T2 = build_oei(basis, basis, geom[0], geom[1], 'kinetic')
     V2 = build_oei(basis, basis, geom[0], geom[1], 'potential')
+    H = T2 + V2
+    result = torch.einsum('ij,jk,kl,lm,im->', H,H,H,H,H)
+    grad = torch.autograd.grad(result, geom)
     return S2, T2, V2
 
-S,T,V = benchmark(basis1, geom)
-S2,T2,V2 = benchmark_old(basis1,geom)
-print(torch.allclose(S, S2))
-print(torch.allclose(T, T2))
-print(torch.allclose(V, V2, rtol=1e-5, atol=1e-5))
+#
+#S2,T2,V2 = benchmark_old(basis4,geom)
+#print(torch.allclose(S, S2))
+#print(torch.allclose(T, T2))
+#print(torch.allclose(V, V2, rtol=1e-5, atol=1e-5))
 
