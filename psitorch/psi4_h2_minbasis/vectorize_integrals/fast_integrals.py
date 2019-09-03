@@ -116,7 +116,7 @@ def vectorized_oei(basis, geom, nbf_per_atom, charge_per_atom):
     V = Ffinal * normtensor * coeff * 2 * math.pi / aa_plus_bb
     return S, T, V
 
-#@torch.jit.script
+@torch.jit.script
 def vectorized_tei(basis, geom, nbf_per_atom):
     '''Computes two electron integrals over s orbital basis functions
        Parameters
@@ -135,21 +135,32 @@ def vectorized_tei(basis, geom, nbf_per_atom):
     # Construct every combination of normalization constants 
     norm = (2 * basis / math.pi)**(3/4)
     normtensor = torch.einsum('i,j,k,l',norm,norm,norm,norm) 
-    # Construct 4 index tensor of dimensions (A,B,C,D) where each dimension is every possible basis function
-    # (A,B,C,D) + (D,B,C,A) ---> (A+D,B+B,C+C,D+A) ---> (A+D,D+A,C+C,B+B) which is just (A+D,A+D,C+C,B+B)
-    g1tmp = basis.expand(nbf,nbf,nbf,-1) + torch.transpose(basis.expand(nbf,nbf,nbf,-1), 0,3)
-    g1 = torch.transpose(g1tmp, 1,3)
-    g2tmp = torch.transpose(g1, 0,2)
-    g2 = torch.transpose(g2tmp, 1,3)
-    #g2 = torch.transpose(g2, 2,3)
-    #g1 = basis.expand(nbf,nbf,nbf,-1) + torch.transpose(basis.expand(nbf,nbf,nbf,-1),1,0) # doesnt copy data, unlike repeat(). may not work, but very efficient
-    #g2 = torch.transpose(basis.expand(nbf,nbf,nbf,-1), 2,3) + torch.transpose(basis.expand(nbf,nbf,nbf,-1),1,0) # doesnt copy data, unlike repeat(). may not work, but very efficient
-    #g2 = basis.expand(nbf,nbf,nbf,-1) + torch.transpose(basis.expand(nbf,nbf,nbf,-1),3,2) # doesnt copy data, unlike repeat(). may not work, but very efficient
-
-    #G = F * c1 * c2 * Na * Nb * Nc * Nd *  2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
-    G = normtensor * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
+    # Obtain miscellaneous terms 
+    # (i,l,j,k) + (l,i,j,k) ---> (i+l,i+l,j+j,k+k) ---> (A+D,D+A,C+C,B+B) which is just (A+D,A+D,C+C,B+B)
+    tmp1 = basis.expand(nbf,nbf,nbf,-1)
+    aa_plus_bb = tmp1.permute(0,3,1,2) + tmp1.permute(3,0,1,2)
+    cc_plus_dd = aa_plus_bb.permute(2,3,0,1)
+    aa_times_bb = tmp1.permute(0,3,1,2) * tmp1.permute(3,0,1,2)
+    cc_times_dd = aa_times_bb.permute(2,3,0,1)  
+    # Obtain gaussian product coefficients
+    tmp2 = centers.expand(nbf,nbf,nbf,nbf,3)
+    AminusB = tmp2.permute(0,3,1,2,4) - tmp2.permute(3,0,1,2,4) 
+    CminusD = AminusB.permute(2,3,0,1,4)
+    contract_AminusB = torch.einsum('ijklm,ijklm->ijkl', AminusB,AminusB)
+    c1 = torch.exp(contract_AminusB * -aa_times_bb / aa_plus_bb)
+    contract_CminusD = torch.einsum('ijklm,ijklm->ijkl', CminusD,CminusD)
+    c2 = torch.exp(contract_CminusD * -cc_times_dd / cc_plus_dd)
+    # Obtain gaussian product centers Rp = (aa * A + bb * B) / (aa + bb);  Rq = (cc * C + dd * D) / (cc + dd)
+    weighted_centers = torch.einsum('ijkl,ijklm->ijklm', tmp1, tmp2)
+    tmpAB = weighted_centers.permute(0,3,1,2,4) + weighted_centers.permute(3,0,1,2,4) 
+    tmpCD = tmpAB.permute(2,3,0,1,4)                                                  
+    Rp = torch.einsum('ijklm,ijkl->ijklm', tmpAB, 1/aa_plus_bb) 
+    Rq = torch.einsum('ijklm,ijkl->ijklm', tmpCD, 1/cc_plus_dd) 
+    delta = 1 / (4 * aa_plus_bb) + 1 / (4 * cc_plus_dd)
+    boys_arg = torch.einsum('ijklm,ijklm->ijkl', Rp-Rq, Rp-Rq) / (4 * delta)
+    F = boys(torch.tensor(0.0), boys_arg)
+    G = F * c1 * c2 * normtensor * 2 * math.pi**2 / (aa_plus_bb * cc_plus_dd) * torch.sqrt(math.pi / (aa_plus_bb + cc_plus_dd))
     return G
-
 
 @torch.jit.script
 def eri(aa,bb,cc,dd,A,B,C,D):
@@ -167,9 +178,7 @@ def eri(aa,bb,cc,dd,A,B,C,D):
     delta = 1 / (4 * g1) + 1 / (4 * g2)
     arg = torch.dot(Rp - Rq, Rp - Rq) / (4 * delta)
     F = torchboys(torch.tensor(0.0), arg)
-    #TODO change back
-    #G = F * Na * Nb * Nc * Nd * c1 * c2 * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
-    G = Na * Nb * Nc * Nd * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
+    G = F * Na * Nb * Nc * Nd * c1 * c2 * 2 * math.pi**2 / (g1 * g2) * torch.sqrt(math.pi / (g1 + g2))
     return G
 
 #@torch.jit.script
@@ -283,7 +292,15 @@ full_basis = torch.cat((basis1,basis1))
 nbf_per_atom = torch.tensor([basis1.size()[0],basis1.size()[0]])
 G = vectorized_tei(full_basis,geom,nbf_per_atom)
 G2 = build_tei(basis1, basis1, basis1, basis1, geom[0], geom[1], geom[0], geom[1])
-print(torch.allclose(G, G2))
+print(torch.allclose(G, G2, rtol=1e-4, atol=1e-4))
+
+full_basis = torch.cat((basis3,basis3))
+nbf_per_atom = torch.tensor([basis3.size()[0],basis3.size()[0]])
+G = vectorized_tei(full_basis,geom,nbf_per_atom)
+G2 = build_tei(basis3, basis3, basis3, basis3, geom[0], geom[1], geom[0], geom[1])
+print(torch.allclose(G, G2, rtol=1e-4, atol=1e-4))
+#print(G[0,0])
+#print(G2[0,0])
 #G3 = torch.from_numpy(np.load('G.npy'))
 #print(torch.allclose(G2, G3))
 
