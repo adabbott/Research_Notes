@@ -1,3 +1,5 @@
-# Molssi_projectnotes
+# Research Notes 
 
-This repository serves a book-keeping for the Molssi project tests and notes.
+This repository serves as 
+ * book-keeping for the Molssi project tests and notes.
+ * various other research and software related learning ventures and developments 
