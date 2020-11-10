@@ -8,6 +8,6 @@ sudo apt-get install img2pdf
 img2pdf *.png -o all_pngs.pdf
 ```
 
-If using WSL, need an Xserver to plot without exceptions raised, but it is need to display. 
+If using WSL, need an Xserver to plot without exceptions raised, but it is not needed to display. 
 Just run `wslview all_pngs.pdf` 
 
