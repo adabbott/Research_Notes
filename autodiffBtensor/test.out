@@ -1,0 +1,14 @@
+[2019-07-25 17:17:44,294] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-07-25 17:17:44,295] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-07-25 17:17:44,302] [INFO] [optking.testB]: 		Max. difference is 1.9e-08; 2nd derivative wrt 3 and 3.
+[2019-07-25 17:17:44,302] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-07-25 17:17:44,308] [INFO] [optking.testB]: 		Max. difference is 1.9e-08; 2nd derivative wrt 0 and 0.
+[2019-07-25 17:17:44,308] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-07-25 17:17:44,315] [INFO] [optking.testB]: 		Max. difference is 1.1e-06; 2nd derivative wrt 6 and 6.
+[2019-07-25 17:17:44,315] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.

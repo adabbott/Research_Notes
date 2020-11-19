@@ -1,0 +1,56 @@
+
+Testing water...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 0.12 seconds
+Optking took 0.02 seconds
+Testing linear water...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... False
+AutoDiff Optking took 0.12 seconds
+Optking took 0.02 seconds
+Testing ammonia...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 11.14 seconds
+Optking took 0.56 seconds
+Testing formaldehyde...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 1.6 seconds
+Optking took 0.13 seconds
+Testing bent formaldehyde...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 1.55 seconds
+Optking took 0.13 seconds
+Testing hooh...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 1.52 seconds
+Optking took 0.14 seconds
+Testing nonsense sf4 ...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 0.35 seconds
+Optking took 0.06 seconds
+Testing allene...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 91.98 seconds
+Optking took 2.6 seconds
+Testing ch3chch2cl...
+Same Internal Coordinates... True
+Same B-Matrix... True
+Same Second Order B-Tensor... True
+AutoDiff Optking took 1112.01 seconds
+Optking took 14.22 seconds
+

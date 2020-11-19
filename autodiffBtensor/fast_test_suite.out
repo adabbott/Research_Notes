@@ -1,0 +1,249 @@
+[2019-08-01 15:50:07,921] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:07,921] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:07,927] [INFO] [optking.testB]: 		Max. difference is 1.9e-08; 2nd derivative wrt 3 and 3.
+[2019-08-01 15:50:07,927] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:07,934] [INFO] [optking.testB]: 		Max. difference is 1.9e-08; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:07,934] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:07,940] [INFO] [optking.testB]: 		Max. difference is 1.1e-06; 2nd derivative wrt 6 and 6.
+[2019-08-01 15:50:07,940] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:50:08,138] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:08,138] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:08,146] [INFO] [optking.testB]: 		Max. difference is 1.9e-08; 2nd derivative wrt 3 and 3.
+[2019-08-01 15:50:08,146] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:08,153] [INFO] [optking.testB]: 		Max. difference is 1.9e-08; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:08,153] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:08,161] [INFO] [optking.testB]: 		Max. difference is 2.5e+02; 2nd derivative wrt 0 and 6.
+[2019-08-01 15:50:08,161] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:50:11,934] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:11,934] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:11,987] [INFO] [optking.testB]: 		Max. difference is 1.3e-08; 2nd derivative wrt 1 and 1.
+[2019-08-01 15:50:11,987] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:12,039] [INFO] [optking.testB]: 		Max. difference is 1.3e-08; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,039] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:12,095] [INFO] [optking.testB]: 		Max. difference is 1.3e-08; 2nd derivative wrt 1 and 1.
+[2019-08-01 15:50:12,095] [INFO] [optking.testB]: 		Testing internal coordinate 4 :
+[2019-08-01 15:50:12,148] [INFO] [optking.testB]: 		Max. difference is 1.3e-08; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,148] [INFO] [optking.testB]: 		Testing internal coordinate 5 :
+[2019-08-01 15:50:12,205] [INFO] [optking.testB]: 		Max. difference is 1.2e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,205] [INFO] [optking.testB]: 		Testing internal coordinate 6 :
+[2019-08-01 15:50:12,262] [INFO] [optking.testB]: 		Max. difference is 5.7e-07; 2nd derivative wrt 1 and 1.
+[2019-08-01 15:50:12,262] [INFO] [optking.testB]: 		Testing internal coordinate 7 :
+[2019-08-01 15:50:12,316] [INFO] [optking.testB]: 		Max. difference is 1.2e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,316] [INFO] [optking.testB]: 		Testing internal coordinate 8 :
+[2019-08-01 15:50:12,374] [INFO] [optking.testB]: 		Max. difference is 1.2e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,375] [INFO] [optking.testB]: 		Testing internal coordinate 9 :
+[2019-08-01 15:50:12,428] [INFO] [optking.testB]: 		Max. difference is 5.7e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,428] [INFO] [optking.testB]: 		Testing internal coordinate 10 :
+[2019-08-01 15:50:12,483] [INFO] [optking.testB]: 		Max. difference is 1.2e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:12,484] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:50:13,880] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:13,880] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:13,900] [INFO] [optking.testB]: 		Max. difference is 5.6e-09; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:13,900] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:13,929] [INFO] [optking.testB]: 		Max. difference is 8.6e-09; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:13,929] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:13,950] [INFO] [optking.testB]: 		Max. difference is 5.9e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:13,950] [INFO] [optking.testB]: 		Testing internal coordinate 4 :
+[2019-08-01 15:50:13,971] [INFO] [optking.testB]: 		Max. difference is 8.6e-09; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:13,971] [INFO] [optking.testB]: 		Testing internal coordinate 5 :
+[2019-08-01 15:50:13,996] [INFO] [optking.testB]: 		Max. difference is 5.9e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:13,996] [INFO] [optking.testB]: 		Testing internal coordinate 6 :
+[2019-08-01 15:50:14,017] [INFO] [optking.testB]: 		Max. difference is 1.2e-06; 2nd derivative wrt 0 and 2.
+[2019-08-01 15:50:14,017] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:50:15,648] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:15,648] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:15,669] [INFO] [optking.testB]: 		Max. difference is 4.6e-09; 2nd derivative wrt 2 and 2.
+[2019-08-01 15:50:15,669] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:15,704] [INFO] [optking.testB]: 		Max. difference is 8.5e-09; 2nd derivative wrt 7 and 1.
+[2019-08-01 15:50:15,704] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:15,731] [INFO] [optking.testB]: 		Max. difference is 3.2e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:15,731] [INFO] [optking.testB]: 		Testing internal coordinate 4 :
+[2019-08-01 15:50:15,752] [INFO] [optking.testB]: 		Max. difference is 8.5e-09; 2nd derivative wrt 10 and 1.
+[2019-08-01 15:50:15,752] [INFO] [optking.testB]: 		Testing internal coordinate 5 :
+[2019-08-01 15:50:15,774] [INFO] [optking.testB]: 		Max. difference is 3.2e-07; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:15,774] [INFO] [optking.testB]: 		Testing internal coordinate 6 :
+[2019-08-01 15:50:15,796] [INFO] [optking.testB]: 		Max. difference is 1.6e-06; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:15,796] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:50:17,225] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:17,225] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:17,246] [INFO] [optking.testB]: 		Max. difference is 2.4e-08; 2nd derivative wrt 1 and 1.
+[2019-08-01 15:50:17,246] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:17,268] [INFO] [optking.testB]: 		Max. difference is 7.5e-10; 2nd derivative wrt 6 and 0.
+[2019-08-01 15:50:17,268] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:17,292] [INFO] [optking.testB]: 		Max. difference is 1.9e-07; 2nd derivative wrt 5 and 5.
+[2019-08-01 15:50:17,292] [INFO] [optking.testB]: 		Testing internal coordinate 4 :
+[2019-08-01 15:50:17,315] [INFO] [optking.testB]: 		Max. difference is 2.4e-08; 2nd derivative wrt 7 and 7.
+[2019-08-01 15:50:17,315] [INFO] [optking.testB]: 		Testing internal coordinate 5 :
+[2019-08-01 15:50:17,337] [INFO] [optking.testB]: 		Max. difference is 1.9e-07; 2nd derivative wrt 8 and 8.
+[2019-08-01 15:50:17,337] [INFO] [optking.testB]: 		Testing internal coordinate 6 :
+[2019-08-01 15:50:17,358] [INFO] [optking.testB]: 		Max. difference is 2.5e-07; 2nd derivative wrt 5 and 3.
+[2019-08-01 15:50:17,358] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:50:18,397] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:18,397] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:18,417] [INFO] [optking.testB]: 		Max. difference is 5.7e-09; 2nd derivative wrt 2 and 0.
+[2019-08-01 15:50:18,417] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:18,439] [INFO] [optking.testB]: 		Max. difference is 5.7e-09; 2nd derivative wrt 2 and 0.
+[2019-08-01 15:50:18,440] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:18,458] [INFO] [optking.testB]: 		Max. difference is 5.7e-09; 2nd derivative wrt 2 and 0.
+[2019-08-01 15:50:18,458] [INFO] [optking.testB]: 	...Passed.
+[2019-08-01 15:50:31,449] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:50:31,450] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:50:31,592] [INFO] [optking.testB]: 		Max. difference is 1.2e-08; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:50:31,592] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:50:31,734] [INFO] [optking.testB]: 		Max. difference is 1.2e-08; 2nd derivative wrt 3 and 3.
+[2019-08-01 15:50:31,734] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:50:31,876] [INFO] [optking.testB]: 		Max. difference is 4.0e-09; 2nd derivative wrt 6 and 6.
+[2019-08-01 15:50:31,876] [INFO] [optking.testB]: 		Testing internal coordinate 4 :
+[2019-08-01 15:50:32,016] [INFO] [optking.testB]: 		Max. difference is 4.0e-09; 2nd derivative wrt 9 and 9.
+[2019-08-01 15:50:32,016] [INFO] [optking.testB]: 		Testing internal coordinate 5 :
+[2019-08-01 15:50:32,157] [INFO] [optking.testB]: 		Max. difference is 1.2e-08; 2nd derivative wrt 13 and 13.
+[2019-08-01 15:50:32,157] [INFO] [optking.testB]: 		Testing internal coordinate 6 :
+[2019-08-01 15:50:32,298] [INFO] [optking.testB]: 		Max. difference is 1.2e-08; 2nd derivative wrt 13 and 13.
+[2019-08-01 15:50:32,298] [INFO] [optking.testB]: 		Testing internal coordinate 7 :
+[2019-08-01 15:50:32,441] [INFO] [optking.testB]: 		Max. difference is 1.2e-06; 2nd derivative wrt 6 and 6.
+[2019-08-01 15:50:32,441] [INFO] [optking.testB]: 		Testing internal coordinate 8 :
+[2019-08-01 15:50:32,582] [INFO] [optking.testB]: 		Max. difference is 4.7e-07; 2nd derivative wrt 6 and 6.
+[2019-08-01 15:50:32,582] [INFO] [optking.testB]: 		Testing internal coordinate 9 :
+[2019-08-01 15:50:32,724] [INFO] [optking.testB]: 		Max. difference is 4.7e-07; 2nd derivative wrt 6 and 6.
+[2019-08-01 15:50:32,724] [INFO] [optking.testB]: 		Testing internal coordinate 10 :
+[2019-08-01 15:50:32,866] [INFO] [optking.testB]: 		Max. difference is 1.8e+02; 2nd derivative wrt 6 and 9.
+[2019-08-01 15:50:32,866] [INFO] [optking.testB]: 		Testing internal coordinate 11 :
+[2019-08-01 15:50:33,007] [INFO] [optking.testB]: 		Max. difference is 1.8e+02; 2nd derivative wrt 6 and 9.
+[2019-08-01 15:50:33,007] [INFO] [optking.testB]: 		Testing internal coordinate 12 :
+[2019-08-01 15:50:33,148] [INFO] [optking.testB]: 		Max. difference is 4.7e-07; 2nd derivative wrt 13 and 13.
+[2019-08-01 15:50:33,148] [INFO] [optking.testB]: 		Testing internal coordinate 13 :
+[2019-08-01 15:50:33,288] [INFO] [optking.testB]: 		Max. difference is 4.7e-07; 2nd derivative wrt 13 and 13.
+[2019-08-01 15:50:33,288] [INFO] [optking.testB]: 		Testing internal coordinate 14 :
+[2019-08-01 15:50:33,429] [INFO] [optking.testB]: 		Max. difference is 1.2e-06; 2nd derivative wrt 13 and 13.
+[2019-08-01 15:50:33,429] [INFO] [optking.testB]: 		Testing internal coordinate 15 :
+[2019-08-01 15:50:33,571] [INFO] [optking.testB]: 		Max. difference is 2.3e-07; 2nd derivative wrt 13 and 12.
+[2019-08-01 15:50:33,571] [INFO] [optking.testB]: 		Testing internal coordinate 16 :
+[2019-08-01 15:50:33,712] [INFO] [optking.testB]: 		Max. difference is 2.3e-07; 2nd derivative wrt 13 and 12.
+[2019-08-01 15:50:33,712] [INFO] [optking.testB]: 		Testing internal coordinate 17 :
+[2019-08-01 15:50:33,853] [INFO] [optking.testB]: 		Max. difference is 2.3e-07; 2nd derivative wrt 6 and 7.
+[2019-08-01 15:50:33,853] [INFO] [optking.testB]: 		Testing internal coordinate 18 :
+[2019-08-01 15:50:33,993] [INFO] [optking.testB]: 		Max. difference is 2.3e-07; 2nd derivative wrt 6 and 7.
+[2019-08-01 15:50:33,993] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.
+[2019-08-01 15:51:32,236] [INFO] [optking.testB]: 
+	Testing Derivative B-matrix numerically...
+[2019-08-01 15:51:32,236] [INFO] [optking.testB]: 		Testing internal coordinate 1 :
+[2019-08-01 15:51:33,044] [INFO] [optking.testB]: 		Max. difference is 8.0e-10; 2nd derivative wrt 4 and 1.
+[2019-08-01 15:51:33,044] [INFO] [optking.testB]: 		Testing internal coordinate 2 :
+[2019-08-01 15:51:33,846] [INFO] [optking.testB]: 		Max. difference is 1.7e-09; 2nd derivative wrt 2 and 2.
+[2019-08-01 15:51:33,846] [INFO] [optking.testB]: 		Testing internal coordinate 3 :
+[2019-08-01 15:51:34,637] [INFO] [optking.testB]: 		Max. difference is 9.7e-09; 2nd derivative wrt 26 and 2.
+[2019-08-01 15:51:34,637] [INFO] [optking.testB]: 		Testing internal coordinate 4 :
+[2019-08-01 15:51:35,428] [INFO] [optking.testB]: 		Max. difference is 8.8e-09; 2nd derivative wrt 1 and 1.
+[2019-08-01 15:51:35,428] [INFO] [optking.testB]: 		Testing internal coordinate 5 :
+[2019-08-01 15:51:36,242] [INFO] [optking.testB]: 		Max. difference is 1.7e-09; 2nd derivative wrt 8 and 8.
+[2019-08-01 15:51:36,242] [INFO] [optking.testB]: 		Testing internal coordinate 6 :
+[2019-08-01 15:51:37,042] [INFO] [optking.testB]: 		Max. difference is 9.7e-09; 2nd derivative wrt 8 and 8.
+[2019-08-01 15:51:37,042] [INFO] [optking.testB]: 		Testing internal coordinate 7 :
+[2019-08-01 15:51:37,839] [INFO] [optking.testB]: 		Max. difference is 9.7e-09; 2nd derivative wrt 11 and 11.
+[2019-08-01 15:51:37,840] [INFO] [optking.testB]: 		Testing internal coordinate 8 :
+[2019-08-01 15:51:38,662] [INFO] [optking.testB]: 		Max. difference is 9.0e-09; 2nd derivative wrt 16 and 10.
+[2019-08-01 15:51:38,663] [INFO] [optking.testB]: 		Testing internal coordinate 9 :
+[2019-08-01 15:51:39,484] [INFO] [optking.testB]: 		Max. difference is 9.0e-09; 2nd derivative wrt 19 and 10.
+[2019-08-01 15:51:39,484] [INFO] [optking.testB]: 		Testing internal coordinate 10 :
+[2019-08-01 15:51:40,312] [INFO] [optking.testB]: 		Max. difference is 9.3e-08; 2nd derivative wrt 8 and 8.
+[2019-08-01 15:51:40,312] [INFO] [optking.testB]: 		Testing internal coordinate 11 :
+[2019-08-01 15:51:41,166] [INFO] [optking.testB]: 		Max. difference is 3.0e-07; 2nd derivative wrt 8 and 8.
+[2019-08-01 15:51:41,166] [INFO] [optking.testB]: 		Testing internal coordinate 12 :
+[2019-08-01 15:51:42,007] [INFO] [optking.testB]: 		Max. difference is 1.3e-08; 2nd derivative wrt 0 and 1.
+[2019-08-01 15:51:42,007] [INFO] [optking.testB]: 		Testing internal coordinate 13 :
+[2019-08-01 15:51:42,842] [INFO] [optking.testB]: 		Max. difference is 4.2e-08; 2nd derivative wrt 0 and 0.
+[2019-08-01 15:51:42,842] [INFO] [optking.testB]: 		Testing internal coordinate 14 :
+[2019-08-01 15:51:43,675] [INFO] [optking.testB]: 		Max. difference is 9.5e-08; 2nd derivative wrt 0 and 1.
+[2019-08-01 15:51:43,675] [INFO] [optking.testB]: 		Testing internal coordinate 15 :
+[2019-08-01 15:51:44,505] [INFO] [optking.testB]: 		Max. difference is 1.6e-07; 2nd derivative wrt 2 and 2.
+[2019-08-01 15:51:44,505] [INFO] [optking.testB]: 		Testing internal coordinate 16 :
+[2019-08-01 15:51:45,329] [INFO] [optking.testB]: 		Max. difference is 6.5e-08; 2nd derivative wrt 2 and 2.
+[2019-08-01 15:51:45,330] [INFO] [optking.testB]: 		Testing internal coordinate 17 :
+[2019-08-01 15:51:46,189] [INFO] [optking.testB]: 		Max. difference is 1.6e-07; 2nd derivative wrt 11 and 11.
+[2019-08-01 15:51:46,189] [INFO] [optking.testB]: 		Testing internal coordinate 18 :
+[2019-08-01 15:51:47,024] [INFO] [optking.testB]: 		Max. difference is 6.5e-08; 2nd derivative wrt 11 and 11.
+[2019-08-01 15:51:47,024] [INFO] [optking.testB]: 		Testing internal coordinate 19 :
+[2019-08-01 15:51:47,918] [INFO] [optking.testB]: 		Max. difference is 6.5e-08; 2nd derivative wrt 11 and 11.
+[2019-08-01 15:51:47,918] [INFO] [optking.testB]: 		Testing internal coordinate 20 :
+[2019-08-01 15:51:48,761] [INFO] [optking.testB]: 		Max. difference is 3.0e-07; 2nd derivative wrt 8 and 8.
+[2019-08-01 15:51:48,761] [INFO] [optking.testB]: 		Testing internal coordinate 21 :
+[2019-08-01 15:51:49,559] [INFO] [optking.testB]: 		Max. difference is 2.1e-07; 2nd derivative wrt 9 and 9.
+[2019-08-01 15:51:49,559] [INFO] [optking.testB]: 		Testing internal coordinate 22 :
+[2019-08-01 15:51:50,365] [INFO] [optking.testB]: 		Max. difference is 2.1e-07; 2nd derivative wrt 9 and 9.
+[2019-08-01 15:51:50,365] [INFO] [optking.testB]: 		Testing internal coordinate 23 :
+[2019-08-01 15:51:51,184] [INFO] [optking.testB]: 		Max. difference is 3.0e-07; 2nd derivative wrt 9 and 10.
+[2019-08-01 15:51:51,184] [INFO] [optking.testB]: 		Testing internal coordinate 24 :
+[2019-08-01 15:51:52,022] [INFO] [optking.testB]: 		Max. difference is 9.1e-08; 2nd derivative wrt 1 and 2.
+[2019-08-01 15:51:52,022] [INFO] [optking.testB]: 		Testing internal coordinate 25 :
+[2019-08-01 15:51:52,904] [INFO] [optking.testB]: 		Max. difference is 2.5e-07; 2nd derivative wrt 11 and 10.
+[2019-08-01 15:51:52,904] [INFO] [optking.testB]: 		Testing internal coordinate 26 :
+[2019-08-01 15:51:53,729] [INFO] [optking.testB]: 		Max. difference is 1.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:51:53,729] [INFO] [optking.testB]: 		Testing internal coordinate 27 :
+[2019-08-01 15:51:54,563] [INFO] [optking.testB]: 		Max. difference is 1.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:51:54,563] [INFO] [optking.testB]: 		Testing internal coordinate 28 :
+[2019-08-01 15:51:55,422] [INFO] [optking.testB]: 		Max. difference is 1.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:51:55,422] [INFO] [optking.testB]: 		Testing internal coordinate 29 :
+[2019-08-01 15:51:56,240] [INFO] [optking.testB]: 		Max. difference is 5.8e-07; 2nd derivative wrt 8 and 6.
+[2019-08-01 15:51:56,240] [INFO] [optking.testB]: 		Testing internal coordinate 30 :
+[2019-08-01 15:51:57,072] [INFO] [optking.testB]: 		Max. difference is 2.4e-07; 2nd derivative wrt 2 and 1.
+[2019-08-01 15:51:57,073] [INFO] [optking.testB]: 		Testing internal coordinate 31 :
+[2019-08-01 15:51:57,901] [INFO] [optking.testB]: 		Max. difference is 1.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:51:57,901] [INFO] [optking.testB]: 		Testing internal coordinate 32 :
+[2019-08-01 15:51:58,712] [INFO] [optking.testB]: 		Max. difference is 4.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:51:58,712] [INFO] [optking.testB]: 		Testing internal coordinate 33 :
+[2019-08-01 15:51:59,530] [INFO] [optking.testB]: 		Max. difference is 4.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:51:59,530] [INFO] [optking.testB]: 		Testing internal coordinate 34 :
+[2019-08-01 15:52:00,366] [INFO] [optking.testB]: 		Max. difference is 4.8e-07; 2nd derivative wrt 8 and 7.
+[2019-08-01 15:52:00,366] [INFO] [optking.testB]: 		Testing internal coordinate 35 :
+[2019-08-01 15:52:01,183] [INFO] [optking.testB]: 		Max. difference is 5.7e-07; 2nd derivative wrt 8 and 6.
+[2019-08-01 15:52:01,183] [INFO] [optking.testB]: 		Testing internal coordinate 36 :
+[2019-08-01 15:52:02,003] [INFO] [optking.testB]: 		Max. difference is 5.8e-07; 2nd derivative wrt 8 and 6.
+[2019-08-01 15:52:02,003] [WARNING] [optking.testB]: 
+        	Some values did not agree.  However, numerical tests may fail for
+        	torsions at 180 degrees and linear bond angles. This is OK
+        	If discontinuities are interfering with a geometry optimization
+        	try restarting your optimization at an updated geometry, and/or
+        	remove angular coordinates that are fixed by symmetry.

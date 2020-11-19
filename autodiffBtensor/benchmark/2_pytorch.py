@@ -32,8 +32,8 @@ def derivatives(inp, order=1):
 
 #print(derivatives(test, order=1))
 #print(derivatives(test, order=1))
-#a = derivatives(test, order=1)
-a = derivatives(test, order=2)
+a = derivatives(test, order=3)
+#a = derivatives(test, order=3)
 print(a)
 print(a.shape)
 

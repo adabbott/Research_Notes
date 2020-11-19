@@ -96,7 +96,6 @@ def fast_B2(intcos, geom):
                     for k in range(len(cartesians)):
                         if k in indices[i]:
                             h = torch.autograd.grad(val, cartesians[k], create_graph=True, allow_unused=False)[0] 
-                            #print("COMPUTED GRADIENT:", h)
                             tensorlist2.append(h)
                         else:
                             tensorlist2.append(torch.zeros((3), dtype=torch.float64))
@@ -148,66 +147,59 @@ def FASTER_B2(intcos, geom):
         Brow = torch.stack(tensorlist, dim=0).flatten()
         Brows.append(Brow)
     B = torch.stack(Brows)
+    print(B)
+    #print(B.reshape((ncoords,natoms,3)))
+    #print(B.reshape((ncoords,natoms,3)).nonzero())
+    tmp = B.reshape((ncoords,natoms,3))
+    print("Zero values",tmp)
+    print((tmp == 0).nonzero())
 
     all_values = (B == B).nonzero()
-    #trivial_derivatives = (B == 0).nonzero()
-    nontrivial_derivatives = torch.nonzero(B)
+    nontrivial_derivatives = []
+
+    # Filter through all addresses of values in B tensor, find out if derivative is needed based on if s-vector is all zero.
+    for Bidx in all_values:
+        print(tmp[list(Bidx)])
+        k = tmp[list(Bidx)[:1]]
+        for svec in k:
+#if any([(a == c_).all() for c_ in c]):V
+            print(any([(val == 0).all() for val in svec ])) #svec.nonzero().all())
+
+
+
+    # TODO improvement: rather than iterating over ALL values, you only need to differentiate those that have one or more nonzero values in s vector
     # Distinguish between trivial and nontrivial derivatives. If nontrivial, then check which cartesian coordinates to differentiate wrt to.
     # Differentiate wrt 3 cartesian coordinates at a time, or just return three 0.0 derivatives
+    tlist = []
     for a in all_values:
-        # If it is nontrivial,
-        if any([ (a == b).all() for b in nontrivial_derivatives]):
-            for j in range(natoms):
-                if j in indices[a[0]]:
-                    g = torch.autograd.grad(B[list(a)], cartesians[j], create_graph=True, allow_unused=False)[0]
-                else:
-                    g = torch.zeros((3), dtype=torch.float64)
-        else:
-            for j in range(natoms):
+        for j in range(natoms):
+            if j in indices[a[0]]:
+                g = torch.autograd.grad(B[list(a)], cartesians[j], create_graph=True, allow_unused=False)[0]
+                tlist.append(g)
+            else:
                 g = torch.zeros((3), dtype=torch.float64)
-        #for b in nontrivial_derivatives:
-        #    if torch.equal(a,b):
-        #        for j in range(natoms):
-        #            if j in indices[b[0]]:
-        #                g = torch.autograd.grad(B[list(b)], cartesians[j], create_graph=True, allow_unused=False)[0]
-        #                count += 1
-        #                print(g)
-        #            else:
-        #                g = torch.zeros((3), dtype=torch.float64)
-        #                count += 1
-        #                print(g)
-        #    else:
-        #        continue
-        
-        #g = torch.zeros((3), dtype=torch.float64)
-        #count += 1
-        #print(g)
-                #print(torch.zeros((3), dtype=torch.float64))
-        #if idx in trivial_derivatives:
-        #    print('trivial!')
-        #if idx in nontrivial_derivatives:
-        #    print(idx)
-            #count += 1
-            #print('nontrivial!')
-    #print(count)
+                tlist.append(g)
+    B2 = torch.stack(tlist).reshape(ncoords,ncart,ncart)
 
-    #count2 = 0
-    #for d in nontrivial_derivatives:
+    ## Try 3rd order?
+    #all_values = (B2 == B2).nonzero()
+    #tlist = []
+    #count = 0
+    #for a in all_values:
     #    for j in range(natoms):
-    #        if j in indices[d[0]]:
-    #            g = torch.autograd.grad(B[list(d)], cartesians[j], create_graph=True, allow_unused=False)[0]
-    #            #print(g)
-    #            count2 += 1
-            #else:
-                #print(torch.zeros((3), dtype=torch.float64))
-                #count2 += 1
-                #tensorlist.append(torch.zeros((3), dtype=torch.float64))
-    #print(count2)
-    #print(B)
-    #print(torch.nonzero(B))
-    #test = torch.autograd.grad(B[0,3], cartesians[1], create_graph=True, allow_unused=False)[0]
-    #print(test)
-    return B
+    #        if j in indices[a[0]]:
+    #            g = torch.autograd.grad(B2[list(a)], cartesians[j], create_graph=True, allow_unused=False)[0]
+    #            tlist.append(g)
+    #            count +=1
+    #        else:
+    #            g = torch.zeros((3), dtype=torch.float64)
+    #            tlist.append(g)
+    #            count +=1
+    #        print(count)
+    #B3 = torch.stack(tlist).reshape(ncoords,ncart,ncart,ncart)
+    #print(B3)
+
+    return B2
     
 
 
@@ -308,10 +300,12 @@ big_autodiff = [ad_intcos.STRE(0, 1),ad_intcos.STRE(0, 2),ad_intcos.STRE(0, 8),a
 #test(allene.geometry(), allene_autodiff)
 npgeom = np.array(h2o.geometry()) * bohr2ang
 geom = torch.tensor(npgeom,requires_grad=False)
-B = FASTER_B2(h2o_autodiff, geom)
+B2fast = FASTER_B2(h2o_autodiff, geom)
+print(B2fast)
+#B2 = fast_B2(h2o_autodiff, geom)
+#print(B2)
+#print(torch.allclose(B2fast,B2))
 
-B2 = fast_B2(h2o_autodiff, geom)
-print(B2)
 #npgeom = np.array(allene.geometry()) * bohr2ang
 #geom = torch.tensor(npgeom,requires_grad=False)
 #B2 = fast_B2(allene_autodiff, geom)

@@ -1,0 +1,305 @@
+
+    -----------------------------------------------------------------------
+          Psi4: An Open-Source Ab Initio Electronic Structure Package
+                               Psi4 1.3.2 release
+
+                         Git: Rev {HEAD} ecbda83 
+
+
+    R. M. Parrish, L. A. Burns, D. G. A. Smith, A. C. Simmonett,
+    A. E. DePrince III, E. G. Hohenstein, U. Bozkaya, A. Yu. Sokolov,
+    R. Di Remigio, R. M. Richard, J. F. Gonthier, A. M. James,
+    H. R. McAlexander, A. Kumar, M. Saitow, X. Wang, B. P. Pritchard,
+    P. Verma, H. F. Schaefer III, K. Patkowski, R. A. King, E. F. Valeev,
+    F. A. Evangelista, J. M. Turney, T. D. Crawford, and C. D. Sherrill,
+    J. Chem. Theory Comput. 13(7) pp 3185--3197 (2017).
+    (doi: 10.1021/acs.jctc.7b00174)
+
+
+                         Additional Contributions by
+    P. Kraus, H. Kruse, M. H. Lechner, M. C. Schieber, R. A. Shaw,
+    A. Alenaizan, R. Galvelis, Z. L. Glick, S. Lehtola, and J. P. Misiewicz
+
+    -----------------------------------------------------------------------
+
+
+    Psi4 started on: Friday, 19 July 2019 05:55PM
+
+    Process ID: 19975
+    Host:       adabbott
+    PSIDATADIR: /home/adabbott/anaconda3/envs/peslearn/share/psi4
+    Memory:     500.0 MiB
+    Threads:    1
+    
+  ==> Input File <==
+
+--------------------------------------------------------------------------
+# density fitted hartree fock 
+molecule h2o {
+0 1
+H 0.0000000000 0.0000000000 0.9666666667
+H 0.0000000000 0.9243926271 -0.2190850772
+O 0.0000000000 0.0000000000 0.0000000000
+}
+
+set scf_type pk
+set basis 6-31g
+gradient('hf')
+
+--------------------------------------------------------------------------
+gradient() will perform analytic gradient computation.
+
+*** tstart() called on adabbott
+*** at Fri Jul 19 17:55:00 2019
+
+   => Loading Basis Set <=
+
+    Name: 6-31G
+    Role: ORBITAL
+    Keyword: BASIS
+    atoms 1-2 entry H          line    26 file /home/adabbott/anaconda3/envs/peslearn/share/psi4/basis/6-31g.gbs 
+    atoms 3   entry O          line   117 file /home/adabbott/anaconda3/envs/peslearn/share/psi4/basis/6-31g.gbs 
+
+
+         ---------------------------------------------------------
+                                   SCF
+               by Justin Turney, Rob Parrish, Andy Simmonett
+                          and Daniel G. A. Smith
+                              RHF Reference
+                        1 Threads,    500 MiB Core
+         ---------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: cs
+    Full point group: Cs
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+         H            0.051726641865    -0.924833917269     0.000000000000     1.007825032230
+         H           -0.872665985235     0.260917826631     0.000000000000     1.007825032230
+         O            0.051726641865     0.041832749431     0.000000000000    15.994914619570
+
+  Running in cs symmetry.
+
+  Rotational constants: A =     26.67102  B =     14.79320  C =      9.51543 [cm^-1]
+  Rotational constants: A = 799576.94157  B = 443488.97328  C = 285265.28854 [MHz]
+  Nuclear repulsion =    9.187590565150495
+
+  Charge       = 0
+  Multiplicity = 1
+  Electrons    = 10
+  Nalpha       = 5
+  Nbeta        = 5
+
+  ==> Algorithm <==
+
+  SCF Algorithm Type is PK.
+  DIIS enabled.
+  MOM disabled.
+  Fractional occupation disabled.
+  Guess Type is SAD.
+  Energy threshold   = 1.00e-08
+  Density threshold  = 1.00e-08
+  Integral threshold = 0.00e+00
+
+  ==> Primary Basis <==
+
+  Basis Set: 6-31G
+    Blend: 6-31G
+    Number of shells: 9
+    Number of basis function: 13
+    Number of Cartesian functions: 13
+    Spherical Harmonics?: false
+    Max angular momentum: 1
+
+  ==> Pre-Iterations <==
+
+   -------------------------------------------------------
+    Irrep   Nso     Nmo     Nalpha   Nbeta   Ndocc  Nsocc
+   -------------------------------------------------------
+     A'        11      11       0       0       0       0
+     A"         2       2       0       0       0       0
+   -------------------------------------------------------
+    Total      13      13       5       5       5       0
+   -------------------------------------------------------
+
+  ==> Integral Setup <==
+
+  Using in-core PK algorithm.
+   Calculation information:
+      Number of atoms:                   3
+      Number of AO shells:               9
+      Number of primitives:             22
+      Number of atomic orbitals:        13
+      Number of basis functions:        13
+
+      Integral cutoff                 1.00e-12
+      Number of threads:                 1
+
+  Performing in-core PK
+  Using 8372 doubles for integral storage.
+  We computed 1035 shell quartets total.
+  Whereas there are 1035 unique shell quartets.
+
+  ==> DiskJK: Disk-Based J/K Matrices <==
+
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    Memory [MiB]:              375
+    Schwarz Cutoff:          1E-12
+
+    OpenMP threads:              1
+
+  Minimum eigenvalue in the overlap matrix is 6.7552554119E-02.
+  Using Symmetric Orthogonalization.
+
+  SCF Guess: Superposition of Atomic Densities via on-the-fly atomic UHF.
+
+  ==> Iterations <==
+
+                        Total Energy        Delta E     RMS |[F,P]|
+
+   @RHF iter SAD:   -75.52444702310734   -7.55244e+01   0.00000e+00 
+   @RHF iter   1:   -75.90911869629801   -3.84672e-01   3.62894e-02 DIIS
+   @RHF iter   2:   -75.96389035746544   -5.47717e-02   2.10856e-02 DIIS
+   @RHF iter   3:   -75.98301595116237   -1.91256e-02   1.72696e-03 DIIS
+   @RHF iter   4:   -75.98333806502814   -3.22114e-04   3.09854e-04 DIIS
+   @RHF iter   5:   -75.98334890002886   -1.08350e-05   4.40430e-05 DIIS
+   @RHF iter   6:   -75.98334920119356   -3.01165e-07   7.51395e-06 DIIS
+   @RHF iter   7:   -75.98334921058057   -9.38701e-09   1.53779e-06 DIIS
+   @RHF iter   8:   -75.98334921100974   -4.29168e-10   3.02345e-07 DIIS
+   @RHF iter   9:   -75.98334921102224   -1.25056e-11   2.95069e-08 DIIS
+   @RHF iter  10:   -75.98334921102243   -1.84741e-13   2.78210e-09 DIIS
+  Energy and wave function converged.
+
+
+  ==> Post-Iterations <==
+
+    Orbital Energies [Eh]
+    ---------------------
+
+    Doubly Occupied:                                                      
+
+       1Ap   -20.561474     2Ap    -1.357217     3Ap    -0.707514  
+       4Ap    -0.562741     1App   -0.501908  
+
+    Virtual:                                                              
+
+       5Ap     0.203135     6Ap     0.299393     7Ap     1.050261  
+       2App    1.164008     8Ap     1.190058     9Ap     1.218998  
+      10Ap     1.378407    11Ap     1.699996  
+
+    Final Occupation by Irrep:
+             Ap   App 
+    DOCC [     4,    1 ]
+
+  @RHF Final Energy:   -75.98334921102243
+
+   => Energetics <=
+
+    Nuclear Repulsion Energy =              9.1875905651504954
+    One-Electron Energy =                -122.9601713468438646
+    Two-Electron Energy =                  37.7892315706709354
+    Total Energy =                        -75.9833492110224284
+
+Computation Completed
+
+
+Properties will be evaluated at   0.000000,   0.000000,   0.000000 [a0]
+
+Properties computed using the SCF density matrix
+
+  Nuclear Dipole Moment: [e a0]
+     X:    -0.7694      Y:    -0.6222      Z:     0.0000
+
+  Electronic Dipole Moment: [e a0]
+     X:    -0.0470      Y:    -0.0267      Z:     0.0000
+
+  Dipole Moment: [e a0]
+     X:    -0.8163      Y:    -0.6489      Z:     0.0000     Total:     1.0428
+
+  Dipole Moment: [D]
+     X:    -2.0749      Y:    -1.6493      Z:     0.0000     Total:     2.6506
+
+
+*** tstop() called on adabbott at Fri Jul 19 17:55:00 2019
+Module time:
+	user time   =       0.33 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.33 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+
+*** tstart() called on adabbott
+*** at Fri Jul 19 17:55:00 2019
+
+
+         ------------------------------------------------------------
+                                   SCF GRAD                          
+                          Rob Parrish, Justin Turney,                
+                       Andy Simmonett, and Alex Sokolov              
+         ------------------------------------------------------------
+
+  ==> Geometry <==
+
+    Molecular point group: cs
+    Full point group: Cs
+
+    Geometry (in Angstrom), charge = 0, multiplicity = 1:
+
+       Center              X                  Y                   Z               Mass       
+    ------------   -----------------  -----------------  -----------------  -----------------
+         H            0.051726641865    -0.924833917269     0.000000000000     1.007825032230
+         H           -0.872665985235     0.260917826631     0.000000000000     1.007825032230
+         O            0.051726641865     0.041832749431     0.000000000000    15.994914619570
+
+  Nuclear repulsion =    9.187590565150495
+
+  ==> Basis Set <==
+
+  Basis Set: 6-31G
+    Blend: 6-31G
+    Number of shells: 9
+    Number of basis function: 13
+    Number of Cartesian functions: 13
+    Spherical Harmonics?: false
+    Max angular momentum: 1
+
+  ==> DirectJKGrad: Integral-Direct SCF Gradients <==
+
+    Gradient:                    1
+    J tasked:                  Yes
+    K tasked:                  Yes
+    wK tasked:                  No
+    Integrals threads:           1
+    Schwarz Cutoff:          0E+00
+
+
+  -Total Gradient:
+     Atom            X                  Y                   Z
+    ------   -----------------  -----------------  -----------------
+       1       -0.014149464626    -0.012142236363     0.000000000000
+       2        0.002103444615    -0.015295069648     0.000000000000
+       3        0.012046020010     0.027437306012     0.000000000000
+
+
+*** tstop() called on adabbott at Fri Jul 19 17:55:00 2019
+Module time:
+	user time   =       0.04 seconds =       0.00 minutes
+	system time =       0.00 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+Total time:
+	user time   =       0.37 seconds =       0.01 minutes
+	system time =       0.01 seconds =       0.00 minutes
+	total time  =          0 seconds =       0.00 minutes
+
+    Psi4 stopped on: Friday, 19 July 2019 05:55PM
+    Psi4 wall time for execution: 0:00:00.39
+
+*** Psi4 exiting successfully. Buy a developer a beer!

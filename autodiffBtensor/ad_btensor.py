@@ -17,13 +17,18 @@ def autodiff_Btensor(intcos, geom, order=1):
     ncart = 3 * geom.shape[0]
     count = 0
     shape = [nint, ncart]
+    count2 = 0
     while count < order:
         gradients = []
         for val in B.flatten():
             if count + 1 != order: 
                 g = torch.autograd.grad(val, geom, create_graph=True)[0].reshape(ncart)
+                count2 += 1
+                print("Derivative {}".format(count2))
             else: # Save time: for last B tensor, don't create derivative graph.
                 g = torch.autograd.grad(val, geom, retain_graph=True)[0].reshape(ncart)
+                count2 += 1
+                print("Derivative {}".format(count2))
             gradients.append(g)
         B = torch.stack(gradients).reshape(tuple(shape)) # shape into final B tensor
         shape.append(ncart)                              # update shape for next B tensor

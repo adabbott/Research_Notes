@@ -1,0 +1,15 @@
+# density fitted hartree fock 
+molecule h2o {
+0 1
+O
+H 1 r1
+H 1 r1 2 a1
+
+r1 = 1.0
+a1 = 104
+}
+
+set scf_type pk
+set basis 6-31g
+optimize('scf')
+

@@ -1,0 +1,11 @@
+# density fitted hartree fock 
+molecule h2o {
+0 1
+O
+H 1 0.96
+H 1 0.96 2 104.5
+}
+
+set basis 6-31g
+set scf_type pk
+gradient('hf')

@@ -1,0 +1,19 @@
+# density fitted hartree fock 
+molecule h2o {
+noreorient
+nocom
+0 1
+O
+H 1 r1
+H 1 r1 2 a2
+
+r1 = 1.0
+a2 = 105
+}
+
+set scf_type pk
+set basis 6-31g
+set e_convergence 10
+set RMS_FORCE_G_CONVERGENCE = 1.0e-8
+optimize('hf')
+

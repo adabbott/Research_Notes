@@ -1,0 +1,27 @@
+# Problem case from CDS
+
+memory 1024 mb
+
+molecule mol {
+0 1
+H  0.0  -0.92   -1.8
+H  0.0   0.92   -1.8
+C  0.0   0.00   -1.3
+C  0.0   0.00    0.0
+C  0.0   0.00    1.3
+H  0.92  0.00    1.8
+H -0.92  0.00    1.8
+}
+
+set scf_type df
+set basis 6-31+G(d)
+set reference rhf
+mol.update_geometry()
+mol.symmetrize(1e-3)
+set intcos_generate_exit True
+
+e, wfn = optimize('scf', return_wfn=True)
+
+#oeprop(wfn, "MULLIKEN_CHARGES")
+#mol.print_out()
+#print_variables()

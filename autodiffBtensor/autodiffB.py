@@ -31,6 +31,59 @@ def autodiff_Btensor(intcos, geom, order=1):
         count += 1                              
     return B
 
+def dummy_computation(p):
+    inp1 = p + 2 * p ** 2 
+    inp2 = p ** 3
+    inp3 = torch.cross(inp1, inp2)
+    inp4 = torch.acos(inp2)
+    inp5 = torch.cross(inp4, inp3)
+    final = torch.sum(inp5, 1) 
+    return final
+
+def derivatives(inp, order=1):
+    """Computes the n'th order derivative"""
+    out = dummy_computation(inp)
+    dim1 = out.shape[0]
+    dim2 = inp.flatten().shape[0]
+    shape = [dim1, dim2]
+    count = 0
+    while count < order:
+        derivatives = []
+        for val in out.flatten():
+            d = torch.autograd.grad(val, inp, create_graph=True)[0].reshape(dim2)
+            derivatives.append(d)
+        out = torch.stack(derivatives).reshape(tuple(shape))
+        shape.append(dim2)
+        count += 1
+    return out
+
+#    for param in out.flatten():
+#        torch.autograd.backward(param, create_graph=True)
+#        first = inp.grad.clone()
+#        print('first', inp.grad)
+#        inp.grad.zero_()
+#    for first_derivative in first.flatten():
+#        torch.autograd.backward(first_derivative, create_graph=True)
+#        print('second',inp.grad)
+#
+
+def experiment(intcos, geom):
+    B = ad_intcos.qValues(intcos, geom)   # Generate internal coordinates from cartesians
+    for param in B.flatten():
+        torch.autograd.backward(param, create_graph=True)
+        first = geom.grad.clone()
+        geom.grad.zero_()
+        #for first_derivative in geom.grad.flatten():
+        for first_derivative in first.flatten():
+            torch.autograd.backward(first_derivative, create_graph=True)
+            print('second',geom.grad)
+
+        geom.grad.zero_()
+    nint = B.shape[0]
+    ncart = 3 * geom.shape[0]
+    count = 0
+    shape = [nint, ncart]
+
 
 def get_interatomics(geom):
     """ 
