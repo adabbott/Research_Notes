@@ -24,7 +24,7 @@ all: $(TARGETS)
 clean: rm -f $(OBJ)
 
 $(OBJ): %.o : %.cc $(DEPS)
-	$(CC) -c $< -o $@ -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
+	$(CC) -c $< -o $@ -O3 -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
 
 $(TARGETS): $(OBJ)
-	$(CC)  $^ -o $@ -shared -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
+	$(CC)  $^ -o $@ -O3 -shared -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
