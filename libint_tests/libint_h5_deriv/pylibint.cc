@@ -42,6 +42,21 @@ void finalize() {
     libint2::finalize();
 }
 
+std::vector<std::vector<int>> cartesian_product (const std::vector<std::vector<int>>& v) {
+    std::vector<std::vector<int>> s = {{}};
+    for (const auto& u : v) {
+        std::vector<std::vector<int>> r;
+        for (const auto& x : s) {
+            for (const auto y : u) {
+                r.push_back(x);
+                r.back().push_back(y);
+            }
+        }
+        s = std::move(r);
+    }
+    return s;
+}
+
 py::array overlap() {
     // Overlap integral engine
     libint2::Engine s_engine(libint2::Operator::overlap,obs.max_nprim(),obs.max_l());
@@ -259,143 +274,255 @@ std::vector<std::vector<int>> generate_multi_index_lookup(int nparams, int deriv
     return combos;
 }
 
-// Writes ERI derivatives to disk 
-void eri_deriv_disk(int deriv_order) { 
-    // Number of unique nuclear derivatives of ERI's
-    unsigned int nderivs_triu = how_many_derivs(natom, deriv_order);
-
-    // Check to make sure you are not flooding the disk.
-    double check = (nbf * nbf * nbf * nbf * nderivs_triu * 8) * (1e-9);
-    assert(check < 2 && "Disk space required for ints exceeds 2 GB. Are you sure you know what you are doing?");
-
-    // Number of unique shell derivatives output by libint (number of indices in buffer)
-    int nshell_derivs = how_many_derivs(4, deriv_order);
-
-    // Create mapping from 1d buffer index (flattened upper triangle shell derivative index) to multidimensional shell derivative index
-    const std::vector<std::vector<int>> buffer_multidim_lookup = generate_multi_index_lookup(12, deriv_order);
-
-    // Create mapping from 1d cartesian coodinate index (flattened upper triangle cartesian derivative index) to multidimensional index
-    const std::vector<std::vector<int>> cart_multidim_lookup = generate_multi_index_lookup(natom * 3, deriv_order);
-
-    // Create mapping from buffer indices to shell atom index 0,1,2,3  and cartesian component index 0,1,2==x,y,z
-    std::vector<std::vector<int>> buffer_center_map;
-    std::vector<std::vector<int>> buffer_comp_map;
-    for (int i=0; i < nshell_derivs; i++) {
-        std::vector<int> tmp_centers;
-        std::vector<int> tmp_comps;
-        auto multi_shell_indices = buffer_multidim_lookup[i];
-        for (auto shell_idx : multi_shell_indices) {
-            // Quotient is shell center 0,1,2,or 3; remainder is 0,1,2 <--> x,y,z
-            div_t tmp = std::div(shell_idx, 3); 
-            tmp_centers.push_back(tmp.quot);
-            tmp_comps.push_back(tmp.rem);
-        }
-        buffer_center_map.push_back(tmp_centers);
-        buffer_comp_map.push_back(tmp_comps);
-    }
-
-    // Libint engine for computing shell quartet derivatives
-    libint2::Engine eri_engine(libint2::Operator::coulomb,obs.max_nprim(),obs.max_l(), deriv_order);
-    const auto& buf_vec = eri_engine.results(); // will point to computed shell sets
-
-    // Begin HDF5 jargon. Define file name and dataset name within file
-    const H5std_string file_name("eri_deriv" + std::to_string(deriv_order) + ".h5");
-   // const H5std_string file_name("eri_deriv.h5");
-    const H5std_string dataset_name("eri_deriv");
-    // Create H5 File and prepare to fill with 0.0's
+// Writes all ERI derivative up to `max_deriv_order` to disk.
+void eri_deriv_disk(int max_deriv_order) { 
+    const H5std_string file_name("eri_derivs.h5");
     H5File* file = new H5File(file_name,H5F_ACC_TRUNC);
     double fillvalue = 0.0;
     DSetCreatPropList plist;
     plist.setFillValue(PredType::NATIVE_DOUBLE, &fillvalue);
-    // Create dataspace for file array (rank, dimensions)
-    hsize_t file_dims[] = {nbf, nbf, nbf, nbf, nderivs_triu};
-    DataSpace fspace(5, file_dims);
-    // Create dataset and write 0.0's into the file 
-    DataSet* dataset = new DataSet(file->createDataSet(dataset_name, PredType::NATIVE_DOUBLE, fspace, plist));
-    // HDF5 slab parameters that are constant across loop iterations
-    hsize_t stride[5] = {1,1,1,1,1}; // stride and block can be used to 
-    hsize_t block[5] = {1,1,1,1,1};  // add values to multiple places, useful if symmetry ever used.
-    hsize_t start2[5] = {0, 0, 0, 0, 0};
-    // End HDF5 jargon.
 
-    for(auto s1=0; s1!=obs.size(); ++s1) {
-        auto bf1 = shell2bf[s1];     // Index of first basis function in shell 1
-        auto atom1 = shell2atom[s1]; // Atom index of shell 1
-        auto n1 = obs[s1].size();    // number of basis functions in shell 1
-        for(auto s2=0; s2!=obs.size(); ++s2) {
-            auto bf2 = shell2bf[s2];     // Index of first basis function in shell 2
-            auto atom2 = shell2atom[s2]; // Atom index of shell 2
-            auto n2 = obs[s2].size();    // number of basis functions in shell 2
-            for(auto s3=0; s3!=obs.size(); ++s3) {
-                auto bf3 = shell2bf[s3];     // Index of first basis function in shell 3
-                auto atom3 = shell2atom[s3]; // Atom index of shell 3
-                auto n3 = obs[s3].size();    // number of basis functions in shell 3
-                for(auto s4=0; s4!=obs.size(); ++s4) {
-                    auto bf4 = shell2bf[s4];     // Index of first basis function in shell 4
-                    auto atom4 = shell2atom[s4]; // Atom index of shell 4
-                    auto n4 = obs[s4].size();    // number of basis functions in shell 4
+    for (int deriv_order = 1; deriv_order <= max_deriv_order; deriv_order++){
+        // Number of unique shell derivatives output by libint (number of indices in buffer)
+        int nshell_derivs = how_many_derivs(4, deriv_order);
+        // Number of unique nuclear derivatives of ERI's
+        unsigned int nderivs_triu = how_many_derivs(natom, deriv_order);
+        // Check to make sure you are not flooding the disk.
+        double check = (nbf * nbf * nbf * nbf * nderivs_triu * 8) * (1e-9);
+        assert(check < 2 && "Disk space required for ERI's exceeds 2 GB. Are you sure you know what you are doing?");
 
-                    // If the atoms are the same we ignore it as the derivatives will be zero.
-                    if (atom1 == atom2 && atom1 == atom3 && atom1 == atom4) continue;
-                    std::vector<long> shell_atom_index_list{atom1,atom2,atom3,atom4};
+        // Create mapping from 1d buffer index (flattened upper triangle shell derivative index) to multidimensional shell derivative index
+        const std::vector<std::vector<int>> buffer_multidim_lookup = generate_multi_index_lookup(12, deriv_order);
 
-                    eri_engine.compute(obs[s1], obs[s2], obs[s3], obs[s4]); // Compute shell set
+        // Create mapping from 1d cartesian coodinate index (flattened upper triangle cartesian derivative index) to multidimensional index
+        const std::vector<std::vector<int>> cart_multidim_lookup = generate_multi_index_lookup(natom * 3, deriv_order);
 
-                    // Define shell set slab, with extra dimension for unique derivatives, initialized with 0.0's
-                    double shellset_slab [n1][n2][n3][n4][nderivs_triu] = {};
+        // Libint engine for computing shell quartet derivatives
+        libint2::Engine eri_engine(libint2::Operator::coulomb,obs.max_nprim(),obs.max_l(), deriv_order);
+        const auto& eri_buffer = eri_engine.results(); // will point to computed shell sets
 
-                    // For every unique shell set derivative in buffer represented by a flattened upper triangle index,
-                    // map the index to its multi-dim shell derivative index, then to its multi-dim cartesian derivative indices, 
-                    // then its flattened 1d cartesian derivative index which is the address in 'nderivs_triu' dimension of shellset_slab
-                    for(auto i=0; i<nshell_derivs; ++i) {
-                        auto ints_shellset = buf_vec[i]; // Location of the computed integrals
-                        if (ints_shellset == nullptr)
-                            continue;  // nullptr returned if the entire shell-set was screened out
+        // Define HDF5 dataset name
+        const H5std_string eri_dset_name("eri_deriv" + std::to_string(deriv_order));
+        hsize_t file_dims[] = {nbf, nbf, nbf, nbf, nderivs_triu};
+        DataSpace fspace(5, file_dims);
+        // Create dataset for each integral type and write 0.0's into the file 
+        DataSet* eri_dataset = new DataSet(file->createDataSet(eri_dset_name, PredType::NATIVE_DOUBLE, fspace, plist));
+        hsize_t stride[5] = {1,1,1,1,1}; // stride and block can be used to 
+        hsize_t block[5] = {1,1,1,1,1};  // add values to multiple places, useful if symmetry ever used.
+        hsize_t zerostart[5] = {0,0,0,0,0};
 
-                        // Convert all shell center indices 0,1,2,3 --> cartesian atom index, multiply by 3, add cartesian component offset
-                        // result is multidimensional cartesian nuclear derivative index
-                        std::vector<int> multi_cart_idx;
-                        for (int j=0; j<deriv_order; j++) {
-                            multi_cart_idx.push_back(3 * shell_atom_index_list[buffer_center_map[i][j]] + buffer_comp_map[i][j]);
-                        }
-                        // Sort such that i <= j <= k ... so it corresponds to the upper triangle of totally symmetric nuclear derivative tensor
-                        std::sort(multi_cart_idx.begin(), multi_cart_idx.end());
+        // Begin shell quartet loops
+        for(auto s1=0; s1!=obs.size(); ++s1) {
+            auto bf1 = shell2bf[s1];     // Index of first basis function in shell 1
+            auto atom1 = shell2atom[s1]; // Atom index of shell 1
+            auto n1 = obs[s1].size();    // number of basis functions in shell 1
+            for(auto s2=0; s2!=obs.size(); ++s2) {
+                auto bf2 = shell2bf[s2];     // Index of first basis function in shell 2
+                auto atom2 = shell2atom[s2]; // Atom index of shell 2
+                auto n2 = obs[s2].size();    // number of basis functions in shell 2
+                for(auto s3=0; s3!=obs.size(); ++s3) {
+                    auto bf3 = shell2bf[s3];     // Index of first basis function in shell 3
+                    auto atom3 = shell2atom[s3]; // Atom index of shell 3
+                    auto n3 = obs[s3].size();    // number of basis functions in shell 3
+                    for(auto s4=0; s4!=obs.size(); ++s4) {
+                        auto bf4 = shell2bf[s4];     // Index of first basis function in shell 4
+                        auto atom4 = shell2atom[s4]; // Atom index of shell 4
+                        auto n4 = obs[s4].size();    // number of basis functions in shell 4
 
-                        // Find flattened upper triangle nuclear derivative index
-                        // Since the vector of vectors "cart_multidim_lookup" is sorted such that each vector is elementwise <= next vector, we can
-                        // use binary search to find the flattened upper triangle 1d index that is in range of nderivs_triu 
-                        int nuc_idx = 0;
-                        auto it = lower_bound(cart_multidim_lookup.begin(), cart_multidim_lookup.end(), multi_cart_idx);
-                        if (it != cart_multidim_lookup.end()) nuc_idx = it - cart_multidim_lookup.begin();
+                        if (atom1 == atom2 && atom1 == atom3 && atom1 == atom4) continue;
+                        std::vector<long> shell_atom_index_list{atom1,atom2,atom3,atom4};
 
-                        // Loop over shell block, keeping a total count idx for the size of shell set
-                        for(auto f1=0, idx=0; f1!=n1; ++f1) {
-                            for(auto f2=0; f2!=n2; ++f2) {
-                                for(auto f3=0; f3!=n3; ++f3) {
-                                    for(auto f4=0; f4!=n4; ++f4, ++idx) {
-                                        shellset_slab[f1][f2][f3][f4][nuc_idx] += ints_shellset[idx];
+                        eri_engine.compute(obs[s1], obs[s2], obs[s3], obs[s4]); // Compute shell set
+
+                        // Define shell set slab, with extra dimension for unique derivatives, initialized with 0.0's
+                        double eri_shellset_slab [n1][n2][n3][n4][nderivs_triu] = {};
+                        // Loop over every possible unique nuclear cartesian derivative index (flattened upper triangle)
+                        for(int nuc_idx=0; nuc_idx < nderivs_triu; ++nuc_idx) {
+                            // Look up multidimensional cartesian derivative index
+                            auto multi_cart_idx = cart_multidim_lookup[nuc_idx];
+    
+                            std::vector<std::vector<int>> indices(deriv_order, std::vector<int> (0,0));
+    
+                            // Find out which 
+                            for (int j=0; j < multi_cart_idx.size(); j++){
+                                int desired_atom_idx = multi_cart_idx[j] / 3;
+                                int desired_coord = multi_cart_idx[j] % 3;
+                                for (int i=0; i<4; i++){
+                                    int atom_idx = shell_atom_index_list[i];
+                                    if (atom_idx == desired_atom_idx) {
+                                        int tmp = 3 * i + desired_coord;
+                                        indices[j].push_back(tmp);
                                     }
                                 }
                             }
-                        }
+
+                            // Now indices is a vector of vectors, where each subvector is your choices for the first derivative operator, second, third, etc
+                            // and the total number of subvectors is the order of differentiation
+                            // Now we want all combinations where we pick exactly one index from each subvector.
+                            // This is achievable through a cartesian product 
+                            std::vector<std::vector<int>> index_combos = cartesian_product(indices);
+                            std::vector<int> buffer_indices;
+                            for (auto vec : index_combos)  {
+                                // This might be an issue to due sorting... yea?
+                                std::sort(vec.begin(), vec.end());
+                                int buf_idx = 0;
+                                // buffer_multidim_lookup
+                                auto it = lower_bound(buffer_multidim_lookup.begin(), buffer_multidim_lookup.end(), vec);
+                                if (it != buffer_multidim_lookup.end()) buf_idx = it - buffer_multidim_lookup.begin();
+                                buffer_indices.push_back(buf_idx);
+                            }
+
+                            // Loop over shell block, keeping a total count idx for the size of shell set
+                            for(auto i=0; i<buffer_indices.size(); ++i) {
+                                auto eri_shellset = eri_buffer[buffer_indices[i]];
+                                if (eri_shellset == nullptr) continue;
+                                for(auto f1=0, idx=0; f1!=n1; ++f1) {
+                                    for(auto f2=0; f2!=n2; ++f2) {
+                                        for(auto f3=0; f3!=n3; ++f3) {
+                                            for(auto f4=0; f4!=n4; ++f4, ++idx) {
+                                                eri_shellset_slab[f1][f2][f3][f4][nuc_idx] += eri_shellset[idx];
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } // For every nuc_idx 0, nderivs_triu
+                        // Now write this shell set slab to HDF5 file
+                        hsize_t count[5] = {n1, n2, n3, n4, nderivs_triu};
+                        hsize_t start[5] = {bf1, bf2, bf3, bf4, 0};
+                        fspace.selectHyperslab(H5S_SELECT_SET, count, start, stride, block);
+                        // Create dataspace defining for memory dataset to write to file
+                        hsize_t mem_dims[] = {n1, n2, n3, n4, nderivs_triu};
+                        DataSpace mspace(5, mem_dims);
+                        mspace.selectHyperslab(H5S_SELECT_SET, count, zerostart, stride, block);
+                        // Write buffer data 'shellset_slab' with data type double from memory dataspace `mspace` to file dataspace `fspace`
+                        eri_dataset->write(eri_shellset_slab, PredType::NATIVE_DOUBLE, mspace, fspace);
                     }
-                    // Now write this shell set slab to HDF5 file
-                    hsize_t count[5] = {n1, n2, n3, n4, nderivs_triu};
-                    hsize_t start[5] = {bf1, bf2, bf3, bf4, 0};
-                    fspace.selectHyperslab(H5S_SELECT_SET, count, start, stride, block);
-                    // Create dataspace defining for memory dataset to write to file
-                    hsize_t mem_dims[] = {n1, n2, n3, n4, nderivs_triu};
-                    DataSpace mspace(5, mem_dims);
-                    mspace.selectHyperslab(H5S_SELECT_SET, count, start2, stride, block);
-                    // Write buffer data 'shellset_slab' with data type double from memory dataspace `mspace` to file dataspace `fspace`
-                    dataset->write(shellset_slab, PredType::NATIVE_DOUBLE, mspace, fspace);
                 }
             }
-        }
-    }
-    // closes the dataset and file
-    delete dataset;
-    delete file;
+        } // shell quartet loops
+    // Close the dataset for this derivative order
+    delete eri_dataset;
+    } // deriv order loop 
+// Close the file
+delete file;
+} // eri_deriv_disk function
+
+// New approach: create a single file, save many datasets to it. 
+// Each dataset will be a derivative tensor.
+// Demo with overlap and kinetic
+// Algo: Create a file. loop over every deriv order from 1 to max_deriv_order.
+// Note this algo is techinically incorrect but works fine for overlap and kinetic since there is only two centers and they cannot be the same atom  
+void oei_deriv_disk(int max_deriv_order) {
+    // Create H5 File and prepare to fill with 0.0's
+    const H5std_string file_name("oei_derivs.h5");
+    H5File* file = new H5File(file_name,H5F_ACC_TRUNC);
+    double fillvalue = 0.0;
+    DSetCreatPropList plist;
+    plist.setFillValue(PredType::NATIVE_DOUBLE, &fillvalue);
+
+    for (int deriv_order = 1; deriv_order <= max_deriv_order; deriv_order++){
+        // Get how many shell derivatives in the Libint buffer, and how many unique cartesian nuclear derivatives
+        int nshell_derivs = how_many_derivs(2, deriv_order);
+        unsigned int nderivs_triu = how_many_derivs(natom, deriv_order);
+        // Create mapping from 1d buffer index (flattened upper triangle shell derivative index) to multidimensional shell derivative index
+        const std::vector<std::vector<int>> buffer_multidim_lookup = generate_multi_index_lookup(6, deriv_order);
+        // Create mapping from 1d cartesian coodinate index (flattened upper triangle cartesian derivative index) to multidimensional index
+        const std::vector<std::vector<int>> cart_multidim_lookup = generate_multi_index_lookup(natom * 3, deriv_order);
+
+        // Define engines and buffers
+        libint2::Engine overlap_engine(libint2::Operator::overlap,obs.max_nprim(),obs.max_l(),deriv_order);
+        const auto& overlap_buffer = overlap_engine.results(); 
+        libint2::Engine kinetic_engine(libint2::Operator::kinetic,obs.max_nprim(),obs.max_l(),deriv_order);
+        const auto& kinetic_buffer = kinetic_engine.results(); 
+        // TODO add potential
+        // Define HDF5 dataset names
+        const H5std_string overlap_dset_name("overlap_deriv" + std::to_string(deriv_order));
+        const H5std_string kinetic_dset_name("kinetic_deriv" + std::to_string(deriv_order));
+
+        // Define rank and dimensions of data that will be written to the file
+        hsize_t file_dims[] = {nbf, nbf, nderivs_triu};
+        DataSpace fspace(3, file_dims);
+        // Create dataset for each integral type and write 0.0's into the file 
+        DataSet* overlap_dataset = new DataSet(file->createDataSet(overlap_dset_name, PredType::NATIVE_DOUBLE, fspace, plist));
+        DataSet* kinetic_dataset = new DataSet(file->createDataSet(kinetic_dset_name, PredType::NATIVE_DOUBLE, fspace, plist));
+        hsize_t stride[3] = {1,1,1}; // stride and block can be used to 
+        hsize_t block[3] = {1,1,1};  // add values to multiple places, useful if symmetry ever used.
+        hsize_t zerostart[3] = {0,0,0};
+
+        for(auto s1=0; s1!=obs.size(); ++s1) {
+            auto bf1 = shell2bf[s1];  // first basis function in first shell
+            auto atom1 = shell2atom[s1]; // Atom index of shell 1
+            auto n1 = obs[s1].size(); // number of basis functions in first shell
+            for(auto s2=0; s2!=obs.size(); ++s2) {
+                auto bf2 = shell2bf[s2];  // first basis function in second shell
+                auto atom2 = shell2atom[s2]; // Atom index of shell 2
+                auto n2 = obs[s2].size(); // number of basis functions in second shell
+                if (atom1 == atom2) continue;
+                std::vector<long> shell_atom_index_list{atom1,atom2};
+
+                overlap_engine.compute(obs[s1], obs[s2]);
+                kinetic_engine.compute(obs[s1], obs[s2]);
+
+                // Define shell set slabs
+                double overlap_shellset_slab [n1][n2][nderivs_triu] = {};
+                double kinetic_shellset_slab [n1][n2][nderivs_triu] = {};
+
+                // Loop over all buffer indices 
+                for (auto i=0; i<nshell_derivs; i++) {
+                    auto overlap_shellset = overlap_buffer[i];
+                    auto kinetic_shellset = kinetic_buffer[i];
+                    //if (overlap_shellset == nullptr and kinetic_shellset == nullptr)
+                    //    continue;
+                    // Map flattened upper triangle buffer index i to flattend upper triangle nuclear derivative index 
+                    // Map 1d buffer index to multidimensional shell derivative index
+                    auto multi_shell_indices = buffer_multidim_lookup[i];
+                    // Map multidim shell derivative index to multidim nuclear derivative index
+                    std::vector<int> multi_cart_idx;
+                    for (auto shell_idx : multi_shell_indices) {
+                        // Quotient is shell center 0,1,2,or 3; remainder is 0,1,2 <--> x,y,z
+                        div_t tmp = std::div(shell_idx, 3); 
+                        // Nuclear derivative index is 3*atom_idx + cart_comp_index
+                        int tmp_idx = 3 * shell_atom_index_list[tmp.quot] + tmp.rem;
+                        multi_cart_idx.push_back(tmp_idx);
+                    }
+                    // Sort such that i <= j <= k
+                    std::sort(multi_cart_idx.begin(), multi_cart_idx.end());   
+
+
+                    // Map multidim nuc derivative index to flattened upper triangle nuc deriv index 
+                    int nuc_idx = 0;
+                    auto it = lower_bound(cart_multidim_lookup.begin(), cart_multidim_lookup.end(), multi_cart_idx);
+                    if (it != cart_multidim_lookup.end()) nuc_idx = it - cart_multidim_lookup.begin();
+                    
+                    for(auto f1=0, idx=0; f1!=n1; ++f1) {
+                        for(auto f2=0; f2!=n2; ++f2, ++idx) {
+                            overlap_shellset_slab[f1][f2][nuc_idx] += overlap_shellset[idx];
+                            kinetic_shellset_slab[f1][f2][nuc_idx] += kinetic_shellset[idx];
+                        }
+                    }
+                }
+
+                // Now write this shell set slab to HDF5 file
+                // Create file space hyperslab, defining where to write data to in file
+                hsize_t count[3] = {n1, n2, nderivs_triu};
+                hsize_t start[3] = {bf1, bf2, 0};
+                fspace.selectHyperslab(H5S_SELECT_SET, count, start, stride, block);
+                // Create dataspace defining for memory dataset to write to file
+                hsize_t mem_dims[] = {n1, n2, nderivs_triu};
+                DataSpace mspace(3, mem_dims);
+                mspace.selectHyperslab(H5S_SELECT_SET, count, zerostart, stride, block);
+                // Write buffer data 'shellset_slab' with data type double from memory dataspace `mspace` to file dataspace `fspace`
+                overlap_dataset->write(overlap_shellset_slab, PredType::NATIVE_DOUBLE, mspace, fspace);
+                kinetic_dataset->write(kinetic_shellset_slab, PredType::NATIVE_DOUBLE, mspace, fspace);
+            }
+        } // shell duet loops
+    // Delete datasets for this derivative order??
+    delete overlap_dataset;
+    delete kinetic_dataset;
+    } // deriv order loop
+// close the file
+delete file;
 }
 
 PYBIND11_MODULE(pylibint, m) {
@@ -405,6 +532,7 @@ PYBIND11_MODULE(pylibint, m) {
     m.def("overlap_disk", &overlap_disk, "Computes overlap integrals and writes them to disk with HDF5");
     m.def("eri_disk", &eri_disk, "Computes coulomb integrals and writes them to disk with HDF5");
     m.def("eri_deriv_disk", &eri_deriv_disk, "Computes coulomb integral derivatives and writes them to disk with HDF5");
+    m.def("oei_deriv_disk", &oei_deriv_disk, "Computes overlap,kinetic integral derivatives and writes them to disk with HDF5");
 }
 
 

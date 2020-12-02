@@ -1,12 +1,14 @@
 CC      := g++
 # These need to be absolute paths to Python headers, pybind11 headers, Eigen headers, libint API files and headers, and the libint static library libint2.a
+LIBINT_PREFIX := /home/adabbott/Git/libint_am3/libint/build/libint-2.7.0-beta.6/PREFIX
+
 INCL1   := /home/adabbott/anaconda3/envs/psijax/include/python3.6m
 INCL2   := /home/adabbott/anaconda3/envs/psijax/lib/python3.6/site-packages/pybind11/include
 INCL3   := /home/adabbott/anaconda3/envs/psijax/include/eigen3
-INCL4   := /home/adabbott/Git/libint_test1/libint/build/libint-2.7.0-beta.6/PREFIX/include
-INCL5   := /home/adabbott/Git/libint_test1/libint/build/libint-2.7.0-beta.6/PREFIX/include/libint2 
+INCL4   := $(LIBINT_PREFIX)/include
+INCL5   := $(LIBINT_PREFIX)/include/libint2 
 INCL6   := /home/adabbott/Git/hdf5/hdf5-1.12.0/PREFIX/include
-LIBS    := /home/adabbott/Git/libint_test1/libint/build/libint-2.7.0-beta.6/PREFIX/lib
+LIBS    := $(LIBINT_PREFIX)/lib
 LIBHDF5 := /home/adabbott/Git/hdf5/hdf5-1.12.0/PREFIX/lib 
 RPATH   := -Wl,-rpath,"/home/adabbott/Git/hdf5/hdf5-1.12.0/PREFIX/lib"
 
@@ -23,8 +25,9 @@ all: $(TARGETS)
 
 clean: rm -f $(OBJ)
 
+# Way faster with -O3
 $(OBJ): %.o : %.cc $(DEPS)
-	$(CC) -c $< -o $@ -O3 -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
+	$(CC) -c $< -o $@ -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
 
 $(TARGETS): $(OBJ)
-	$(CC)  $^ -o $@ -O3 -shared -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
+	$(CC)  $^ -o $@ -shared -fPIC -I $(INCL1) -I $(INCL2) -I $(INCL3) -I $(INCL4) -I $(INCL5) -lint2 -L $(LIBS) -I $(INCL6) -lhdf5 -lhdf5_cpp -L $(LIBHDF5) $(RPATH)
