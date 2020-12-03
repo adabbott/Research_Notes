@@ -229,12 +229,16 @@ void eri_disk() {
     delete file;
 }
 
-// how many unique nth order derivatives wrt k objects which have 3 differentiable coordinates each
-int how_many_derivs(int k, int n) {
+// Returns total size of the libint integral derivative buffer, which is how many unique nth order derivatives
+// wrt k objects which have 3 differentiable coordinates each
+// k: how many centers
+// n: order of differentiation
+// l: how many atoms (needed for potential integrals only!)
+int how_many_derivs(int k, int n, int l = 0) {
     int val = 1;
     int factorial = 1;
     for (int i=0; i < n; i++) {
-        val *= (3 * k + i);
+        val *= (3 * (k+l) + i);
         factorial *= i + 1;
     }
     val /= factorial;
@@ -469,6 +473,7 @@ void oei_deriv_disk(int max_deriv_order) {
                 double kinetic_shellset_slab [n1][n2][nderivs_triu] = {};
 
                 // Loop over all buffer indices 
+                // TODO potentials need their own loop! The buffer size is different
                 for (auto i=0; i<nshell_derivs; i++) {
                     auto overlap_shellset = overlap_buffer[i];
                     auto kinetic_shellset = kinetic_buffer[i];
