@@ -1,0 +1,411 @@
+N2 cc-pVDZ gradients
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  gradient
+[ 0.          0.         -0.13575135  0.          0.          0.13575135]
+6.03user 1.74system 0:07.90elapsed 98%CPU (0avgtext+0avgdata 1607628maxresident)k
+458800inputs+32outputs (0major+94773minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+17  RHF iterations performed
+MP2  cc-pvdz  gradient
+[ 0.          0.          0.02516451  0.          0.         -0.02516451]
+8.45user 2.35system 0:09.85elapsed 109%CPU (0avgtext+0avgdata 1645752maxresident)k
+458800inputs+32outputs (0major+98539minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  gradient
+[ 0.         0.        -0.0018284  0.         0.         0.0018284]
+94.34user 7.32system 1:01.02elapsed 166%CPU (0avgtext+0avgdata 1783160maxresident)k
+458800inputs+32outputs (0major+402471minor)pagefaults 0swaps
+N2 cc-pVDZ hessians
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  hessian
+[[ 0.06422247  0.          0.         -0.06422247  0.          0.        ]
+ [ 0.          0.06422247  0.          0.         -0.06422247  0.        ]
+ [ 0.          0.          1.51493308  0.          0.         -1.51493308]
+ [-0.06422247  0.          0.          0.06422247  0.          0.        ]
+ [ 0.         -0.06422247  0.          0.          0.06422247  0.        ]
+ [ 0.          0.         -1.51493308  0.          0.          1.51493308]]
+23.84user 7.25system 1:01.05elapsed 50%CPU (0avgtext+0avgdata 2229016maxresident)k
+10665384inputs+32outputs (0major+196307minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+17  RHF iterations performed
+MP2  cc-pvdz  hessian
+[[-0.01190505  0.          0.          0.01190505  0.          0.        ]
+ [ 0.         -0.01190505  0.          0.          0.01190505  0.        ]
+ [ 0.          0.          1.36731575  0.          0.         -1.36731575]
+ [ 0.01190505  0.          0.         -0.01190505  0.          0.        ]
+ [ 0.          0.01190505  0.          0.         -0.01190505  0.        ]
+ [ 0.          0.         -1.36731575  0.          0.          1.36731575]]
+27.97user 7.26system 1:06.01elapsed 53%CPU (0avgtext+0avgdata 2475840maxresident)k
+10665384inputs+32outputs (0major+176382minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  hessian
+[[ 8.6499650e-04  0.0000000e+00  0.0000000e+00 -8.6499650e-04
+   0.0000000e+00  0.0000000e+00]
+ [ 0.0000000e+00  8.6499650e-04  0.0000000e+00  0.0000000e+00
+  -8.6499650e-04  0.0000000e+00]
+ [ 0.0000000e+00  0.0000000e+00  1.4485541e+00  0.0000000e+00
+   0.0000000e+00 -1.4485541e+00]
+ [-8.6499650e-04  0.0000000e+00  0.0000000e+00  8.6499650e-04
+   0.0000000e+00  0.0000000e+00]
+ [ 0.0000000e+00 -8.6499650e-04  0.0000000e+00  0.0000000e+00
+   8.6499650e-04  0.0000000e+00]
+ [ 0.0000000e+00  0.0000000e+00 -1.4485541e+00  0.0000000e+00
+   0.0000000e+00  1.4485541e+00]]
+571.53user 39.38system 3:35.66elapsed 283%CPU (0avgtext+0avgdata 3492796maxresident)k
+10665384inputs+40outputs (0major+787441minor)pagefaults 0swaps
+N2 cc-pVTZ gradients
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  gradient
+[ 0.         0.        -0.1131639  0.         0.         0.1131639]
+37.97user 13.51system 1:15.45elapsed 68%CPU (0avgtext+0avgdata 4147036maxresident)k
+13522768inputs+32outputs (0major+280291minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+19  RHF iterations performed
+MP2  cc-pvtz  gradient
+[ 0.         0.         0.0202761  0.         0.        -0.0202761]
+41.74user 14.04system 1:17.64elapsed 71%CPU (0avgtext+0avgdata 4246908maxresident)k
+13522768inputs+32outputs (0major+306200minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  gradient
+[ 0.          0.         -0.00451518  0.          0.          0.00451518]
+640.16user 55.96system 2:50.15elapsed 409%CPU (0avgtext+0avgdata 6784368maxresident)k
+13522768inputs+32outputs (0major+1161198minor)pagefaults 0swaps
+N2 cc-pVTZ hessians
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  hessian
+[[ 0.05439893  0.          0.         -0.05439893  0.          0.        ]
+ [ 0.          0.05439893  0.          0.         -0.05439893  0.        ]
+ [ 0.          0.          1.56725201  0.          0.         -1.56725201]
+ [-0.05439893  0.          0.          0.05439893  0.          0.        ]
+ [ 0.         -0.05439893  0.          0.          0.05439893  0.        ]
+ [ 0.          0.         -1.56725201  0.          0.          1.56725201]]
+1092.56user 149.79system 24:32.74elapsed 84%CPU (0avgtext+0avgdata 20049628maxresident)k
+311222760inputs+32outputs (0major+509900minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+19  RHF iterations performed
+MP2  cc-pvtz  hessian
+[[-0.00974691  0.          0.          0.00974691  0.          0.        ]
+ [ 0.         -0.00974691  0.          0.          0.00974691  0.        ]
+ [ 0.          0.          1.39803793  0.          0.         -1.39803793]
+ [ 0.00974691  0.          0.         -0.00974691  0.          0.        ]
+ [ 0.          0.00974691  0.          0.         -0.00974691  0.        ]
+ [ 0.          0.         -1.39803793  0.          0.          1.39803793]]
+1032.62user 147.57system 24:27.22elapsed 80%CPU (0avgtext+0avgdata 22605852maxresident)k
+311222760inputs+32outputs (0major+527325minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  hessian
+[[ 0.00217049  0.          0.         -0.00217049  0.          0.        ]
+ [ 0.          0.00217049  0.          0.         -0.00217049  0.        ]
+ [ 0.          0.          1.4735436   0.          0.         -1.4735436 ]
+ [-0.00217049  0.          0.          0.00217049  0.          0.        ]
+ [ 0.         -0.00217049  0.          0.          0.00217049  0.        ]
+ [ 0.          0.         -1.4735436   0.          0.          1.4735436 ]]
+8417.62user 717.33system 34:14.95elapsed 444%CPU (0avgtext+0avgdata 48548356maxresident)k
+311222760inputs+40outputs (0major+7114440minor)pagefaults 0swaps
+H2O cc-pVDZ gradients
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  gradient
+[ 3.66550000e-06  3.01792165e-02  0.00000000e+00 -1.34010587e-02
+ -1.50910714e-02  0.00000000e+00  1.33973932e-02 -1.50881451e-02
+  0.00000000e+00]
+8.05user 3.18system 0:09.27elapsed 121%CPU (0avgtext+0avgdata 1567264maxresident)k
+499240inputs+32outputs (0major+147962minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+29  RHF iterations performed
+MP2  cc-pvdz  gradient
+[ 3.6720000e-06  1.7941283e-03  0.0000000e+00 -1.7664289e-03
+ -8.9855280e-04  0.0000000e+00  1.7627570e-03 -8.9557550e-04
+  0.0000000e+00]
+8.89user 1.73system 0:10.70elapsed 99%CPU (0avgtext+0avgdata 1609456maxresident)k
+499240inputs+32outputs (0major+139620minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  gradient
+[ 3.625800e-06  1.569239e-04  0.000000e+00 -5.759372e-04 -7.993250e-05
+  0.000000e+00  5.723114e-04 -7.699140e-05  0.000000e+00]
+62.77user 4.73system 0:50.90elapsed 132%CPU (0avgtext+0avgdata 1785008maxresident)k
+499240inputs+32outputs (0major+243199minor)pagefaults 0swaps
+H2O cc-pVDZ hessians
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  hessian
+[[ 6.72824900e-01 -9.59890000e-06  0.00000000e+00 -3.36407995e-01
+  -2.62117826e-01  0.00000000e+00 -3.36416905e-01  2.62127425e-01
+   0.00000000e+00]
+ [-9.59890000e-06  5.09695316e-01  0.00000000e+00 -1.97999965e-01
+  -2.54844634e-01  0.00000000e+00  1.98009564e-01 -2.54850682e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  2.62537934e-02  0.00000000e+00
+   0.00000000e+00 -1.31281533e-02  0.00000000e+00  0.00000000e+00
+  -1.31256401e-02]
+ [-3.36407995e-01 -1.97999965e-01  0.00000000e+00  3.73135500e-01
+   2.30058987e-01  0.00000000e+00 -3.67275048e-02 -3.20590218e-02
+   0.00000000e+00]
+ [-2.62117826e-01 -2.54844634e-01  0.00000000e+00  2.30058987e-01
+   2.38411958e-01  0.00000000e+00  3.20588390e-02  1.64326760e-02
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -1.31281533e-02  0.00000000e+00
+   0.00000000e+00  1.12902514e-02  0.00000000e+00  0.00000000e+00
+   1.83790190e-03]
+ [-3.36416905e-01  1.98009564e-01  0.00000000e+00 -3.67275048e-02
+   3.20588390e-02  0.00000000e+00  3.73144410e-01 -2.30068403e-01
+   0.00000000e+00]
+ [ 2.62127425e-01 -2.54850682e-01  0.00000000e+00 -3.20590218e-02
+   1.64326760e-02  0.00000000e+00 -2.30068403e-01  2.38418006e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -1.31256401e-02  0.00000000e+00
+   0.00000000e+00  1.83790190e-03  0.00000000e+00  0.00000000e+00
+   1.12877383e-02]]
+25.40user 11.95system 2:01.99elapsed 30%CPU (0avgtext+0avgdata 2204644maxresident)k
+23739536inputs+40outputs (0major+234957minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+29  RHF iterations performed
+MP2  cc-pvdz  hessian
+[[ 6.66802403e-01 -9.58210000e-06  0.00000000e+00 -3.33396784e-01
+  -2.69686945e-01  0.00000000e+00 -3.33405618e-01  2.69696527e-01
+   0.00000000e+00]
+ [-9.58210000e-06  4.75928534e-01  0.00000000e+00 -2.03129371e-01
+  -2.37961306e-01  0.00000000e+00  2.03138953e-01 -2.37967228e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  1.56076630e-03  0.00000000e+00
+   0.00000000e+00 -7.81676000e-04  0.00000000e+00  0.00000000e+00
+  -7.79090300e-04]
+ [-3.33396784e-01 -2.03129371e-01  0.00000000e+00  3.66141761e-01
+   2.36408237e-01  0.00000000e+00 -3.27449766e-02 -3.32788657e-02
+   0.00000000e+00]
+ [-2.69686945e-01 -2.37961306e-01  0.00000000e+00  2.36408237e-01
+   2.28935653e-01  0.00000000e+00  3.32787079e-02  9.02565320e-03
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -7.81676000e-04  0.00000000e+00
+   0.00000000e+00  1.01380920e-03  0.00000000e+00  0.00000000e+00
+  -2.32133100e-04]
+ [-3.33405618e-01  2.03138953e-01  0.00000000e+00 -3.27449766e-02
+   3.32787079e-02  0.00000000e+00  3.66150595e-01 -2.36417661e-01
+   0.00000000e+00]
+ [ 2.69696527e-01 -2.37967228e-01  0.00000000e+00 -3.32788657e-02
+   9.02565320e-03  0.00000000e+00 -2.36417661e-01  2.28941575e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -7.79090300e-04  0.00000000e+00
+   0.00000000e+00 -2.32133100e-04  0.00000000e+00  0.00000000e+00
+   1.01122340e-03]]
+32.97user 13.18system 2:06.32elapsed 36%CPU (0avgtext+0avgdata 2460996maxresident)k
+23739536inputs+32outputs (0major+281059minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  hessian
+[[ 6.58013457e-01 -9.65280000e-06  0.00000000e+00 -3.29002274e-01
+  -2.66701233e-01  0.00000000e+00 -3.29011184e-01  2.66710885e-01
+   0.00000000e+00]
+ [-9.65280000e-06  4.75798809e-01  0.00000000e+00 -2.01207011e-01
+  -2.37896396e-01  0.00000000e+00  2.01216664e-01 -2.37902413e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  1.36513900e-04  0.00000000e+00
+   0.00000000e+00 -6.95355000e-05  0.00000000e+00  0.00000000e+00
+  -6.69784000e-05]
+ [-3.29002274e-01 -2.01207011e-01  0.00000000e+00  3.63021439e-01
+   2.33954211e-01  0.00000000e+00 -3.40191657e-02 -3.27471998e-02
+   0.00000000e+00]
+ [-2.66701233e-01 -2.37896396e-01  0.00000000e+00  2.33954211e-01
+   2.27272922e-01  0.00000000e+00  3.27470220e-02  1.06234743e-02
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -6.95355000e-05  0.00000000e+00
+   0.00000000e+00  2.37885500e-04  0.00000000e+00  0.00000000e+00
+  -1.68350000e-04]
+ [-3.29011184e-01  2.01216664e-01  0.00000000e+00 -3.40191657e-02
+   3.27470220e-02  0.00000000e+00  3.63030350e-01 -2.33963686e-01
+   0.00000000e+00]
+ [ 2.66710885e-01 -2.37902413e-01  0.00000000e+00 -3.27471998e-02
+   1.06234743e-02  0.00000000e+00 -2.33963686e-01  2.27278939e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -6.69784000e-05  0.00000000e+00
+   0.00000000e+00 -1.68350000e-04  0.00000000e+00  0.00000000e+00
+   2.35328400e-04]]
+371.64user 32.27system 4:04.57elapsed 165%CPU (0avgtext+0avgdata 3540916maxresident)k
+23739536inputs+32outputs (0major+616187minor)pagefaults 0swaps
+H2O cc-pVTZ gradients
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+32  RHF iterations performed
+Hartree Fock  cc-pvtz  gradient
+[ 3.55600000e-06  4.02211877e-02  0.00000000e+00 -1.62809298e-02
+ -2.01120028e-02  0.00000000e+00  1.62773737e-02 -2.01091848e-02
+  0.00000000e+00]
+39.19user 20.05system 2:01.61elapsed 48%CPU (0avgtext+0avgdata 4528316maxresident)k
+22624408inputs+32outputs (0major+209727minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+32  RHF iterations performed
+MP2  cc-pvtz  gradient
+[ 3.53540000e-06  1.21321268e-02  0.00000000e+00 -4.39105830e-03
+ -6.06748610e-03  0.00000000e+00  4.38752290e-03 -6.06464070e-03
+  0.00000000e+00]
+49.14user 19.59system 2:05.28elapsed 54%CPU (0avgtext+0avgdata 4528584maxresident)k
+22624408inputs+32outputs (0major+218965minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+32  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  gradient
+[ 3.48410000e-06  1.19368385e-02  0.00000000e+00 -3.96812290e-03
+ -5.96982080e-03  0.00000000e+00  3.96463880e-03 -5.96701770e-03
+  0.00000000e+00]
+399.80user 48.02system 3:22.45elapsed 221%CPU (0avgtext+0avgdata 7133680maxresident)k
+22624408inputs+32outputs (0major+775474minor)pagefaults 0swaps
+H2O cc-pVTZ hessians
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+32  RHF iterations performed
+Hartree Fock  cc-pvtz  hessian
+[[ 6.55509460e-01 -9.29150000e-06  0.00000000e+00 -3.27750384e-01
+  -2.51556695e-01  0.00000000e+00 -3.27759076e-01  2.51565987e-01
+   0.00000000e+00]
+ [-9.29150000e-06  4.94932590e-01  0.00000000e+00 -1.89820376e-01
+  -2.47463366e-01  0.00000000e+00  1.89829668e-01 -2.47469224e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  3.49896009e-02  0.00000000e+00
+   0.00000000e+00 -1.74960064e-02  0.00000000e+00  0.00000000e+00
+  -1.74935945e-02]
+ [-3.27750384e-01 -1.89820376e-01  0.00000000e+00  3.64948426e-01
+   2.20688620e-01  0.00000000e+00 -3.71980418e-02 -3.08682434e-02
+   0.00000000e+00]
+ [-2.51556695e-01 -2.47463366e-01  0.00000000e+00  2.20688620e-01
+   2.31455455e-01  0.00000000e+00  3.08680758e-02  1.60079110e-02
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -1.74960064e-02  0.00000000e+00
+   0.00000000e+00  1.44898249e-02  0.00000000e+00  0.00000000e+00
+   3.00618150e-03]
+ [-3.27759076e-01  1.89829668e-01  0.00000000e+00 -3.71980418e-02
+   3.08680758e-02  0.00000000e+00  3.64957118e-01 -2.20697744e-01
+   0.00000000e+00]
+ [ 2.51565987e-01 -2.47469224e-01  0.00000000e+00 -3.08682434e-02
+   1.60079110e-02  0.00000000e+00 -2.20697744e-01  2.31461313e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -1.74935945e-02  0.00000000e+00
+   0.00000000e+00  3.00618150e-03  0.00000000e+00  0.00000000e+00
+   1.44874130e-02]]
+1738.52user 442.39system 1:21:42elapsed 44%CPU (0avgtext+0avgdata 29625580maxresident)k
+1063443744inputs+32outputs (0major+871930minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+32  RHF iterations performed
+MP2  cc-pvtz  hessian
+[[ 6.44638562e-01 -9.09410000e-06  0.00000000e+00 -3.22315068e-01
+  -2.57055942e-01  0.00000000e+00 -3.22323494e-01  2.57065036e-01
+   0.00000000e+00]
+ [-9.09410000e-06  4.57155565e-01  0.00000000e+00 -1.92799956e-01
+  -2.28574982e-01  0.00000000e+00  1.92809050e-01 -2.28580582e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  1.05540968e-02  0.00000000e+00
+   0.00000000e+00 -5.27828070e-03  0.00000000e+00  0.00000000e+00
+  -5.27581610e-03]
+ [-3.22315068e-01 -1.92799956e-01  0.00000000e+00  3.55406139e-01
+   2.24928019e-01  0.00000000e+00 -3.30910705e-02 -3.21280629e-02
+   0.00000000e+00]
+ [-2.57055942e-01 -2.28574982e-01  0.00000000e+00  2.24928019e-01
+   2.20047471e-01  0.00000000e+00  3.21279229e-02  8.52751100e-03
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -5.27828070e-03  0.00000000e+00
+   0.00000000e+00  4.18774140e-03  0.00000000e+00  0.00000000e+00
+   1.09053930e-03]
+ [-3.22323494e-01  1.92809050e-01  0.00000000e+00 -3.30910705e-02
+   3.21279229e-02  0.00000000e+00  3.55414564e-01 -2.24936973e-01
+   0.00000000e+00]
+ [ 2.57065036e-01 -2.28580582e-01  0.00000000e+00 -3.21280629e-02
+   8.52751100e-03  0.00000000e+00 -2.24936973e-01  2.20053071e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -5.27581610e-03  0.00000000e+00
+   0.00000000e+00  1.09053930e-03  0.00000000e+00  0.00000000e+00
+   4.18527680e-03]]
+2196.51user 454.10system 1:21:27elapsed 54%CPU (0avgtext+0avgdata 33020600maxresident)k
+1063443744inputs+40outputs (0major+979518minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing integral derivatives in your working directory. Trying to use them.
+Integral derivatives appear to be correct. Avoiding recomputation.
+32  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  hessian
+[[ 6.35277910e-01 -9.14290000e-06  0.00000000e+00 -3.17634715e-01
+  -2.53329943e-01  0.00000000e+00 -3.17643194e-01  2.53339086e-01
+   0.00000000e+00]
+ [-9.14290000e-06  4.58345231e-01  0.00000000e+00 -1.90506125e-01
+  -2.29169773e-01  0.00000000e+00  1.90515268e-01 -2.29175458e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00  1.03842097e-02  0.00000000e+00
+   0.00000000e+00 -5.19331930e-03  0.00000000e+00  0.00000000e+00
+  -5.19089040e-03]
+ [-3.17634715e-01 -1.90506125e-01  0.00000000e+00  3.52252560e-01
+   2.21918115e-01  0.00000000e+00 -3.46178444e-02 -3.14119897e-02
+   0.00000000e+00]
+ [-2.53329943e-01 -2.29169773e-01  0.00000000e+00  2.21918115e-01
+   2.18685171e-01  0.00000000e+00  3.14118281e-02  1.04846021e-02
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -5.19331930e-03  0.00000000e+00
+   0.00000000e+00  3.99610290e-03  0.00000000e+00  0.00000000e+00
+   1.19721640e-03]
+ [-3.17643194e-01  1.90515268e-01  0.00000000e+00 -3.46178444e-02
+   3.14118281e-02  0.00000000e+00  3.52261039e-01 -2.21927096e-01
+   0.00000000e+00]
+ [ 2.53339086e-01 -2.29175458e-01  0.00000000e+00 -3.14119897e-02
+   1.04846021e-02  0.00000000e+00 -2.21927096e-01  2.18690856e-01
+   0.00000000e+00]
+ [ 0.00000000e+00  0.00000000e+00 -5.19089040e-03  0.00000000e+00
+   0.00000000e+00  1.19721640e-03  0.00000000e+00  0.00000000e+00
+   3.99367400e-03]]
+8436.37user 956.11system 1:32:22elapsed 169%CPU (0avgtext+0avgdata 76327120maxresident)k
+1063443744inputs+32outputs (0major+6092863minor)pagefaults 0swaps

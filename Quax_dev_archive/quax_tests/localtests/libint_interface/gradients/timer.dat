@@ -1,0 +1,340 @@
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:29:27 2020
+Timers Off: Wed Oct 28 15:29:28 2020
+
+Wall Time:        0.79 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:30:00 2020
+Timers Off: Wed Oct 28 15:30:09 2020
+
+Wall Time:        8.71 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Total PK formation time             :      0.033u      0.000s      0.020w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.001w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.117u      0.000s      0.065w      1 calls
+SAD Guess                           :      0.100u      0.000s      0.057w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+JK: D                               :      0.000u      0.000s      0.000w      3 calls
+JK: USO2AO                          :      0.000u      0.000s      0.000w      3 calls
+JK: JK                              :      0.000u      0.000s      0.000w      3 calls
+PK computes JK                      :      0.000u      0.000s      0.000w      3 calls
+JK: AO2USO                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+
+--------------------------------------------------------------------------------------
+Total PK formation time             :      0.033u      0.000s      0.020w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.001w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.117u      0.000s      0.065w      1 calls
+| SAD Guess                         :      0.100u      0.000s      0.057w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+| JK: D                             :      0.000u      0.000s      0.000w      3 calls
+| JK: USO2AO                        :      0.000u      0.000s      0.000w      3 calls
+| JK: JK                            :      0.000u      0.000s      0.000w      3 calls
+| | PK computes JK                  :      0.000u      0.000s      0.000w      3 calls
+| JK: AO2USO                        :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:31:04 2020
+Timers Off: Wed Oct 28 15:31:22 2020
+
+Wall Time:       18.39 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:34:46 2020
+Timers Off: Wed Oct 28 15:34:46 2020
+
+Wall Time:        0.75 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:35:41 2020
+Timers Off: Wed Oct 28 15:35:42 2020
+
+Wall Time:        0.74 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:42:37 2020
+Timers Off: Wed Oct 28 15:42:37 2020
+
+Wall Time:        0.74 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:42:58 2020
+Timers Off: Wed Oct 28 15:42:59 2020
+
+Wall Time:        0.75 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:43:16 2020
+Timers Off: Wed Oct 28 15:43:36 2020
+
+Wall Time:       19.51 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Total PK formation time             :      0.033u      0.000s      0.022w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.001w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.100u      0.000s      0.067w      1 calls
+SAD Guess                           :      0.100u      0.000s      0.058w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+JK: D                               :      0.000u      0.000s      0.000w      3 calls
+JK: USO2AO                          :      0.000u      0.000s      0.000w      3 calls
+JK: JK                              :      0.000u      0.000s      0.000w      3 calls
+PK computes JK                      :      0.000u      0.000s      0.000w      3 calls
+JK: AO2USO                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+Grad: V T Perturb                   :      0.000u      0.000s      0.001w      1 calls
+Grad: S                             :      0.000u      0.000s      0.000w      1 calls
+Grad: JK                            :      0.033u      0.000s      0.021w      1 calls
+Grad: XC                            :      0.000u      0.000s      0.000w      1 calls
+
+--------------------------------------------------------------------------------------
+Total PK formation time             :      0.033u      0.000s      0.022w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.001w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.100u      0.000s      0.067w      1 calls
+| SAD Guess                         :      0.100u      0.000s      0.058w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+| JK: D                             :      0.000u      0.000s      0.000w      3 calls
+| JK: USO2AO                        :      0.000u      0.000s      0.000w      3 calls
+| JK: JK                            :      0.000u      0.000s      0.000w      3 calls
+| | PK computes JK                  :      0.000u      0.000s      0.000w      3 calls
+| JK: AO2USO                        :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+Grad: V T Perturb                   :      0.000u      0.000s      0.001w      1 calls
+Grad: S                             :      0.000u      0.000s      0.000w      1 calls
+Grad: JK                            :      0.033u      0.000s      0.021w      1 calls
+Grad: XC                            :      0.000u      0.000s      0.000w      1 calls
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:45:01 2020
+Timers Off: Wed Oct 28 15:45:02 2020
+
+Wall Time:        0.99 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Total PK formation time             :      0.033u      0.000s      0.020w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.002w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.117u      0.000s      0.065w      1 calls
+SAD Guess                           :      0.100u      0.000s      0.056w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+JK: D                               :      0.000u      0.000s      0.000w      3 calls
+JK: USO2AO                          :      0.000u      0.000s      0.000w      3 calls
+JK: JK                              :      0.000u      0.000s      0.000w      3 calls
+PK computes JK                      :      0.000u      0.000s      0.000w      3 calls
+JK: AO2USO                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+Grad: V T Perturb                   :      0.000u      0.000s      0.001w      1 calls
+Grad: S                             :      0.000u      0.000s      0.000w      1 calls
+Grad: JK                            :      0.033u      0.000s      0.020w      1 calls
+Grad: XC                            :      0.000u      0.000s      0.000w      1 calls
+
+--------------------------------------------------------------------------------------
+Total PK formation time             :      0.033u      0.000s      0.020w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.002w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.117u      0.000s      0.065w      1 calls
+| SAD Guess                         :      0.100u      0.000s      0.056w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+| JK: D                             :      0.000u      0.000s      0.000w      3 calls
+| JK: USO2AO                        :      0.000u      0.000s      0.000w      3 calls
+| JK: JK                            :      0.000u      0.000s      0.000w      3 calls
+| | PK computes JK                  :      0.000u      0.000s      0.000w      3 calls
+| JK: AO2USO                        :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+Grad: V T Perturb                   :      0.000u      0.000s      0.001w      1 calls
+Grad: S                             :      0.000u      0.000s      0.000w      1 calls
+Grad: JK                            :      0.033u      0.000s      0.020w      1 calls
+Grad: XC                            :      0.000u      0.000s      0.000w      1 calls
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:45:49 2020
+Timers Off: Wed Oct 28 15:46:26 2020
+
+Wall Time:       37.45 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+Total PK formation time             :      0.033u      0.000s      0.020w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.001w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.100u      0.017s      0.068w      1 calls
+SAD Guess                           :      0.100u      0.017s      0.059w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+JK: D                               :      0.000u      0.000s      0.000w      3 calls
+JK: USO2AO                          :      0.000u      0.000s      0.000w      3 calls
+JK: JK                              :      0.000u      0.000s      0.000w      3 calls
+PK computes JK                      :      0.000u      0.000s      0.000w      3 calls
+JK: AO2USO                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+Grad: V T Perturb                   :      0.000u      0.000s      0.001w      1 calls
+Grad: S                             :      0.000u      0.000s      0.000w      1 calls
+Grad: JK                            :      0.033u      0.000s      0.023w      1 calls
+Grad: XC                            :      0.000u      0.000s      0.000w      1 calls
+
+--------------------------------------------------------------------------------------
+Total PK formation time             :      0.033u      0.000s      0.020w      1 calls
+HF: Form core H                     :      0.000u      0.000s      0.001w      1 calls
+HF: Form S/X                        :      0.000u      0.000s      0.000w      1 calls
+HF: Guess                           :      0.100u      0.017s      0.068w      1 calls
+| SAD Guess                         :      0.100u      0.017s      0.059w      1 calls
+HF: Form G                          :      0.000u      0.000s      0.000w      3 calls
+| JK: D                             :      0.000u      0.000s      0.000w      3 calls
+| JK: USO2AO                        :      0.000u      0.000s      0.000w      3 calls
+| JK: JK                            :      0.000u      0.000s      0.000w      3 calls
+| | PK computes JK                  :      0.000u      0.000s      0.000w      3 calls
+| JK: AO2USO                        :      0.000u      0.000s      0.000w      3 calls
+HF: Form F                          :      0.000u      0.000s      0.000w      3 calls
+HF: Form D                          :      0.000u      0.000s      0.000w      3 calls
+HF: DIIS                            :      0.000u      0.000s      0.000w      2 calls
+HF: Form C                          :      0.000u      0.000s      0.000w      2 calls
+Grad: V T Perturb                   :      0.000u      0.000s      0.001w      1 calls
+Grad: S                             :      0.000u      0.000s      0.000w      1 calls
+Grad: JK                            :      0.033u      0.000s      0.023w      1 calls
+Grad: XC                            :      0.000u      0.000s      0.000w      1 calls
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:53:32 2020
+Timers Off: Wed Oct 28 15:53:33 2020
+
+Wall Time:        0.69 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:54:11 2020
+Timers Off: Wed Oct 28 15:54:12 2020
+
+Wall Time:        0.66 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:55:15 2020
+Timers Off: Wed Oct 28 15:55:16 2020
+
+Wall Time:        0.67 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************
+
+Host: adabbott
+
+Timers On : Wed Oct 28 15:56:28 2020
+Timers Off: Wed Oct 28 15:56:28 2020
+
+Wall Time:        0.66 seconds
+
+                                                       Time (seconds)
+Module                                       User      System        Wall        Calls
+
+--------------------------------------------------------------------------------------
+
+**************************************************************************************

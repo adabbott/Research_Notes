@@ -1,0 +1,120 @@
+N2 cc-pVDZ energy
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  energy
+-108.95061986099527
+2.74user 1.18system 0:03.23elapsed 121%CPU (0avgtext+0avgdata 1491464maxresident)k
+0inputs+32outputs (0major+85994minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+17  RHF iterations performed
+MP2  cc-pvdz  energy
+-109.2741545986407
+3.92user 1.79system 0:03.82elapsed 149%CPU (0avgtext+0avgdata 1489716maxresident)k
+0inputs+32outputs (0major+88438minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  energy
+-109.28742703240879
+17.74user 1.89system 0:15.23elapsed 128%CPU (0avgtext+0avgdata 1588692maxresident)k
+0inputs+32outputs (0major+153043minor)pagefaults 0swaps
+N2 cc-pVTZ energy
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  energy
+-108.98347293011179
+7.55user 2.70system 0:06.66elapsed 153%CPU (0avgtext+0avgdata 1854856maxresident)k
+0inputs+40outputs (0major+97456minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+19  RHF iterations performed
+MP2  cc-pvtz  energy
+-109.39157648392151
+7.95user 2.72system 0:07.20elapsed 148%CPU (0avgtext+0avgdata 1855728maxresident)k
+8inputs+32outputs (0major+105613minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  energy
+-109.40873876009049
+74.68user 9.43system 0:24.35elapsed 345%CPU (0avgtext+0avgdata 2047516maxresident)k
+0inputs+32outputs (0major+446483minor)pagefaults 0swaps
+H2O cc-pVDZ energy
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  energy
+-76.02650832615441
+2.49user 1.26system 0:02.94elapsed 127%CPU (0avgtext+0avgdata 1485400maxresident)k
+0inputs+40outputs (0major+87088minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+29  RHF iterations performed
+MP2  cc-pvdz  energy
+-76.23489710966417
+3.37user 1.82system 0:03.30elapsed 157%CPU (0avgtext+0avgdata 1480924maxresident)k
+8inputs+32outputs (0major+92135minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  energy
+-76.24715588398143
+13.25user 1.87system 0:12.93elapsed 116%CPU (0avgtext+0avgdata 1584356maxresident)k
+0inputs+32outputs (0major+157369minor)pagefaults 0swaps
+H2O cc-pVTZ energy
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+32  RHF iterations performed
+Hartree Fock  cc-pvtz  energy
+-76.05673399158854
+6.21user 2.81system 0:05.21elapsed 173%CPU (0avgtext+0avgdata 1754448maxresident)k
+0inputs+40outputs (0major+108859minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+32  RHF iterations performed
+MP2  cc-pvtz  energy
+-76.33653695844171
+6.57user 2.55system 0:05.81elapsed 156%CPU (0avgtext+0avgdata 1759248maxresident)k
+8inputs+32outputs (0major+115675minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+32  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  energy
+-76.3501483448593
+38.25user 5.56system 0:20.22elapsed 216%CPU (0avgtext+0avgdata 1910196maxresident)k
+0inputs+32outputs (0major+289655minor)pagefaults 0swaps
+H2CO cc-pVDZ energy
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  energy
+-113.87504720856067
+4.69user 1.98system 0:03.91elapsed 170%CPU (0avgtext+0avgdata 1531188maxresident)k
+0inputs+40outputs (0major+90253minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+62  RHF iterations performed
+MP2  cc-pvdz  energy
+-114.20470066961747
+5.02user 1.78system 0:04.62elapsed 147%CPU (0avgtext+0avgdata 1532252maxresident)k
+0inputs+32outputs (0major+93342minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  energy
+-114.22997013059833
+29.60user 3.35system 0:19.73elapsed 166%CPU (0avgtext+0avgdata 1645192maxresident)k
+0inputs+32outputs (0major+132932minor)pagefaults 0swaps
+H2CO cc-pVTZ energy
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  energy
+-113.9120952040181
+35.30user 14.24system 0:27.38elapsed 180%CPU (0avgtext+0avgdata 3040956maxresident)k
+8inputs+32outputs (0major+164762minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+68  RHF iterations performed
+MP2  cc-pvtz  energy
+-114.34204444765682
+36.64user 17.21system 0:29.07elapsed 185%CPU (0avgtext+0avgdata 3039084maxresident)k
+0inputs+32outputs (0major+2600709minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  energy
+-114.36951065203183
+254.37user 28.75system 0:55.37elapsed 511%CPU (0avgtext+0avgdata 4608420maxresident)k
+0inputs+32outputs (0major+1011485minor)pagefaults 0swaps

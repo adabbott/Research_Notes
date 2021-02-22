@@ -1,0 +1,826 @@
+N2 cc-pVDZ
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  partial gradient
+-0.13575134286215196
+5.42user 2.49system 0:05.37elapsed 147%CPU (0avgtext+0avgdata 1529996maxresident)k
+23936inputs+32outputs (0major+116967minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  partial hessian
+1.514933089815635
+8.51user 2.27system 0:08.51elapsed 126%CPU (0avgtext+0avgdata 1611788maxresident)k
+71288inputs+32outputs (0major+172117minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  partial cubic
+5.676550581185765
+15.47user 2.93system 0:15.61elapsed 117%CPU (0avgtext+0avgdata 1748256maxresident)k
+165400inputs+32outputs (0major+219226minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  partial quartic
+17.491515533524105
+29.78user 4.03system 0:29.70elapsed 113%CPU (0avgtext+0avgdata 2020396maxresident)k
+352952inputs+32outputs (0major+307441minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  partial quintic
+51.81217507746854
+68.30user 6.26system 1:05.50elapsed 113%CPU (0avgtext+0avgdata 2309980maxresident)k
+727280inputs+32outputs (0major+382425minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+Hartree Fock  cc-pvdz  partial sextic
+143.43064276959657
+166.36user 13.50system 2:41.41elapsed 111%CPU (0avgtext+0avgdata 2968764maxresident)k
+1464640inputs+32outputs (0major+1176447minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+MP2  cc-pvdz  partial gradient
+0.025164522567326236
+6.93user 2.20system 0:06.99elapsed 130%CPU (0avgtext+0avgdata 1532852maxresident)k
+23936inputs+32outputs (0major+118808minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+MP2  cc-pvdz  partial hessian
+1.3673157544550303
+10.97user 2.04system 0:11.20elapsed 116%CPU (0avgtext+0avgdata 1610948maxresident)k
+71288inputs+40outputs (0major+169489minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+MP2  cc-pvdz  partial cubic
+5.843978240427871
+19.91user 3.08system 0:19.83elapsed 115%CPU (0avgtext+0avgdata 1750336maxresident)k
+165400inputs+32outputs (0major+251794minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+MP2  cc-pvdz  partial quartic
+17.626600508155153
+39.34user 4.10system 0:37.92elapsed 114%CPU (0avgtext+0avgdata 2020168maxresident)k
+352952inputs+40outputs (0major+295444minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+MP2  cc-pvdz  partial quintic
+51.12189468378265
+87.27user 6.35system 1:23.29elapsed 112%CPU (0avgtext+0avgdata 2375784maxresident)k
+727280inputs+32outputs (0major+573880minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+MP2  cc-pvdz  partial sextic
+141.92170812077697
+222.16user 14.36system 3:26.72elapsed 114%CPU (0avgtext+0avgdata 3194932maxresident)k
+1464640inputs+32outputs (0major+1300343minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial gradient
+-0.001828387094458657
+55.15user 3.68system 0:46.58elapsed 126%CPU (0avgtext+0avgdata 1739360maxresident)k
+23952inputs+32outputs (0major+220587minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial hessian
+1.4485541061943954
+118.44user 6.71system 1:35.07elapsed 131%CPU (0avgtext+0avgdata 1949372maxresident)k
+71288inputs+32outputs (0major+387412minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial cubic
+5.694617411149544
+273.06user 15.37system 3:28.48elapsed 138%CPU (0avgtext+0avgdata 2305124maxresident)k
+165400inputs+32outputs (0major+1074741minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial quartic
+17.698724140663032
+665.14user 32.36system 8:01.13elapsed 144%CPU (0avgtext+0avgdata 3218132maxresident)k
+352952inputs+32outputs (0major+1491308minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial quintic
+51.89103651826562
+1756.69user 82.16system 20:18.59elapsed 150%CPU (0avgtext+0avgdata 6081528maxresident)k
+727280inputs+40outputs (0major+3503313minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-18 15:49:53.178702: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+17  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial sextic
+139.48286122419123
+4975.42user 233.45system 57:00.87elapsed 152%CPU (0avgtext+0avgdata 19195016maxresident)k
+1464640inputs+48outputs (0major+9176637minor)pagefaults 0swaps
+N2 cc-pVTZ
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  partial gradient
+-0.11316388927664711
+13.24user 5.39system 0:13.36elapsed 139%CPU (0avgtext+0avgdata 2251620maxresident)k
+385824inputs+32outputs (0major+138369minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  partial hessian
+1.5672520192295458
+21.69user 7.82system 0:25.28elapsed 116%CPU (0avgtext+0avgdata 3039564maxresident)k
+1155064inputs+40outputs (0major+204960minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  partial cubic
+5.73697081158522
+46.62user 14.02system 0:55.98elapsed 108%CPU (0avgtext+0avgdata 4596380maxresident)k
+2694768inputs+32outputs (0major+328449minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  partial quartic
+17.643938452602395
+100.99user 29.32system 2:05.13elapsed 104%CPU (0avgtext+0avgdata 7683332maxresident)k
+5773944inputs+32outputs (0major+816342minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  partial quintic
+56.97637740294363
+286.47user 61.57system 5:39.52elapsed 102%CPU (0avgtext+0avgdata 13825272maxresident)k
+11932032inputs+32outputs (0major+1689654minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+Hartree Fock  cc-pvtz  partial sextic
+204.06021250904143
+787.96user 127.41system 14:57.39elapsed 102%CPU (0avgtext+0avgdata 26091688maxresident)k
+24238752inputs+32outputs (0major+3637633minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+MP2  cc-pvtz  partial gradient
+0.02027610841047245
+15.56user 3.71system 0:15.01elapsed 128%CPU (0avgtext+0avgdata 2252908maxresident)k
+385096inputs+32outputs (0major+151781minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+MP2  cc-pvtz  partial hessian
+1.3980379375479577
+29.61user 6.96system 0:29.97elapsed 122%CPU (0avgtext+0avgdata 3037296maxresident)k
+1155064inputs+32outputs (0major+224149minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+MP2  cc-pvtz  partial cubic
+5.910822252607523
+58.64user 15.25system 1:00.72elapsed 121%CPU (0avgtext+0avgdata 4618896maxresident)k
+2694768inputs+32outputs (0major+391855minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+MP2  cc-pvtz  partial quartic
+17.936024612061775
+137.84user 30.08system 2:22.94elapsed 117%CPU (0avgtext+0avgdata 7682572maxresident)k
+5773944inputs+32outputs (0major+932951minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+MP2  cc-pvtz  partial quintic
+53.74918512678801
+375.59user 64.55system 6:11.42elapsed 118%CPU (0avgtext+0avgdata 14388268maxresident)k
+11932032inputs+40outputs (0major+1954403minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+MP2  cc-pvtz  partial sextic
+187.48080839356157
+990.77user 137.51system 15:19.54elapsed 122%CPU (0avgtext+0avgdata 26089672maxresident)k
+24238752inputs+32outputs (0major+4126935minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial gradient
+-0.00451516942016842
+230.34user 18.87system 1:11.05elapsed 350%CPU (0avgtext+0avgdata 2645608maxresident)k
+385096inputs+32outputs (0major+604880minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial hessian
+1.4735436035632716
+608.71user 40.23system 2:43.62elapsed 396%CPU (0avgtext+0avgdata 4368852maxresident)k
+1155064inputs+32outputs (0major+1083289minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial cubic
+5.783869611466622
+1790.21user 96.81system 6:17.16elapsed 500%CPU (0avgtext+0avgdata 7236544maxresident)k
+2694768inputs+32outputs (0major+1826574minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial quartic
+18.055902706523497
+5017.43user 257.24system 15:08.39elapsed 580%CPU (0avgtext+0avgdata 13522160maxresident)k
+5773944inputs+32outputs (0major+3734598minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial quintic
+54.10024002989669
+14952.23user 746.87system 38:13.43elapsed 684%CPU (0avgtext+0avgdata 25668732maxresident)k
+11932032inputs+32outputs (0major+9148987minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-18 19:19:44.490907: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+19  RHF iterations performed
+25  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial sextic
+183.6313471129188
+45625.22user 2103.18system 1:45:08elapsed 756%CPU (0avgtext+0avgdata 49971444maxresident)k
+24238752inputs+48outputs (0major+22279366minor)pagefaults 0swaps
+H2O cc-pVDZ
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  partial gradient
+-2.451502261090404e-17
+5.18user 2.46system 0:05.19elapsed 147%CPU (0avgtext+0avgdata 1511492maxresident)k
+16064inputs+40outputs (0major+94657minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  partial hessian
+0.026253789944307826
+8.64user 2.45system 0:08.21elapsed 135%CPU (0avgtext+0avgdata 1567400maxresident)k
+40464inputs+32outputs (0major+156689minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  partial cubic
+-2.1407261342980162e-17
+15.86user 3.11system 0:15.43elapsed 122%CPU (0avgtext+0avgdata 1663088maxresident)k
+81200inputs+32outputs (0major+308261minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  partial quartic
+1.0975728965868763
+35.20user 5.16system 0:32.48elapsed 124%CPU (0avgtext+0avgdata 1824624maxresident)k
+154208inputs+32outputs (0major+328380minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  partial quintic
+-7.862473033530811e-16
+79.00user 7.52system 1:14.27elapsed 116%CPU (0avgtext+0avgdata 2025860maxresident)k
+291360inputs+32outputs (0major+555120minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+Hartree Fock  cc-pvdz  partial sextic
+-17.526071731564706
+221.50user 20.38system 3:23.77elapsed 118%CPU (0avgtext+0avgdata 2512860maxresident)k
+554832inputs+32outputs (0major+1353370minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+MP2  cc-pvdz  partial gradient
+-3.431676741176e-17
+6.40user 2.31system 0:06.49elapsed 134%CPU (0avgtext+0avgdata 1527116maxresident)k
+16056inputs+32outputs (0major+117413minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+MP2  cc-pvdz  partial hessian
+0.0015607628528565634
+10.95user 2.50system 0:10.66elapsed 126%CPU (0avgtext+0avgdata 1572896maxresident)k
+40464inputs+32outputs (0major+163072minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+MP2  cc-pvdz  partial cubic
+-6.562694884212442e-18
+20.33user 3.34system 0:19.38elapsed 122%CPU (0avgtext+0avgdata 1670380maxresident)k
+81200inputs+40outputs (0major+287444minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+MP2  cc-pvdz  partial quartic
+1.0769724578598152
+41.98user 5.77system 0:39.90elapsed 119%CPU (0avgtext+0avgdata 1816128maxresident)k
+154208inputs+40outputs (0major+457847minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+MP2  cc-pvdz  partial quintic
+-1.0076710678552796e-15
+95.95user 7.51system 1:29.50elapsed 115%CPU (0avgtext+0avgdata 2064360maxresident)k
+291360inputs+32outputs (0major+632231minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+MP2  cc-pvdz  partial sextic
+-17.106152973662653
+262.50user 22.29system 4:01.28elapsed 118%CPU (0avgtext+0avgdata 2743532maxresident)k
+554832inputs+32outputs (0major+1517268minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial gradient
+-3.5364138714878856e-17
+38.30user 2.65system 0:36.79elapsed 111%CPU (0avgtext+0avgdata 1723796maxresident)k
+16056inputs+32outputs (0major+231255minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial hessian
+0.00013651039425976444
+78.25user 4.02system 1:13.48elapsed 111%CPU (0avgtext+0avgdata 1932756maxresident)k
+40464inputs+32outputs (0major+377799minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial cubic
+-7.984395498866549e-18
+173.46user 5.55system 2:41.08elapsed 111%CPU (0avgtext+0avgdata 2284480maxresident)k
+81200inputs+32outputs (0major+582045minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial quartic
+1.079911466324148
+416.65user 13.80system 6:22.70elapsed 112%CPU (0avgtext+0avgdata 3180124maxresident)k
+154208inputs+32outputs (0major+2256964minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial quintic
+-9.87467436256855e-16
+1064.16user 30.46system 16:09.44elapsed 112%CPU (0avgtext+0avgdata 5998196maxresident)k
+291360inputs+32outputs (0major+3395588minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-18 20:56:19.499156: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+29  RHF iterations performed
+21  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial sextic
+-17.159414584829747
+3071.81user 79.35system 46:49.24elapsed 112%CPU (0avgtext+0avgdata 19060904maxresident)k
+554832inputs+48outputs (0major+10755941minor)pagefaults 0swaps
+H2O cc-pVTZ
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+Hartree Fock  cc-pvtz  partial gradient
+7.176306992476906e-17
+12.67user 4.40system 0:12.14elapsed 140%CPU (0avgtext+0avgdata 2060456maxresident)k
+292928inputs+32outputs (0major+158044minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+Hartree Fock  cc-pvtz  partial hessian
+0.024262312603628544
+22.92user 9.30system 0:25.16elapsed 128%CPU (0avgtext+0avgdata 2652372maxresident)k
+878528inputs+32outputs (0major+272344minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+Hartree Fock  cc-pvtz  partial cubic
+-2.6727133196481177e-16
+48.58user 17.79system 0:55.21elapsed 120%CPU (0avgtext+0avgdata 3824920maxresident)k
+2049504inputs+40outputs (0major+443229minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+Hartree Fock  cc-pvtz  partial quartic
+1.147092057106172
+117.28user 33.22system 2:14.56elapsed 111%CPU (0avgtext+0avgdata 6140836maxresident)k
+4391232inputs+32outputs (0major+983369minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+Hartree Fock  cc-pvtz  partial quintic
+3.0461677022595145e-15
+336.33user 69.73system 6:13.35elapsed 108%CPU (0avgtext+0avgdata 10745448maxresident)k
+9074224inputs+32outputs (0major+2244690minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+Hartree Fock  cc-pvtz  partial sextic
+-18.544980219078838
+966.14user 155.73system 17:28.16elapsed 107%CPU (0avgtext+0avgdata 19926396maxresident)k
+18425992inputs+32outputs (0major+6020674minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+MP2  cc-pvtz  partial gradient
+-8.112837729619541e-18
+15.24user 5.72system 0:14.18elapsed 147%CPU (0avgtext+0avgdata 2057488maxresident)k
+292920inputs+32outputs (0major+167310minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+MP2  cc-pvtz  partial hessian
+0.00024440851011869186
+27.41user 9.35system 0:28.44elapsed 129%CPU (0avgtext+0avgdata 2652248maxresident)k
+878528inputs+32outputs (0major+278223minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+MP2  cc-pvtz  partial cubic
+-1.813482991031113e-16
+58.66user 16.68system 1:02.34elapsed 120%CPU (0avgtext+0avgdata 3825720maxresident)k
+2049504inputs+32outputs (0major+474615minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+MP2  cc-pvtz  partial quartic
+1.1120990938081066
+145.80user 35.13system 2:31.79elapsed 119%CPU (0avgtext+0avgdata 6142244maxresident)k
+4391232inputs+32outputs (0major+1181043minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+MP2  cc-pvtz  partial quintic
+2.0242868446681942e-15
+381.05user 70.24system 6:15.62elapsed 120%CPU (0avgtext+0avgdata 11037224maxresident)k
+9074224inputs+32outputs (0major+2246343minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+MP2  cc-pvtz  partial sextic
+-17.815905253882345
+1152.08user 166.60system 18:32.73elapsed 118%CPU (0avgtext+0avgdata 19929228maxresident)k
+18425992inputs+40outputs (0major+6483021minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial gradient
+-9.713551427349761e-18
+113.80user 12.44system 0:59.65elapsed 211%CPU (0avgtext+0avgdata 2364820maxresident)k
+292920inputs+32outputs (0major+443274minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial hessian
+1.0403087757955825e-05
+287.03user 26.69system 2:11.93elapsed 237%CPU (0avgtext+0avgdata 3479616maxresident)k
+878528inputs+32outputs (0major+957601minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial cubic
+-3.08688854289988e-16
+747.93user 66.17system 4:55.38elapsed 275%CPU (0avgtext+0avgdata 5752868maxresident)k
+2049504inputs+32outputs (0major+2254197minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial quartic
+1.1155251454004023
+1982.58user 151.82system 11:22.75elapsed 312%CPU (0avgtext+0avgdata 9788348maxresident)k
+4391232inputs+32outputs (0major+3202385minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial quintic
+2.7016783508392676e-15
+5607.81user 389.73system 28:24.63elapsed 351%CPU (0avgtext+0avgdata 19560964maxresident)k
+9074224inputs+32outputs (0major+8793931minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-18 23:55:08.279332: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+31  RHF iterations performed
+20  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial sextic
+-17.866934181656532
+16618.35user 1039.75system 1:17:16elapsed 380%CPU (0avgtext+0avgdata 37690348maxresident)k
+18425992inputs+40outputs (0major+22122364minor)pagefaults 0swaps
+H2CO cc-pVDZ
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  partial gradient
+-0.046636815082100824
+8.94user 2.99system 0:08.26elapsed 144%CPU (0avgtext+0avgdata 1636660maxresident)k
+54656inputs+32outputs (0major+144024minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  partial hessian
+1.0017134963899395
+17.47user 5.63system 0:16.80elapsed 137%CPU (0avgtext+0avgdata 1855180maxresident)k
+163456inputs+32outputs (0major+352200minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  partial cubic
+2.5516518963356223
+36.83user 4.67system 0:33.55elapsed 123%CPU (0avgtext+0avgdata 2212484maxresident)k
+380472inputs+32outputs (0major+223354minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  partial quartic
+7.545254400692393
+85.16user 10.39system 1:20.16elapsed 119%CPU (0avgtext+0avgdata 2789404maxresident)k
+813880inputs+32outputs (0major+658950minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  partial quintic
+31.66771522947137
+224.88user 21.88system 3:30.13elapsed 117%CPU (0avgtext+0avgdata 3404144maxresident)k
+1680136inputs+32outputs (0major+1213498minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+Hartree Fock  cc-pvdz  partial sextic
+103.89265322354026
+602.56user 51.07system 9:22.82elapsed 116%CPU (0avgtext+0avgdata 5327708maxresident)k
+3398432inputs+32outputs (0major+3726134minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+MP2  cc-pvdz  partial gradient
+-0.00024591283242687834
+11.34user 3.15system 0:10.31elapsed 140%CPU (0avgtext+0avgdata 1637036maxresident)k
+54648inputs+40outputs (0major+133979minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+MP2  cc-pvdz  partial hessian
+0.9565375403824922
+20.87user 4.38system 0:20.07elapsed 125%CPU (0avgtext+0avgdata 1809460maxresident)k
+163456inputs+40outputs (0major+331374minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+MP2  cc-pvdz  partial cubic
+2.718324098230235
+43.28user 5.33system 0:40.22elapsed 120%CPU (0avgtext+0avgdata 2153932maxresident)k
+380472inputs+32outputs (0major+396539minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+MP2  cc-pvdz  partial quartic
+8.108205519197789
+99.56user 9.19system 1:30.20elapsed 120%CPU (0avgtext+0avgdata 2766704maxresident)k
+813880inputs+32outputs (0major+570484minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+MP2  cc-pvdz  partial quintic
+31.96228770350939
+246.79user 18.89system 3:42.36elapsed 119%CPU (0avgtext+0avgdata 3597156maxresident)k
+1680136inputs+32outputs (0major+1424864minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+MP2  cc-pvdz  partial sextic
+89.45987354704579
+664.94user 45.61system 10:01.48elapsed 118%CPU (0avgtext+0avgdata 5415456maxresident)k
+3398432inputs+32outputs (0major+3753366minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial gradient
+-0.002066660714420847
+93.57user 5.47system 1:01.50elapsed 161%CPU (0avgtext+0avgdata 1797280maxresident)k
+54648inputs+32outputs (0major+170239minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial hessian
+0.9582737650332995
+227.86user 16.48system 2:19.70elapsed 174%CPU (0avgtext+0avgdata 2013848maxresident)k
+163456inputs+32outputs (0major+856767minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial cubic
+2.6902737244632156
+579.05user 28.61system 5:05.98elapsed 198%CPU (0avgtext+0avgdata 2490060maxresident)k
+380472inputs+32outputs (0major+619742minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial quartic
+8.0135445033167
+1463.13user 77.34system 11:42.93elapsed 219%CPU (0avgtext+0avgdata 3417764maxresident)k
+813880inputs+40outputs (0major+1280559minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-19 01:19:10.982520: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial quintic
+31.368445462788145
+3819.33user 198.96system 28:05.34elapsed 238%CPU (0avgtext+0avgdata 6466736maxresident)k
+1680136inputs+48outputs (0major+2879043minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-19 02:24:32.220952: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+62  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvdz  partial sextic
+88.44195780230429
+11181.88user 598.53system 1:13:17elapsed 267%CPU (0avgtext+0avgdata 19984324maxresident)k
+3398432inputs+40outputs (0major+8165458minor)pagefaults 0swaps
+H2CO cc-pVTZ
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  partial gradient
+-0.0457604624522947
+81.10user 34.90system 1:20.90elapsed 143%CPU (0avgtext+0avgdata 4629132maxresident)k
+1576688inputs+32outputs (0major+346072minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  partial hessian
+1.0204326764156262
+199.48user 81.21system 3:34.92elapsed 130%CPU (0avgtext+0avgdata 7791900maxresident)k
+4728792inputs+32outputs (0major+715185minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  partial cubic
+2.6010970270886453
+513.70user 170.69system 9:26.88elapsed 120%CPU (0avgtext+0avgdata 14106552maxresident)k
+11031768inputs+32outputs (0major+1455667minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  partial quartic
+7.413781128865352
+1413.66user 340.33system 25:16.24elapsed 115%CPU (0avgtext+0avgdata 26700532maxresident)k
+23636464inputs+32outputs (0major+2966414minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  partial quintic
+30.779450809515453
+3725.93user 712.88system 1:05:49elapsed 112%CPU (0avgtext+0avgdata 51870808maxresident)k
+48844576inputs+40outputs (0major+5953161minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+Hartree Fock  cc-pvtz  partial sextic
+105.99285715079425
+10682.50user 1472.51system 3:04:52elapsed 109%CPU (0avgtext+0avgdata 102177748maxresident)k
+99247536inputs+32outputs (0major+12800398minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+MP2  cc-pvtz  partial gradient
+0.0027532496345667803
+86.59user 36.27system 1:23.09elapsed 147%CPU (0avgtext+0avgdata 4630564maxresident)k
+1576680inputs+40outputs (0major+385310minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+MP2  cc-pvtz  partial hessian
+0.9561056708932525
+226.85user 77.09system 3:51.55elapsed 131%CPU (0avgtext+0avgdata 7795800maxresident)k
+4728792inputs+32outputs (0major+696624minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+MP2  cc-pvtz  partial cubic
+2.700026787354689
+569.27user 165.74system 9:49.88elapsed 124%CPU (0avgtext+0avgdata 14107708maxresident)k
+11031768inputs+32outputs (0major+1402992minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+MP2  cc-pvtz  partial quartic
+7.798083266390045
+1520.12user 350.15system 25:47.86elapsed 120%CPU (0avgtext+0avgdata 26696380maxresident)k
+23636464inputs+32outputs (0major+3159733minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+MP2  cc-pvtz  partial quintic
+31.09498435245008
+4060.79user 732.75system 1:07:24elapsed 118%CPU (0avgtext+0avgdata 53389964maxresident)k
+48844576inputs+32outputs (0major+6289316minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+MP2  cc-pvtz  partial sextic
+100.93064724324263
+11538.27user 1476.91system 3:06:45elapsed 116%CPU (0avgtext+0avgdata 102178136maxresident)k
+99247536inputs+32outputs (0major+12793858minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial gradient
+0.00029837811661669565
+723.95user 69.94system 2:50.38elapsed 465%CPU (0avgtext+0avgdata 6994000maxresident)k
+1576680inputs+32outputs (0major+1149529minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial hessian
+0.9577511487341821
+2074.15user 180.06system 7:27.54elapsed 503%CPU (0avgtext+0avgdata 13287108maxresident)k
+4728792inputs+40outputs (0major+2864851minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial cubic
+2.6695709343023495
+5898.90user 446.52system 18:23.46elapsed 575%CPU (0avgtext+0avgdata 21154136maxresident)k
+11031768inputs+32outputs (0major+7443159minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial quartic
+7.737991531696479
+17297.01user 1087.28system 48:22.89elapsed 633%CPU (0avgtext+0avgdata 47027760maxresident)k
+23636464inputs+40outputs (0major+16075010minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial quintic
+30.814692447270087
+51221.56user 2761.90system 2:11:29elapsed 684%CPU (0avgtext+0avgdata 90949288maxresident)k
+48844576inputs+32outputs (0major+40721649minor)pagefaults 0swaps
+WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+2021-01-19 21:23:55.975056: E external/org_tensorflow/tensorflow/compiler/xla/service/slow_operation_alarm.cc:55] 
+********************************
+Very slow compile?  If you want to file a bug, run with envvar XLA_FLAGS=--xla_dump_to=/tmp/foo and attach the results.
+********************************
+Found currently existing partial derivatives in working directory. I hope you know what you are doing!
+68  RHF iterations performed
+27  CCSD iterations performed
+CCSD(T)  cc-pvtz  partial sextic
+100.60116905002785
+163365.60user 7143.68system 6:19:16elapsed 749%CPU (0avgtext+0avgdata 152980400maxresident)k
+99247536inputs+40outputs (0major+104815539minor)pagefaults 0swaps

@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/hello_world_trial2/helloworld.cpp
+iostream
+-
+libint2.hpp
+-
+

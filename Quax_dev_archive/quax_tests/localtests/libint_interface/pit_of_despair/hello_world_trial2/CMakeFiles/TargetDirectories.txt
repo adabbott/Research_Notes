@@ -1,0 +1,3 @@
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/hello_world_trial2/CMakeFiles/rebuild_cache.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/hello_world_trial2/CMakeFiles/hello.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/hello_world_trial2/CMakeFiles/edit_cache.dir

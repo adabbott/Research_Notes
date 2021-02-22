@@ -1,0 +1,1 @@
+/usr/bin/c++  -I/usr/include/eigen3 -L/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/hello_world_trial2/lib/  -rdynamic CMakeFiles/hello.dir/helloworld.cpp.o  -o hello 

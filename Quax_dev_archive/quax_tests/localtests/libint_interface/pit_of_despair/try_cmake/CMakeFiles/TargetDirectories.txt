@@ -1,0 +1,6 @@
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/try_cmake/CMakeFiles/install/strip.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/try_cmake/CMakeFiles/install/local.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/try_cmake/CMakeFiles/install.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/try_cmake/CMakeFiles/edit_cache.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/try_cmake/CMakeFiles/rebuild_cache.dir
+/home/adabbott/Git/PsiTorch/PsiJax/localtests/libint_interface/try_cmake/CMakeFiles/list_install_components.dir

@@ -1,0 +1,5 @@
+First run:
+g++ -c test.cc -o test.o -I /home/adabbott/anaconda3/envs/psijax/include/eigen3 -I /home/adabbott/Git/libint/BUILD/libint-2.7.0-beta.6/include -I /home/adabbott/Git/libint/BUILD/libint-2.7.0-beta.6/include/libint2  -lint2 -L /home/adabbott/Git/libint/BUILD/libint-2.7.0-beta.6/
+
+Then run:
+g++  test.o -o test -I /home/adabbott/anaconda3/envs/psijax/include/eigen3 -I /home/adabbott/Git/libint/BUILD/libint-2.7.0-beta.6/include -I /home/adabbott/Git/libint/BUILD/libint-2.7.0-beta.6/include/libint2  -lint2 -L /home/adabbott/Git/libint/BUILD/libint-2.7.0-beta.6/
