@@ -1,15 +1,12 @@
-#from pandas_datareader import data as pdr 
 import yfinance as yf
 import numpy as np
+import jax.numpy as jnp
 import pandas as pd
 import matplotlib.pyplot as plt
 import urllib
 import requests
 import re
 from datetime import datetime, timedelta
-#from GPy.models import GPRegression
-#from GPy.kern import RBF
-#import peslearn
 
 from black_scholes import implied_vol
 from risk_free_rate import get_rfr
@@ -68,7 +65,7 @@ def vol_surf(ticker, mode=0):
             rate = rfr_func(tte)
             iv = data.apply(lambda row: find_iv(row, rate,mode), axis=1)
             tmp = np.vstack((data['tenor'].values, data['strike'].values, iv.values)).T
-            # Remove 0 IV rows
+            # Remove 0 IV rows (opt failed)
             tmp = tmp[np.all(tmp > 0, axis=1)]
             dataset.append(tmp)
 
@@ -82,7 +79,7 @@ def vol_surf(ticker, mode=0):
     ax.scatter3D(dataset[:,0], dataset[:,1], dataset[:,2])
     plt.show()
 
-#vol_surf("^SPX", mode=1)
-vol_surf("AAPL", mode=1)
+vol_surf("^SPX", mode=0)
+#vol_surf("AAPL", mode=1)
 
 
