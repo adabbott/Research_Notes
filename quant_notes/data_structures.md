@@ -63,12 +63,12 @@ Consequently, if your use case needs to do a lot of access/search/insertion/dele
 
 ### Binary heaps
 A binary tree, except all levels are completely filled, with the except of the last level (the leaves), which is left-biased (all keys as left as possible)
-      O
-     / \
-    /   \
-   O     O
-  / \   / 
- O   O O   
+      O  
+     / \  
+    /   \  
+   O     O  
+  / \   /   
+ O   O O     
 
 A binary heap always has a property (invariant) such as: 
     * Min-Heap: value of any node must be smaller than its children
