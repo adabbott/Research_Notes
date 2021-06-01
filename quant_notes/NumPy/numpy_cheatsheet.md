@@ -1,5 +1,8 @@
-# NumPy Cheat Sheet
+# NumPy Notes 
 (I've used numpy a lot, so only noting things that seem worth reminding of. ) 
+
+* The row-major layout of a NumPy array can have performance implications. It is always
+better to traverse data in the order it is laid out.
 
 * Several ndarrays can share the same data, so that an ndarray can be a **view** to another ndarray.  
 ndarrays can also view into memory owned by Python strings or other objects if they implement the buffer and array interfaces.
